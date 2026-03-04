@@ -142,6 +142,94 @@
             border-color: var(--color-primary);
         }
 
+        .card {
+            background: var(--color-surface);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .flag-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .flag {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .country-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px;
+            border: 2px solid var(--color-border);
+            background: var(--color-surface);
+            color: var(--color-text);
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: var(--color-secondary-hover);
+            border-color: var(--color-primary);
+        }
+
+        .option-btn.correct {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: white;
+        }
+
+        .option-btn.incorrect {
+            background: var(--color-error);
+            border-color: var(--color-error);
+            color: white;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        .action-btn:hover {
+            background: var(--color-primary-hover);
+        }
+
         .action-buttons {
             display: flex;
             gap: 10px;
@@ -169,115 +257,8 @@
             color: white;
         }
 
-        .action-btn-half.correct:hover {
+        .action-btn-half:hover {
             opacity: 0.9;
-        }
-
-        .action-btn-half.missed:hover {
-            opacity: 0.9;
-        }
-
-        .card {
-            background: var(--color-surface);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-
-        .flag-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .flag {
-            width: 100%;
-            max-width: 300px;
-            height: 200px;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .answer-reveal {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .country-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--color-primary);
-            margin-bottom: 10px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .option-btn {
-            padding: 16px;
-            border: 2px solid var(--color-border);
-            background: var(--color-surface);
-            color: var(--color-text);
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            font-weight: 500;
-        }
-
-        .option-btn:hover {
-            background: var(--color-secondary-hover);
-            border-color: var(--color-primary);
-        }
-
-        .option-btn.correct {
-            background: var(--color-success);
-            border-color: var(--color-success);
-            color: white;
-        }
-
-        .option-btn.incorrect {
-            background: var(--color-error);
-            border-color: var(--color-error);
-            color: white;
-        }
-
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .action-btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            background: var(--color-primary);
-            color: white;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 20px;
-        }
-
-        .action-btn:hover {
-            background: var(--color-primary-hover);
-        }
-
-        .action-btn.secondary {
-            background: var(--color-secondary);
-            color: var(--color-text);
-        }
-
-        .action-btn.secondary:hover {
-            background: var(--color-secondary-hover);
         }
 
         .feedback {
@@ -343,7 +324,7 @@
 
         <div class="mode-selector">
             <button class="mode-btn active" data-mode="practice">Flashcard</button>
-            <button class="mode-btn" data-mode="quiz">Multiple choice</button>
+            <button class="mode-btn" data-mode="quiz">Multiple Choice</button>
         </div>
 
         <div class="toggle-row">
@@ -354,7 +335,7 @@
 
         <div class="toggle-row">
             <span class="toggle-label">Focus on weak flags:</span>
-            <button class="toggle-btn" id="weak-toggle" data-weak="off">Off</button>
+            <button class="toggle-btn" id="weak-toggle">Off</button>
         </div>
 
         <div class="card" style="padding: 20px; margin-bottom: 20px;">
@@ -377,35 +358,23 @@
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </optgroup>
-                <optgroup label="Similar Flags">
-                    <option value="tricolor-horizontal">Tricolor Horizontal</option>
-                    <option value="tricolor-vertical">Tricolor Vertical</option>
-                    <option value="nordic-cross">Nordic Cross</option>
-                    <option value="crescent">Crescent Flags</option>
-                    <option value="chad-romania">Chad vs Romania</option>
-                    <option value="indonesia-monaco-poland">Indonesia/Monaco/Poland</option>
-                    <option value="ireland-ivory-coast">Ireland vs Ivory Coast</option>
-                    <option value="colombia-ecuador-venezuela">Colombia/Ecuador/Venezuela</option>
-                    <option value="central-america">Central America</option>
-                    <option value="arab-tricolor">Arab Tricolor</option>
-                </optgroup>
             </select>
             <div style="margin-top: 10px; font-size: 14px; color: var(--color-text-secondary);" id="filter-info">Showing all 197 flags</div>
         </div>
 
         <div class="card">
-            <div class="flag-container">
-                <img id="flag-image" class="flag" src="" alt="Country flag">
+            <div id="flag-container" class="flag-container">
+                <img id="flag-image" class="flag" src="" alt="Flag">
             </div>
 
             <div id="practice-view">
-                <div id="question-container">
-                    <div class="country-name" id="question-text" style="margin-bottom: 20px;"></div>
+                <div id="question-container" class="hidden">
+                    <div class="country-name" id="question-text"></div>
                 </div>
-                <button class="action-btn" id="reveal-btn">Show answer</button>
+                <button class="action-btn" id="reveal-btn">Show Answer</button>
                 <div id="answer-section" class="hidden">
-                    <div class="answer-reveal">
-                        <div class="country-name" id="country-name"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <div class="country-name" id="answer-name"></div>
                     </div>
                     <div class="action-buttons">
                         <button class="action-btn-half correct" id="correct-btn">✓ Correct</button>
@@ -415,198 +384,155 @@
             </div>
 
             <div id="quiz-view" class="hidden">
+                <div id="quiz-question"></div>
                 <div class="options" id="options-container"></div>
                 <div id="quiz-feedback" class="feedback hidden"></div>
-                <button class="action-btn hidden" id="next-quiz-btn">Next Question</button>
+                <button class="action-btn hidden" id="next-btn">Next Question</button>
             </div>
         </div>
     </div>
 
     <script>
-        const allFlags = [
+        const FLAGS = [
             { name: 'Afghanistan', code: 'af', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Albania', code: 'al', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
-            { name: 'Algeria', code: 'dz', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
+            { name: 'Algeria', code: 'dz', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Andorra', code: 'ad', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
             { name: 'Angola', code: 'ao', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Antigua and Barbuda', code: 'ag', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
             { name: 'Argentina', code: 'ar', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Armenia', code: 'am', continent: 'Asia', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Armenia', code: 'am', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
             { name: 'Australia', code: 'au', continent: 'Oceania', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Austria', code: 'at', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-horizontal' },
-            { name: 'Azerbaijan', code: 'az', continent: 'Asia', popularity: 'less', difficulty: 'medium', similar: 'crescent' },
+            { name: 'Austria', code: 'at', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
+            { name: 'Azerbaijan', code: 'az', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Bahamas', code: 'bs', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
             { name: 'Bahrain', code: 'bh', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Bangladesh', code: 'bd', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
             { name: 'Barbados', code: 'bb', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
             { name: 'Belarus', code: 'by', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
-            { name: 'Belgium', code: 'be', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-vertical' },
+            { name: 'Belgium', code: 'be', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Belize', code: 'bz', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
             { name: 'Benin', code: 'bj', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Bhutan', code: 'bt', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
-            { name: 'Bolivia', code: 'bo', continent: 'Americas', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Bolivia', code: 'bo', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
             { name: 'Bosnia and Herzegovina', code: 'ba', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
             { name: 'Botswana', code: 'bw', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Brazil', code: 'br', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
             { name: 'Brunei', code: 'bn', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
-            { name: 'Bulgaria', code: 'bg', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Bulgaria', code: 'bg', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'Burkina Faso', code: 'bf', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Burundi', code: 'bi', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Cabo Verde', code: 'cv', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Cambodia', code: 'kh', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
-            { name: 'Cameroon', code: 'cm', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'tricolor-vertical' },
+            { name: 'Cameroon', code: 'cm', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Canada', code: 'ca', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Central African Republic', code: 'cf', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Chad', code: 'td', continent: 'Africa', popularity: 'less', difficulty: 'hard', similar: 'chad-romania' },
+            { name: 'Chad', code: 'td', continent: 'Africa', popularity: 'less', difficulty: 'hard' },
             { name: 'Chile', code: 'cl', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
             { name: 'China', code: 'cn', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Colombia', code: 'co', continent: 'Americas', popularity: 'popular', difficulty: 'medium', similar: 'colombia-ecuador-venezuela' },
-            { name: 'Comoros', code: 'km', continent: 'Africa', popularity: 'less', difficulty: 'hard', similar: 'crescent' },
+            { name: 'Colombia', code: 'co', continent: 'Americas', popularity: 'popular', difficulty: 'medium' },
             { name: 'Congo', code: 'cg', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Costa Rica', code: 'cr', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
-            { name: 'Croatia', code: 'hr', continent: 'Europe', popularity: 'less', difficulty: 'medium', similar: 'tricolor-horizontal' },
+            { name: 'Croatia', code: 'hr', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
             { name: 'Cuba', code: 'cu', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
             { name: 'Cyprus', code: 'cy', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'Czech Republic', code: 'cz', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Denmark', code: 'dk', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'nordic-cross' },
-            { name: 'Djibouti', code: 'dj', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Dominica', code: 'dm', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
+            { name: 'Denmark', code: 'dk', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Dominican Republic', code: 'do', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
-            { name: 'DR Congo', code: 'cd', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
-            { name: 'Ecuador', code: 'ec', continent: 'Americas', popularity: 'less', difficulty: 'hard', similar: 'colombia-ecuador-venezuela' },
-            { name: 'Egypt', code: 'eg', continent: 'Africa', popularity: 'popular', difficulty: 'medium', similar: 'arab-tricolor' },
-            { name: 'El Salvador', code: 'sv', continent: 'Americas', popularity: 'less', difficulty: 'hard', similar: 'central-america' },
-            { name: 'Equatorial Guinea', code: 'gq', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Eritrea', code: 'er', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Estonia', code: 'ee', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
-            { name: 'Eswatini', code: 'sz', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
+            { name: 'Ecuador', code: 'ec', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
+            { name: 'Egypt', code: 'eg', continent: 'Africa', popularity: 'popular', difficulty: 'medium' },
+            { name: 'El Salvador', code: 'sv', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
+            { name: 'Estonia', code: 'ee', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'Ethiopia', code: 'et', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Fiji', code: 'fj', continent: 'Oceania', popularity: 'less', difficulty: 'medium' },
-            { name: 'Finland', code: 'fi', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'nordic-cross' },
-            { name: 'France', code: 'fr', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-vertical' },
-            { name: 'Gabon', code: 'ga', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Finland', code: 'fi', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
+            { name: 'France', code: 'fr', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
+            { name: 'Gabon', code: 'ga', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Gambia', code: 'gm', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Georgia', code: 'ge', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Germany', code: 'de', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Germany', code: 'de', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Ghana', code: 'gh', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Greece', code: 'gr', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Grenada', code: 'gd', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
-            { name: 'Guatemala', code: 'gt', continent: 'Americas', popularity: 'less', difficulty: 'medium', similar: 'central-america' },
-            { name: 'Guinea', code: 'gn', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'tricolor-vertical' },
-            { name: 'Guinea-Bissau', code: 'gw', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Guyana', code: 'gy', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
+            { name: 'Guatemala', code: 'gt', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
+            { name: 'Guinea', code: 'gn', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Haiti', code: 'ht', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
-            { name: 'Honduras', code: 'hn', continent: 'Americas', popularity: 'less', difficulty: 'hard', similar: 'central-america' },
-            { name: 'Hungary', code: 'hu', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
-            { name: 'Iceland', code: 'is', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'nordic-cross' },
+            { name: 'Honduras', code: 'hn', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
+            { name: 'Hungary', code: 'hu', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
+            { name: 'Iceland', code: 'is', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'India', code: 'in', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Indonesia', code: 'id', continent: 'Asia', popularity: 'popular', difficulty: 'hard', similar: 'indonesia-monaco-poland' },
+            { name: 'Indonesia', code: 'id', continent: 'Asia', popularity: 'popular', difficulty: 'hard' },
             { name: 'Iran', code: 'ir', continent: 'Asia', popularity: 'popular', difficulty: 'medium' },
-            { name: 'Iraq', code: 'iq', continent: 'Asia', popularity: 'less', difficulty: 'medium', similar: 'arab-tricolor' },
-            { name: 'Ireland', code: 'ie', continent: 'Europe', popularity: 'popular', difficulty: 'hard', similar: 'ireland-ivory-coast' },
+            { name: 'Iraq', code: 'iq', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
+            { name: 'Ireland', code: 'ie', continent: 'Europe', popularity: 'popular', difficulty: 'hard' },
             { name: 'Israel', code: 'il', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Italy', code: 'it', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-vertical' },
-            { name: 'Ivory Coast', code: 'ci', continent: 'Africa', popularity: 'less', difficulty: 'hard', similar: 'ireland-ivory-coast' },
+            { name: 'Italy', code: 'it', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
+            { name: 'Ivory Coast', code: 'ci', continent: 'Africa', popularity: 'less', difficulty: 'hard' },
             { name: 'Jamaica', code: 'jm', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
             { name: 'Japan', code: 'jp', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
             { name: 'Jordan', code: 'jo', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Kazakhstan', code: 'kz', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Kenya', code: 'ke', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Kiribati', code: 'ki', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
-            { name: 'Kosovo', code: 'xk', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
             { name: 'Kuwait', code: 'kw', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Kyrgyzstan', code: 'kg', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Laos', code: 'la', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
-            { name: 'Latvia', code: 'lv', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Latvia', code: 'lv', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'Lebanon', code: 'lb', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
-            { name: 'Lesotho', code: 'ls', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Liberia', code: 'lr', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Libya', code: 'ly', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Liechtenstein', code: 'li', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
-            { name: 'Lithuania', code: 'lt', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
-            { name: 'Luxembourg', code: 'lu', continent: 'Europe', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Libya', code: 'ly', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
+            { name: 'Lithuania', code: 'lt', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
+            { name: 'Luxembourg', code: 'lu', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
             { name: 'Madagascar', code: 'mg', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Malawi', code: 'mw', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Malaysia', code: 'my', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Maldives', code: 'mv', continent: 'Asia', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Mali', code: 'ml', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'tricolor-vertical' },
+            { name: 'Mali', code: 'ml', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Malta', code: 'mt', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
-            { name: 'Marshall Islands', code: 'mh', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
-            { name: 'Mauritania', code: 'mr', continent: 'Africa', popularity: 'less', difficulty: 'medium', similar: 'crescent' },
-            { name: 'Mauritius', code: 'mu', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Mexico', code: 'mx', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Micronesia', code: 'fm', continent: 'Oceania', popularity: 'less', difficulty: 'easy' },
-            { name: 'Moldova', code: 'md', continent: 'Europe', popularity: 'less', difficulty: 'medium', similar: 'tricolor-vertical' },
-            { name: 'Monaco', code: 'mc', continent: 'Europe', popularity: 'less', difficulty: 'hard', similar: 'indonesia-monaco-poland' },
+            { name: 'Moldova', code: 'md', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
+            { name: 'Monaco', code: 'mc', continent: 'Europe', popularity: 'less', difficulty: 'hard' },
             { name: 'Mongolia', code: 'mn', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Montenegro', code: 'me', continent: 'Europe', popularity: 'less', difficulty: 'hard' },
             { name: 'Morocco', code: 'ma', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Mozambique', code: 'mz', continent: 'Africa', popularity: 'less', difficulty: 'hard' },
             { name: 'Myanmar', code: 'mm', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
             { name: 'Namibia', code: 'na', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Nauru', code: 'nr', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
             { name: 'Nepal', code: 'np', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
-            { name: 'Netherlands', code: 'nl', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Netherlands', code: 'nl', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'New Zealand', code: 'nz', continent: 'Oceania', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Nicaragua', code: 'ni', continent: 'Americas', popularity: 'less', difficulty: 'hard', similar: 'central-america' },
+            { name: 'Nicaragua', code: 'ni', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
             { name: 'Niger', code: 'ne', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Nigeria', code: 'ng', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'North Korea', code: 'kp', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'North Macedonia', code: 'mk', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
-            { name: 'Norway', code: 'no', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'nordic-cross' },
+            { name: 'Norway', code: 'no', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Oman', code: 'om', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
-            { name: 'Pakistan', code: 'pk', continent: 'Asia', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Palau', code: 'pw', continent: 'Oceania', popularity: 'less', difficulty: 'easy' },
+            { name: 'Pakistan', code: 'pk', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
             { name: 'Palestine', code: 'ps', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Panama', code: 'pa', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
-            { name: 'Papua New Guinea', code: 'pg', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
-            { name: 'Paraguay', code: 'py', continent: 'Americas', popularity: 'less', difficulty: 'easy', similar: 'tricolor-horizontal' },
-            { name: 'Peru', code: 'pe', continent: 'Americas', popularity: 'less', difficulty: 'easy', similar: 'tricolor-vertical' },
+            { name: 'Paraguay', code: 'py', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
+            { name: 'Peru', code: 'pe', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
             { name: 'Philippines', code: 'ph', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Poland', code: 'pl', continent: 'Europe', popularity: 'popular', difficulty: 'hard', similar: 'indonesia-monaco-poland' },
+            { name: 'Poland', code: 'pl', continent: 'Europe', popularity: 'popular', difficulty: 'hard' },
             { name: 'Portugal', code: 'pt', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Qatar', code: 'qa', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
-            { name: 'Romania', code: 'ro', continent: 'Europe', popularity: 'less', difficulty: 'hard', similar: 'chad-romania' },
-            { name: 'Russia', code: 'ru', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'tricolor-horizontal' },
+            { name: 'Romania', code: 'ro', continent: 'Europe', popularity: 'less', difficulty: 'hard' },
+            { name: 'Russia', code: 'ru', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Rwanda', code: 'rw', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
-            { name: 'Saint Kitts and Nevis', code: 'kn', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
-            { name: 'Saint Lucia', code: 'lc', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
-            { name: 'Saint Vincent and the Grenadines', code: 'vc', continent: 'Americas', popularity: 'less', difficulty: 'hard' },
-            { name: 'Samoa', code: 'ws', continent: 'Oceania', popularity: 'less', difficulty: 'easy' },
-            { name: 'San Marino', code: 'sm', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
-            { name: 'Sao Tome and Principe', code: 'st', continent: 'Africa', popularity: 'less', difficulty: 'hard' },
             { name: 'Saudi Arabia', code: 'sa', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Senegal', code: 'sn', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'tricolor-vertical' },
-            { name: 'Serbia', code: 'rs', continent: 'Europe', popularity: 'less', difficulty: 'medium', similar: 'tricolor-horizontal' },
-            { name: 'Seychelles', code: 'sc', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
-            { name: 'Sierra Leone', code: 'sl', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
-            { name: 'Singapore', code: 'sg', continent: 'Asia', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Slovakia', code: 'sk', continent: 'Europe', popularity: 'less', difficulty: 'medium', similar: 'tricolor-horizontal' },
-            { name: 'Slovenia', code: 'si', continent: 'Europe', popularity: 'less', difficulty: 'medium', similar: 'tricolor-horizontal' },
-            { name: 'Solomon Islands', code: 'sb', continent: 'Oceania', popularity: 'less', difficulty: 'medium' },
+            { name: 'Senegal', code: 'sn', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
+            { name: 'Serbia', code: 'rs', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
+            { name: 'Singapore', code: 'sg', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
+            { name: 'Slovakia', code: 'sk', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
+            { name: 'Slovenia', code: 'si', continent: 'Europe', popularity: 'less', difficulty: 'medium' },
             { name: 'Somalia', code: 'so', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'South Africa', code: 'za', continent: 'Africa', popularity: 'popular', difficulty: 'easy' },
             { name: 'South Korea', code: 'kr', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'South Sudan', code: 'ss', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Spain', code: 'es', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Sri Lanka', code: 'lk', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Sudan', code: 'sd', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'arab-tricolor' },
-            { name: 'Suriname', code: 'sr', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
-            { name: 'Sweden', code: 'se', continent: 'Europe', popularity: 'popular', difficulty: 'easy', similar: 'nordic-cross' },
+            { name: 'Sudan', code: 'sd', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
+            { name: 'Sweden', code: 'se', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'Switzerland', code: 'ch', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Syria', code: 'sy', continent: 'Asia', popularity: 'less', difficulty: 'medium', similar: 'arab-tricolor' },
+            { name: 'Syria', code: 'sy', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Taiwan', code: 'tw', continent: 'Asia', popularity: 'less', difficulty: 'easy' },
-            { name: 'Tajikistan', code: 'tj', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Tanzania', code: 'tz', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Thailand', code: 'th', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Timor-Leste', code: 'tl', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
             { name: 'Togo', code: 'tg', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
-            { name: 'Tonga', code: 'to', continent: 'Oceania', popularity: 'less', difficulty: 'easy' },
             { name: 'Trinidad and Tobago', code: 'tt', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
-            { name: 'Tunisia', code: 'tn', continent: 'Africa', popularity: 'less', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Turkey', code: 'tr', continent: 'Asia', popularity: 'popular', difficulty: 'easy', similar: 'crescent' },
-            { name: 'Turkmenistan', code: 'tm', continent: 'Asia', popularity: 'less', difficulty: 'hard' },
-            { name: 'Tuvalu', code: 'tv', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
+            { name: 'Tunisia', code: 'tn', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
+            { name: 'Turkey', code: 'tr', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
             { name: 'Uganda', code: 'ug', continent: 'Africa', popularity: 'less', difficulty: 'medium' },
             { name: 'Ukraine', code: 'ua', continent: 'Europe', popularity: 'popular', difficulty: 'easy' },
             { name: 'United Arab Emirates', code: 'ae', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
@@ -614,330 +540,325 @@
             { name: 'United States', code: 'us', continent: 'Americas', popularity: 'popular', difficulty: 'easy' },
             { name: 'Uruguay', code: 'uy', continent: 'Americas', popularity: 'less', difficulty: 'easy' },
             { name: 'Uzbekistan', code: 'uz', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
-            { name: 'Vanuatu', code: 'vu', continent: 'Oceania', popularity: 'less', difficulty: 'hard' },
-            { name: 'Vatican City', code: 'va', continent: 'Europe', popularity: 'less', difficulty: 'easy' },
-            { name: 'Venezuela', code: 've', continent: 'Americas', popularity: 'less', difficulty: 'medium', similar: 'colombia-ecuador-venezuela' },
+            { name: 'Venezuela', code: 've', continent: 'Americas', popularity: 'less', difficulty: 'medium' },
             { name: 'Vietnam', code: 'vn', continent: 'Asia', popularity: 'popular', difficulty: 'easy' },
-            { name: 'Yemen', code: 'ye', continent: 'Asia', popularity: 'less', difficulty: 'medium', similar: 'arab-tricolor' },
+            { name: 'Yemen', code: 'ye', continent: 'Asia', popularity: 'less', difficulty: 'medium' },
             { name: 'Zambia', code: 'zm', continent: 'Africa', popularity: 'less', difficulty: 'easy' },
             { name: 'Zimbabwe', code: 'zw', continent: 'Africa', popularity: 'less', difficulty: 'medium' }
         ];
 
-        let currentMode = 'practice';
-        let currentDirection = 'flag-to-country';
-        let weakFlagMode = false;
-        let currentFilter = 'all';
-        let filteredFlags = [...allFlags];
-        let currentFlag = null;
-        let correctCount = 0;
-        let incorrectCount = 0;
-        let totalCount = 0;
-        let answered = false;
-        let flagStats = {};
+        let state = {
+            mode: 'practice',
+            direction: 'flag-to-country',
+            weakMode: false,
+            filter: 'all',
+            filtered: [...FLAGS],
+            current: null,
+            answered: false,
+            stats: { correct: 0, incorrect: 0, total: 0 },
+            flagData: {}
+        };
 
-        function loadStats() {
+        function init() {
+            loadData();
+            setupEventListeners();
+            nextFlag();
+        }
+
+        function loadData() {
             try {
                 const saved = localStorage.getItem('flagStats');
-                if (saved) {
-                    flagStats = JSON.parse(saved);
-                }
+                if (saved) state.flagData = JSON.parse(saved);
             } catch (e) {}
         }
 
-        function saveStats() {
+        function saveData() {
             try {
-                localStorage.setItem('flagStats', JSON.stringify(flagStats));
+                localStorage.setItem('flagStats', JSON.stringify(state.flagData));
             } catch (e) {}
         }
 
-        function updateFlagStats(code, correct) {
-            if (!flagStats[code]) {
-                flagStats[code] = { seen: 0, correct: 0 };
-            }
-            flagStats[code].seen++;
-            if (correct) {
-                flagStats[code].correct++;
-            }
-            saveStats();
-        }
-
-        function getWeakFlags() {
-            const scored = filteredFlags.map(f => {
-                const stats = flagStats[f.code] || { seen: 0, correct: 0 };
-                const accuracy = stats.seen > 0 ? stats.correct / stats.seen : 0.5;
-                return { flag: f, accuracy, weight: 1 - accuracy };
+        function setupEventListeners() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.mode = btn.dataset.mode;
+                    switchMode();
+                });
             });
-            scored.sort((a, b) => a.accuracy - b.accuracy);
-            return scored;
+
+            document.querySelectorAll('[data-direction]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-direction]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.direction = btn.dataset.direction;
+                    nextFlag();
+                });
+            });
+
+            document.getElementById('weak-toggle').addEventListener('click', (e) => {
+                state.weakMode = !state.weakMode;
+                e.target.textContent = state.weakMode ? 'On' : 'Off';
+                e.target.classList.toggle('active');
+                nextFlag();
+            });
+
+            document.getElementById('filter-select').addEventListener('change', (e) => {
+                applyFilter(e.target.value);
+            });
+
+            document.getElementById('reveal-btn').addEventListener('click', revealAnswer);
+            document.getElementById('correct-btn').addEventListener('click', () => markAnswer(true));
+            document.getElementById('missed-btn').addEventListener('click', () => markAnswer(false));
+            document.getElementById('next-btn').addEventListener('click', nextFlag);
         }
 
-        function getWeightedRandomFlag() {
-            const scored = getWeakFlags();
-            const totalWeight = scored.reduce((sum, item) => sum + item.weight, 0);
-            let random = Math.random() * totalWeight;
+        function applyFilter(value) {
+            state.filter = value;
             
-            for (let item of scored) {
-                random -= item.weight;
-                if (random <= 0) {
-                    return item.flag;
-                }
+            if (value === 'all') {
+                state.filtered = [...FLAGS];
+            } else if (['europe', 'asia', 'africa', 'americas', 'oceania'].includes(value)) {
+                state.filtered = FLAGS.filter(f => f.continent.toLowerCase() === value);
+            } else if (value === 'popular' || value === 'less') {
+                state.filtered = FLAGS.filter(f => f.popularity === value);
+            } else if (['easy', 'medium', 'hard'].includes(value)) {
+                state.filtered = FLAGS.filter(f => f.difficulty === value);
             }
-            return scored[0].flag;
+            
+            document.getElementById('filter-info').textContent = `Showing ${state.filtered.length} flags`;
+            nextFlag();
         }
-
-        const flagImage = document.getElementById('flag-image');
-        const countryName = document.getElementById('country-name');
-        const questionText = document.getElementById('question-text');
-        const questionContainer = document.getElementById('question-container');
-        const practiceView = document.getElementById('practice-view');
-        const quizView = document.getElementById('quiz-view');
-        const answerSection = document.getElementById('answer-section');
-        const revealBtn = document.getElementById('reveal-btn');
-        const correctBtn = document.getElementById('correct-btn');
-        const missedBtn = document.getElementById('missed-btn');
-        const nextQuizBtn = document.getElementById('next-quiz-btn');
-        const optionsContainer = document.getElementById('options-container');
-        const quizFeedback = document.getElementById('quiz-feedback');
-        const correctCountEl = document.getElementById('correct-count');
-        const incorrectCountEl = document.getElementById('incorrect-count');
-        const totalCountEl = document.getElementById('total-count');
-
-        loadStats();
-
-        document.querySelectorAll('.mode-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentMode = btn.dataset.mode;
-                switchMode();
-            });
-        });
-
-        document.querySelectorAll('[data-direction]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('[data-direction]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentDirection = btn.dataset.direction;
-                loadNewFlag();
-            });
-        });
-
-        document.getElementById('weak-toggle').addEventListener('click', (e) => {
-            weakFlagMode = !weakFlagMode;
-            e.target.textContent = weakFlagMode ? 'On' : 'Off';
-            e.target.classList.toggle('active', weakFlagMode);
-            loadNewFlag();
-        });
 
         function switchMode() {
-            if (currentMode === 'practice') {
-                practiceView.classList.remove('hidden');
-                quizView.classList.add('hidden');
+            if (state.mode === 'practice') {
+                document.getElementById('practice-view').classList.remove('hidden');
+                document.getElementById('quiz-view').classList.add('hidden');
             } else {
-                practiceView.classList.add('hidden');
-                quizView.classList.remove('hidden');
+                document.getElementById('practice-view').classList.add('hidden');
+                document.getElementById('quiz-view').classList.remove('hidden');
             }
-            loadNewFlag();
-        }
-
-        function applyFilter(filterValue) {
-            currentFilter = filterValue;
-            
-            if (filterValue === 'all') {
-                filteredFlags = [...allFlags];
-            } else if (['europe', 'asia', 'africa', 'americas', 'oceania'].includes(filterValue)) {
-                filteredFlags = allFlags.filter(f => f.continent.toLowerCase() === filterValue);
-            } else if filterValue === 'popular' || filterValue === 'less') {
-                filteredFlags = allFlags.filter(f => f.popularity === filterValue);
-            } else if (['easy', 'medium', 'hard'].includes(filterValue)) {
-                filteredFlags = allFlags.filter(f => f.difficulty === filterValue);
-            } else {
-                filteredFlags = allFlags.filter(f => f.similar === filterValue);
-            }
-            
-            const filterInfo = document.getElementById('filter-info');
-            filterInfo.textContent = `Showing ${filteredFlags.length} flags`;
-            
-            loadNewFlag();
+            nextFlag();
         }
 
         function getRandomFlag() {
-            if (filteredFlags.length === 0) {
-                filteredFlags = [...allFlags];
+            if (state.filtered.length === 0) return FLAGS[0];
+            
+            if (state.weakMode) {
+                const scored = state.filtered.map(f => {
+                    const data = state.flagData[f.code] || { seen: 0, correct: 0 };
+                    const accuracy = data.seen > 0 ? data.correct / data.seen : 0.5;
+                    return { flag: f, weight: 1 - accuracy };
+                });
+                
+                const total = scored.reduce((sum, s) => sum + s.weight, 0);
+                let random = Math.random() * total;
+                
+                for (let item of scored) {
+                    random -= item.weight;
+                    if (random <= 0) return item.flag;
+                }
+                return scored[0].flag;
             }
-            const flag = weakFlagMode ? getWeightedRandomFlag() : filteredFlags[Math.floor(Math.random() * filteredFlags.length)];
-            return {
-                name: flag.name,
-                code: flag.code,
-                flag: `https://flagcdn.com/w320/${flag.code}.png`
-            };
+            
+            return state.filtered[Math.floor(Math.random() * state.filtered.length)];
         }
 
-        function getRandomOptions(correctFlag) {
-            const options = [correctFlag];
-            const otherFlags = filteredFlags.filter(f => f.name !== correctFlag.name);
+        function nextFlag() {
+            state.current = getRandomFlag();
+            state.answered = false;
             
-            while (options.length < 4) {
-                const randomFlag = otherFlags[Math.floor(Math.random() * otherFlags.length)];
-                if (!options.find(o => o.name === randomFlag.name)) {
-                    options.push(randomFlag);
+            if (state.mode === 'practice') {
+                loadPracticeMode();
+            } else {
+                loadQuizMode();
+            }
+        }
+
+        function loadPracticeMode() {
+            document.getElementById('answer-section').classList.add('hidden');
+            document.getElementById('reveal-btn').classList.remove('hidden');
+            
+            const flagContainer = document.getElementById('flag-container');
+            const questionContainer = document.getElementById('question-container');
+            const flagImage = document.getElementById('flag-image');
+            const questionText = document.getElementById('question-text');
+            
+            if (state.direction === 'flag-to-country') {
+                flagContainer.classList.remove('hidden');
+                questionContainer.classList.add('hidden');
+                flagImage.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+                flagImage.alt = 'Flag to identify';
+            } else {
+                flagContainer.classList.add('hidden');
+                questionContainer.classList.remove('hidden');
+                questionText.textContent = state.current.name;
+            }
+        }
+
+        function revealAnswer() {
+            const flagContainer = document.getElementById('flag-container');
+            const flagImage = document.getElementById('flag-image');
+            const answerName = document.getElementById('answer-name');
+            
+            if (state.direction === 'country-to-flag') {
+                flagContainer.classList.remove('hidden');
+                flagImage.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+                flagImage.alt = state.current.name;
+                answerName.textContent = '';
+            } else {
+                answerName.textContent = state.current.name;
+            }
+            
+            document.getElementById('reveal-btn').classList.add('hidden');
+            document.getElementById('answer-section').classList.remove('hidden');
+        }
+
+        function markAnswer(correct) {
+            state.stats.total++;
+            if (correct) {
+                state.stats.correct++;
+            } else {
+                state.stats.incorrect++;
+            }
+            
+            if (!state.flagData[state.current.code]) {
+                state.flagData[state.current.code] = { seen: 0, correct: 0 };
+            }
+            state.flagData[state.current.code].seen++;
+            if (correct) state.flagData[state.current.code].correct++;
+            
+            saveData();
+            updateStats();
+            nextFlag();
+        }
+
+        function loadQuizMode() {
+            const options = getQuizOptions();
+            const container = document.getElementById('options-container');
+            const questionDiv = document.getElementById('quiz-question');
+            const flagContainer = document.getElementById('flag-container');
+            const flagImage = document.getElementById('flag-image');
+            
+            container.innerHTML = '';
+            questionDiv.innerHTML = '';
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            if (state.direction === 'flag-to-country') {
+                flagContainer.classList.remove('hidden');
+                flagImage.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+                flagImage.alt = 'Flag to identify';
+                
+                options.forEach(flag => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = flag.name;
+                    btn.addEventListener('click', () => handleQuizAnswer(flag.name, btn));
+                    container.appendChild(btn);
+                });
+            } else {
+                flagContainer.classList.add('hidden');
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'country-name';
+                nameDiv.textContent = state.current.name;
+                nameDiv.style.marginBottom = '20px';
+                questionDiv.appendChild(nameDiv);
+                
+                options.forEach(flag => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.style.padding = '0';
+                    btn.style.height = '120px';
+                    
+                    const img = document.createElement('img');
+                    img.src = `https://flagcdn.com/w320/${flag.code}.png`;
+                    img.alt = flag.name;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'contain';
+                    img.style.borderRadius = '10px';
+                    
+                    btn.appendChild(img);
+                    btn.addEventListener('click', () => handleQuizAnswer(flag.name, btn));
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+        function getQuizOptions() {
+            const options = [state.current];
+            const others = state.filtered.filter(f => f.code !== state.current.code);
+            
+            while (options.length < 4 && others.length > 0) {
+                const random = others[Math.floor(Math.random() * others.length)];
+                if (!options.find(o => o.code === random.code)) {
+                    options.push(random);
                 }
             }
             
             return options.sort(() => Math.random() - 0.5);
         }
 
-        function loadNewFlag() {
-            currentFlag = getRandomFlag();
-            answered = false;
+        function handleQuizAnswer(selected, btn) {
+            if (state.answered) return;
+            state.answered = true;
             
-            if (currentMode === 'practice') {
-                answerSection.classList.add('hidden');
-                revealBtn.classList.remove('hidden');
-                
-                if (currentDirection === 'flag-to-country') {
-                    questionContainer.classList.add('hidden');
-                    flagImage.parentElement.classList.remove('hidden');
-                    flagImage.src = currentFlag.flag;
-                } else {
-                    flagImage.parentElement.classList.add('hidden');
-                    questionContainer.classList.remove('hidden');
-                    questionText.textContent = currentFlag.name;
-                }
+            const correct = selected === state.current.name;
+            const allBtns = document.querySelectorAll('#options-container .option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            
+            state.stats.total++;
+            if (correct) {
+                state.stats.correct++;
+                btn.classList.add('correct');
+                showFeedback('✅ Correct!', 'correct');
             } else {
-                quizFeedback.classList.add('hidden');
-                nextQuizBtn.classList.add('hidden');
-                loadQuizOptions();
-            }
-        }
-
-        function loadQuizOptions() {
-            const options = getRandomOptions(currentFlag);
-            optionsContainer.innerHTML = '';
-            
-            if (currentDirection === 'flag-to-country') {
-                flagImage.parentElement.classList.remove('hidden');
-                flagImage.src = currentFlag.flag;
+                state.stats.incorrect++;
+                btn.classList.add('incorrect');
                 
-                options.forEach(option => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.textContent = option.name;
-                    btn.addEventListener('click', () => handleQuizAnswer(option.name, currentFlag.name, btn));
-                    optionsContainer.appendChild(btn);
-                });
-            } else {
-                flagImage.parentElement.classList.add('hidden');
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'country-name';
-                questionDiv.textContent = currentFlag.name;
-                questionDiv.style.marginBottom = '20px';
-                optionsContainer.before(questionDiv);
-                
-                options.forEach(option => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.style.padding = '0';
-                    btn.style.height = '120px';
-                    const img = document.createElement('img');
-                    img.src = option.flag;
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'contain';
-                    img.style.borderRadius = '10px';
-                    btn.appendChild(img);
-                    btn.addEventListener('click', () => handleQuizAnswer(option.name, currentFlag.name, btn));
-                    optionsContainer.appendChild(btn);
-                });
-            }
-        }
-
-        function handleQuizAnswer(selectedName, correctName, selectedBtn) {
-            if (answered) return;
-            
-            answered = true;
-            totalCount++;
-            
-            const allBtns = optionsContainer.querySelectorAll('.option-btn');
-            allBtns.forEach(btn => btn.disabled = true);
-            
-            const isCorrect = selectedName === correctName;
-            updateFlagStats(currentFlag.code, isCorrect);
-            
-            if (isCorrect) {
-                selectedBtn.classList.add('correct');
-                quizFeedback.textContent = '✅ Correct!';
-                quizFeedback.className = 'feedback correct';
-                correctCount++;
-            } else {
-                selectedBtn.classList.add('incorrect');
-                if (currentDirection === 'flag-to-country') {
-                    allBtns.forEach(btn => {
-                        if (btn.textContent === correctName) {
-                            btn.classList.add('correct');
+                allBtns.forEach(b => {
+                    if (state.direction === 'flag-to-country') {
+                        if (b.textContent === state.current.name) {
+                            b.classList.add('correct');
                         }
-                    });
-                } else {
-                    allBtns.forEach(btn => {
-                        const img = btn.querySelector('img');
-                        if (img && img.src.includes(currentFlag.code)) {
-                            btn.classList.add('correct');
+                    } else {
+                        const img = b.querySelector('img');
+                        if (img && img.src.includes(state.current.code)) {
+                            b.classList.add('correct');
                         }
-                    });
-                }
-                quizFeedback.textContent = `❌ Wrong! The correct answer is ${correctName}`;
-                quizFeedback.className = 'feedback incorrect';
-                incorrectCount++;
+                    }
+                });
+                
+                showFeedback(`❌ Wrong! The correct answer is ${state.current.name}`, 'incorrect');
             }
             
-            quizFeedback.classList.remove('hidden');
-            nextQuizBtn.classList.remove('hidden');
+            if (!state.flagData[state.current.code]) {
+                state.flagData[state.current.code] = { seen: 0, correct: 0 };
+            }
+            state.flagData[state.current.code].seen++;
+            if (correct) state.flagData[state.current.code].correct++;
+            
+            saveData();
             updateStats();
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function showFeedback(text, type) {
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.textContent = text;
+            feedback.className = `feedback ${type}`;
+            feedback.classList.remove('hidden');
         }
 
         function updateStats() {
-            correctCountEl.textContent = correctCount;
-            incorrectCountEl.textContent = incorrectCount;
-            totalCountEl.textContent = totalCount;
+            document.getElementById('correct-count').textContent = state.stats.correct;
+            document.getElementById('incorrect-count').textContent = state.stats.incorrect;
+            document.getElementById('total-count').textContent = state.stats.total;
         }
 
-        revealBtn.addEventListener('click', () => {
-            if (currentDirection === 'flag-to-country') {
-                countryName.textContent = currentFlag.name;
-            } else {
-                flagImage.src = currentFlag.flag;
-                flagImage.parentElement.classList.remove('hidden');
-                countryName.textContent = '';
-            }
-            answerSection.classList.remove('hidden');
-            revealBtn.classList.add('hidden');
-        });
-
-        correctBtn.addEventListener('click', () => {
-            totalCount++;
-            correctCount++;
-            updateFlagStats(currentFlag.code, true);
-            updateStats();
-            loadNewFlag();
-        });
-
-        missedBtn.addEventListener('click', () => {
-            totalCount++;
-            incorrectCount++;
-            updateFlagStats(currentFlag.code, false);
-            updateStats();
-            loadNewFlag();
-        });
-
-        nextQuizBtn.addEventListener('click', () => {
-            loadNewFlag();
-        });
-
-        document.getElementById('filter-select').addEventListener('change', (e) => {
-            applyFilter(e.target.value);
-        });
-
-        loadNewFlag();
+        init();
     </script>
 </body>
 </html>
