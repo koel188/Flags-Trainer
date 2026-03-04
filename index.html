@@ -145,9 +145,49 @@
         .card {
             background: var(--color-surface);
             border-radius: 16px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+        }
+
+        .settings-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .settings-card.collapsed {
+            max-height: 60px;
+            padding: 15px 20px;
+        }
+
+        .settings-card.collapsed .settings-content {
+            display: none;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .settings-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-card.collapsed .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .settings-content {
+            margin-top: 15px;
         }
 
         .flag-container {
@@ -157,8 +197,8 @@
 
         .flag {
             width: 100%;
-            max-width: 300px;
-            height: 200px;
+            max-width: 280px;
+            height: 160px;
             object-fit: contain;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -172,19 +212,19 @@
         }
 
         .country-info {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 12px;
+            padding: 12px;
             background: var(--color-secondary);
             border-radius: 10px;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         .country-info-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 6px;
+            margin-bottom: 6px;
         }
 
         .country-info-item:last-child {
@@ -192,43 +232,26 @@
         }
 
         .map-container {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 10px;
+            padding: 12px;
             background: var(--color-secondary);
             border-radius: 10px;
         }
 
         .map-box {
-            flex: 1;
             text-align: center;
         }
 
         .map-box h4 {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--color-text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
-        }
-
-        .country-outline {
-            width: 100%;
-            height: 80px;
-            background: var(--color-surface);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--color-primary);
-            border: 2px solid var(--color-border);
         }
 
         .globe-map {
             width: 100%;
-            height: 80px;
+            height: 140px;
             background: var(--color-surface);
             border-radius: 8px;
             border: 2px solid var(--color-border);
@@ -242,8 +265,10 @@
         }
 
         .continent-shape {
-            fill: var(--color-border);
-            opacity: 0.3;
+            fill: var(--color-primary);
+            opacity: 0.25;
+            stroke: var(--color-border);
+            stroke-width: 0.5;
         }
 
         .location-dot {
@@ -427,25 +452,30 @@
             </div>
         </header>
 
-        <div class="mode-selector">
-            <button class="mode-btn active" data-mode="practice">Flashcard</button>
-            <button class="mode-btn" data-mode="quiz">Multiple Choice</button>
-        </div>
+        <div class="card settings-card" id="settings-card">
+            <div class="settings-header" id="settings-toggle">
+                <h3>⚙️ Settings & Filters</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="settings-content">
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="practice">Flashcard</button>
+                    <button class="mode-btn" data-mode="quiz">Multiple Choice</button>
+                </div>
 
-        <div class="toggle-row">
-            <span class="toggle-label">Direction:</span>
-            <button class="toggle-btn active" data-direction="flag-to-country">Flag → Country</button>
-            <button class="toggle-btn" data-direction="country-to-flag">Country → Flag</button>
-        </div>
+                <div class="toggle-row">
+                    <span class="toggle-label">Direction:</span>
+                    <button class="toggle-btn active" data-direction="flag-to-country">Flag → Country</button>
+                    <button class="toggle-btn" data-direction="country-to-flag">Country → Flag</button>
+                </div>
 
-        <div class="toggle-row">
-            <span class="toggle-label">Focus on weak flags:</span>
-            <button class="toggle-btn" id="weak-toggle">Off</button>
-        </div>
+                <div class="toggle-row">
+                    <span class="toggle-label">Focus on weak flags:</span>
+                    <button class="toggle-btn" id="weak-toggle">Off</button>
+                </div>
 
-        <div class="card" style="padding: 20px; margin-bottom: 20px;">
-            <h3 style="margin-bottom: 12px; font-size: 16px;">Filter Flags:</h3>
-            <select id="filter-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-size: 16px; cursor: pointer;">
+                <h3 style="margin-bottom: 12px; font-size: 16px; margin-top: 15px;">Filter Flags:</h3>
+                <select id="filter-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-size: 16px; cursor: pointer;">
                 <option value="all">All Flags (197)</option>
                 <optgroup label="By Continent">
                     <option value="europe">Europe</option>
@@ -465,6 +495,7 @@
                 </optgroup>
             </select>
             <div style="margin-top: 10px; font-size: 14px; color: var(--color-text-secondary);" id="filter-info">Showing all 197 flags</div>
+            </div>
         </div>
 
         <div class="card">
@@ -685,6 +716,8 @@
         }
 
         function setupEventListeners() {
+            document.getElementById('settings-toggle').addEventListener('click', toggleSettings);
+            
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -718,6 +751,11 @@
             document.getElementById('correct-btn').addEventListener('click', () => markAnswer(true));
             document.getElementById('missed-btn').addEventListener('click', () => markAnswer(false));
             document.getElementById('next-btn').addEventListener('click', nextFlag);
+        }
+
+        function toggleSettings() {
+            const card = document.getElementById('settings-card');
+            card.classList.toggle('collapsed');
         }
 
         function applyFilter(value) {
@@ -846,19 +884,11 @@
                     ${cfmStatus}
                 </div>
                 <div class="country-info-item">
-                    <strong>🌍 Continent:</strong> ${state.current.continent}
-                </div>
-                <div class="country-info-item">
-                    <strong>👥 Population:</strong> ${state.current.population}
+                    <strong>🌍 Continent:</strong> ${state.current.continent} &nbsp; <strong>👥 Population:</strong> ${state.current.population}
                 </div>
                 <div class="map-container">
                     <div class="map-box">
-                        <h4>Country Shape</h4>
-                        <div class="country-outline">${state.current.code.toUpperCase()}</div>
-                    </div>
-                    <div class="map-box">
-                        <h4>Location</h4>
-                        <div class="globe-map">${getGlobeMap(state.current.continent)}</div>
+                        <div class="globe-map">${getGlobeMap(state.current.code)}</div>
                     </div>
                 </div>
             `;
@@ -1017,19 +1047,11 @@
                     ${cfmStatus}
                 </div>
                 <div class="country-info-item">
-                    <strong>🌍 Continent:</strong> ${state.current.continent}
-                </div>
-                <div class="country-info-item">
-                    <strong>👥 Population:</strong> ${state.current.population}
+                    <strong>🌍 Continent:</strong> ${state.current.continent} &nbsp; <strong>👥 Population:</strong> ${state.current.population}
                 </div>
                 <div class="map-container">
                     <div class="map-box">
-                        <h4>Country Shape</h4>
-                        <div class="country-outline">${state.current.code.toUpperCase()}</div>
-                    </div>
-                    <div class="map-box">
-                        <h4>Location</h4>
-                        <div class="globe-map">${getGlobeMap(state.current.continent)}</div>
+                        <div class="globe-map">${getGlobeMap(state.current.code)}</div>
                     </div>
                 </div>
             `;
@@ -1045,33 +1067,59 @@
             feedback.classList.remove('hidden');
         }
 
-        function getGlobeMap(continent) {
-            const continentCoords = {
-                'Europe': { x: 52, y: 30 },
-                'Asia': { x: 70, y: 35 },
-                'Africa': { x: 52, y: 55 },
-                'Americas': { x: 25, y: 40 },
-                'Oceania': { x: 82, y: 65 }
+        function getGlobeMap(countryCode) {
+            const countryCoords = {
+                'af': {x: 644, y: 216}, 'al': {x: 518, y: 238}, 'dz': {x: 488, y: 274}, 'ad': {x: 486, y: 238}, 'ao': {x: 520, y: 396},
+                'ar': {x: 292, y: 448}, 'am': {x: 570, y: 238}, 'au': {x: 828, y: 456}, 'at': {x: 514, y: 226}, 'az': {x: 586, y: 238},
+                'bs': {x: 266, y: 278}, 'bh': {x: 596, y: 280}, 'bd': {x: 700, y: 278}, 'bb': {x: 310, y: 298}, 'by': {x: 540, y: 212},
+                'be': {x: 488, y: 216}, 'bz': {x: 236, y: 288}, 'bj': {x: 484, y: 308}, 'bt': {x: 700, y: 272}, 'bo': {x: 282, y: 408},
+                'ba': {x: 518, y: 242}, 'bw': {x: 524, y: 436}, 'br': {x: 290, y: 380}, 'bn': {x: 754, y: 320}, 'bg': {x: 530, y: 232},
+                'bf': {x: 476, y: 300}, 'bi': {x: 536, y: 348}, 'kh': {x: 727, y: 300}, 'cm': {x: 506, y: 316}, 'ca': {x: 186, y: 168},
+                'td': {x: 514, y: 300}, 'cl': {x: 282, y: 452}, 'cn': {x: 722, y: 226}, 'co': {x: 270, y: 332}, 'cg': {x: 514, y: 344},
+                'cr': {x: 238, y: 312}, 'hr': {x: 516, y: 236}, 'cu': {x: 262, y: 278}, 'cy': {x: 558, y: 248}, 'cz': {x: 514, y: 222},
+                'dk': {x: 502, y: 204}, 'do': {x: 284, y: 288}, 'ec': {x: 236, y: 344}, 'eg': {x: 538, y: 272}, 'sv': {x: 230, y: 300},
+                'ee': {x: 530, y: 198}, 'et': {x: 564, y: 312}, 'fj': {x: 890, y: 408}, 'fi': {x: 530, y: 182}, 'fr': {x: 486, y: 224},
+                'ga': {x: 502, y: 344}, 'gm': {x: 450, y: 300}, 'ge': {x: 582, y: 232}, 'de': {x: 506, y: 216}, 'gh': {x: 476, y: 316},
+                'gr': {x: 530, y: 246}, 'gt': {x: 230, y: 294}, 'gn': {x: 458, y: 312}, 'ht': {x: 284, y: 288}, 'hn': {x: 230, y: 294},
+                'hu': {x: 518, y: 224}, 'is': {x: 450, y: 166}, 'in': {x: 668, y: 278}, 'id': {x: 754, y: 344}, 'ir': {x: 614, y: 226},
+                'iq': {x: 582, y: 226}, 'ie': {x: 464, y: 206}, 'il': {x: 558, y: 254}, 'it': {x: 506, y: 236}, 'ci': {x: 470, y: 316},
+                'jm': {x: 266, y: 288}, 'jp': {x: 798, y: 228}, 'jo': {x: 564, y: 254}, 'kz': {x: 650, y: 220}, 'ke': {x: 564, y: 344},
+                'kw': {x: 592, y: 260}, 'la': {x: 727, y: 288}, 'lv': {x: 530, y: 202}, 'lb': {x: 558, y: 248}, 'ly': {x: 514, y: 272},
+                'lt': {x: 530, y: 206}, 'lu': {x: 492, y: 220}, 'mg': {x: 592, y: 408}, 'mw': {x: 558, y: 396}, 'my': {x: 727, y: 332},
+                'ml': {x: 470, y: 294}, 'mt': {x: 514, y: 248}, 'mx': {x: 200, y: 278}, 'md': {x: 536, y: 224}, 'mc': {x: 492, y: 238},
+                'mn': {x: 727, y: 220}, 'ma': {x: 470, y: 254}, 'mz': {x: 558, y: 408}, 'mm': {x: 710, y: 278}, 'na': {x: 514, y: 428},
+                'np': {x: 686, y: 266}, 'nl': {x: 488, y: 206}, 'nz': {x: 888, y: 500}, 'ni': {x: 230, y: 300}, 'ne': {x: 486, y: 294},
+                'ng': {x: 492, y: 312}, 'kp': {x: 774, y: 238}, 'mk': {x: 530, y: 238}, 'no': {x: 506, y: 182}, 'om': {x: 614, y: 280},
+                'pk': {x: 650, y: 260}, 'ps': {x: 558, y: 254}, 'pa': {x: 264, y: 312}, 'py': {x: 290, y: 436}, 'pe': {x: 236, y: 372},
+                'ph': {x: 766, y: 300}, 'pl': {x: 522, y: 216}, 'pt': {x: 462, y: 246}, 'qa': {x: 604, y: 272}, 'ro': {x: 530, y: 232},
+                'ru': {x: 634, y: 168}, 'rw': {x: 536, y: 348}, 'sa': {x: 592, y: 272}, 'sn': {x: 450, y: 294}, 'rs': {x: 522, y: 238},
+                'sg': {x: 727, y: 344}, 'sk': {x: 522, y: 222}, 'si': {x: 514, y: 232}, 'so': {x: 582, y: 316}, 'za': {x: 524, y: 452},
+                'kr': {x: 780, y: 228}, 'es': {x: 476, y: 238}, 'lk': {x: 686, y: 316}, 'sd': {x: 538, y: 294}, 'se': {x: 514, y: 182},
+                'ch': {x: 498, y: 224}, 'sy': {x: 564, y: 248}, 'tw': {x: 766, y: 280}, 'tz': {x: 558, y: 364}, 'th': {x: 722, y: 294},
+                'tg': {x: 486, y: 316}, 'tt': {x: 308, y: 312}, 'tn': {x: 502, y: 254}, 'tr': {x: 558, y: 246}, 'ug': {x: 546, y: 344},
+                'ua': {x: 546, y: 222}, 'ae': {x: 612, y: 280}, 'gb': {x: 476, y: 206}, 'us': {x: 200, y: 244}, 'uy': {x: 294, y: 464},
+                'uz': {x: 650, y: 238}, 've': {x: 290, y: 316}, 'vn': {x: 727, y: 294}, 'ye': {x: 592, y: 294}, 'zm': {x: 536, y: 396},
+                'zw': {x: 546, y: 408}
             };
             
-            const coord = continentCoords[continent] || { x: 50, y: 40 };
+            const coord = countryCoords[countryCode] || { x: 500, y: 300 };
             
             return `
-                <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Simplified world map shapes -->
-                    <!-- Americas -->
-                    <path class="continent-shape" d="M 15,25 L 18,20 L 22,22 L 25,18 L 28,20 L 30,25 L 32,30 L 30,35 L 28,40 L 25,45 L 22,50 L 20,55 L 18,50 L 16,45 L 15,40 L 14,35 L 15,30 Z"/>
-                    <!-- Europe -->
-                    <path class="continent-shape" d="M 45,20 L 50,18 L 55,20 L 58,25 L 56,30 L 52,32 L 48,30 L 45,25 Z"/>
-                    <!-- Africa -->
-                    <path class="continent-shape" d="M 48,35 L 52,35 L 56,38 L 58,42 L 58,50 L 55,58 L 50,62 L 48,60 L 46,55 L 45,48 L 46,42 L 48,38 Z"/>
-                    <!-- Asia -->
-                    <path class="continent-shape" d="M 60,22 L 70,20 L 78,24 L 82,30 L 80,38 L 75,42 L 68,40 L 62,35 L 58,30 L 60,25 Z"/>
-                    <!-- Oceania -->
-                    <path class="continent-shape" d="M 78,55 L 82,58 L 85,62 L 83,66 L 80,68 L 76,66 L 75,62 L 76,58 Z"/>
-                    <!-- Location dot -->
-                    <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="3"/>
-                </svg>
+                <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg" 
+                         alt="World Map" 
+                         style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                         viewBox="0 0 1000 540" 
+                         preserveAspectRatio="xMidYMid slice">
+                        <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="8" opacity="0.4" style="filter: blur(3px);"/>
+                        <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="5"/>
+                        <circle cx="${coord.x}" cy="${coord.y}" r="8" fill="none" stroke="var(--color-error)" stroke-width="2" opacity="0.8">
+                            <animate attributeName="r" from="5" to="15" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
             `;
         }
 
