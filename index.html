@@ -1069,58 +1069,180 @@
         }
 
 function getGlobeMap(countryCode) {
+    // Coordinates are for the original 2058×1036 equirectangular image
+    // https://commons.wikimedia.org/wiki/File:Equirectangular_projection_SW.jpg [web:226][web:232]
     const countryCoords = {
-        'af': {x: 644, y: 216}, 'al': {x: 518, y: 238}, 'dz': {x: 488, y: 274}, 'ad': {x: 486, y: 238}, 'ao': {x: 520, y: 396},
-        'ar': {x: 292, y: 448}, 'am': {x: 570, y: 238}, 'au': {x: 828, y: 456}, 'at': {x: 514, y: 226}, 'az': {x: 586, y: 238},
-        'bs': {x: 266, y: 278}, 'bh': {x: 596, y: 280}, 'bd': {x: 700, y: 278}, 'bb': {x: 310, y: 298}, 'by': {x: 540, y: 212},
-        'be': {x: 488, y: 216}, 'bz': {x: 236, y: 288}, 'bj': {x: 484, y: 308}, 'bt': {x: 700, y: 272}, 'bo': {x: 282, y: 408},
-        'ba': {x: 518, y: 242}, 'bw': {x: 524, y: 436}, 'br': {x: 290, y: 380}, 'bn': {x: 754, y: 320}, 'bg': {x: 530, y: 232},
-        'bf': {x: 476, y: 300}, 'bi': {x: 536, y: 348}, 'kh': {x: 727, y: 300}, 'cm': {x: 506, y: 316}, 'ca': {x: 186, y: 168},
-        'td': {x: 514, y: 300}, 'cl': {x: 282, y: 452}, 'cn': {x: 722, y: 226}, 'co': {x: 270, y: 332}, 'cg': {x: 514, y: 344},
-        'cr': {x: 238, y: 312}, 'hr': {x: 516, y: 236}, 'cu': {x: 262, y: 278}, 'cy': {x: 558, y: 248}, 'cz': {x: 514, y: 222},
-        'dk': {x: 502, y: 204}, 'do': {x: 284, y: 288}, 'ec': {x: 236, y: 344}, 'eg': {x: 538, y: 272}, 'sv': {x: 230, y: 300},
-        'ee': {x: 530, y: 198}, 'et': {x: 564, y: 312}, 'fj': {x: 890, y: 408}, 'fi': {x: 530, y: 182}, 'fr': {x: 486, y: 224},
-        'ga': {x: 502, y: 344}, 'gm': {x: 450, y: 300}, 'ge': {x: 582, y: 232}, 'de': {x: 506, y: 216}, 'gh': {x: 476, y: 316},
-        'gr': {x: 530, y: 246}, 'gt': {x: 230, y: 294}, 'gn': {x: 458, y: 312}, 'ht': {x: 284, y: 288}, 'hn': {x: 230, y: 294},
-        'hu': {x: 518, y: 224}, 'is': {x: 450, y: 166}, 'in': {x: 668, y: 278}, 'id': {x: 754, y: 344}, 'ir': {x: 614, y: 226},
-        'iq': {x: 582, y: 226}, 'ie': {x: 464, y: 206}, 'il': {x: 558, y: 254}, 'it': {x: 506, y: 236}, 'ci': {x: 470, y: 316},
-        'jm': {x: 266, y: 288}, 'jp': {x: 798, y: 228}, 'jo': {x: 564, y: 254}, 'kz': {x: 650, y: 220}, 'ke': {x: 564, y: 344},
-        'kw': {x: 592, y: 260}, 'la': {x: 727, y: 288}, 'lv': {x: 530, y: 202}, 'lb': {x: 558, y: 248}, 'ly': {x: 514, y: 272},
-        'lt': {x: 530, y: 206}, 'lu': {x: 492, y: 220}, 'mg': {x: 592, y: 408}, 'mw': {x: 558, y: 396}, 'my': {x: 727, y: 332},
-        'ml': {x: 470, y: 294}, 'mt': {x: 514, y: 248}, 'mx': {x: 200, y: 278}, 'md': {x: 536, y: 224}, 'mc': {x: 492, y: 238},
-        'mn': {x: 727, y: 220}, 'ma': {x: 470, y: 254}, 'mz': {x: 558, y: 408}, 'mm': {x: 710, y: 278}, 'na': {x: 514, y: 428},
-        'np': {x: 686, y: 266}, 'nl': {x: 488, y: 206}, 'nz': {x: 888, y: 500}, 'ni': {x: 230, y: 300}, 'ne': {x: 486, y: 294},
-        'ng': {x: 492, y: 312}, 'kp': {x: 774, y: 238}, 'mk': {x: 530, y: 238}, 'no': {x: 506, y: 182}, 'om': {x: 614, y: 280},
-        'pk': {x: 650, y: 260}, 'ps': {x: 558, y: 254}, 'pa': {x: 264, y: 312}, 'py': {x: 290, y: 436}, 'pe': {x: 236, y: 372},
-        'ph': {x: 766, y: 300}, 'pl': {x: 522, y: 216}, 'pt': {x: 462, y: 246}, 'qa': {x: 604, y: 272}, 'ro': {x: 530, y: 232},
-        'ru': {x: 634, y: 168}, 'rw': {x: 536, y: 348}, 'sa': {x: 592, y: 272}, 'sn': {x: 450, y: 294}, 'rs': {x: 522, y: 238},
-        'sg': {x: 727, y: 344}, 'sk': {x: 522, y: 222}, 'si': {x: 514, y: 232}, 'so': {x: 582, y: 316}, 'za': {x: 524, y: 452},
-        'kr': {x: 780, y: 228}, 'es': {x: 476, y: 238}, 'lk': {x: 686, y: 316}, 'sd': {x: 538, y: 294}, 'se': {x: 514, y: 182},
-        'ch': {x: 498, y: 224}, 'sy': {x: 564, y: 248}, 'tw': {x: 766, y: 280}, 'tz': {x: 558, y: 364}, 'th': {x: 722, y: 294},
-        'tg': {x: 486, y: 316}, 'tt': {x: 308, y: 312}, 'tn': {x: 502, y: 254}, 'tr': {x: 558, y: 246}, 'ug': {x: 546, y: 344},
-        'ua': {x: 546, y: 222}, 'ae': {x: 612, y: 280}, 'gb': {x: 476, y: 206}, 'us': {x: 200, y: 244}, 'uy': {x: 294, y: 464},
-        'uz': {x: 650, y: 238}, 've': {x: 290, y: 316}, 'vn': {x: 727, y: 294}, 'ye': {x: 592, y: 294}, 'zm': {x: 536, y: 396},
-        'zw': {x: 546, y: 408}
+        'af': {x: 1200, y: 460},   // Afghanistan
+        'al': {x: 1045, y: 460},   // Albania
+        'dz': {x: 990,  y: 540},   // Algeria
+        'ao': {x: 1060, y: 650},   // Angola
+        'ar': {x: 620,  y: 760},   // Argentina
+        'am': {x: 1120, y: 440},   // Armenia
+        'au': {x: 1500, y: 780},   // Australia
+        'at': {x: 1060, y: 430},   // Austria
+        'az': {x: 1135, y: 440},   // Azerbaijan
+        'bs': {x: 640,  y: 500},   // Bahamas
+        'bh': {x: 1190, y: 500},   // Bahrain
+        'bd': {x: 1320, y: 500},   // Bangladesh
+        'bb': {x: 680,  y: 520},   // Barbados
+        'by': {x: 1090, y: 410},   // Belarus
+        'be': {x: 1030, y: 430},   // Belgium
+        'bz': {x: 620,  y: 520},   // Belize
+        'bj': {x: 1005, y: 560},   // Benin
+        'bt': {x: 1315, y: 485},   // Bhutan
+        'bo': {x: 650,  y: 680},   // Bolivia
+        'ba': {x: 1055, y: 450},   // Bosnia and Herzegovina
+        'bw': {x: 1080, y: 690},   // Botswana
+        'br': {x: 700,  y: 640},   // Brazil
+        'bn': {x: 1440, y: 570},   // Brunei
+        'bg': {x: 1070, y: 450},   // Bulgaria
+        'bf': {x: 1000, y: 560},   // Burkina Faso
+        'bi': {x: 1085, y: 610},   // Burundi
+        'kh': {x: 1410, y: 550},   // Cambodia
+        'cm': {x: 1040, y: 580},   // Cameroon
+        'ca': {x: 600,  y: 360},   // Canada
+        'td': {x: 1040, y: 550},   // Chad
+        'cl': {x: 640,  y: 780},   // Chile
+        'cn': {x: 1380, y: 430},   // China
+        'co': {x: 640,  y: 600},   // Colombia
+        'cg': {x: 1055, y: 610},   // Congo
+        'cr': {x: 620,  y: 540},   // Costa Rica
+        'hr': {x: 1050, y: 440},   // Croatia
+        'cu': {x: 640,  y: 520},   // Cuba
+        'cy': {x: 1100, y: 470},   // Cyprus
+        'cz': {x: 1060, y: 420},   // Czech Republic
+        'dk': {x: 1050, y: 400},   // Denmark
+        'do': {x: 660,  y: 520},   // Dominican Republic
+        'ec': {x: 620,  y: 620},   // Ecuador
+        'eg': {x: 1070, y: 520},   // Egypt
+        'sv': {x: 620,  y: 535},   // El Salvador
+        'ee': {x: 1090, y: 395},   // Estonia
+        'et': {x: 1090, y: 570},   // Ethiopia
+        'fj': {x: 1600, y: 720},   // Fiji
+        'fi': {x: 1090, y: 370},   // Finland
+        'fr': {x: 1025, y: 440},   // France
+        'ga': {x: 1035, y: 590},   // Gabon
+        'gm': {x: 980,  y: 545},   // Gambia
+        'ge': {x: 1115, y: 440},   // Georgia
+        'de': {x: 1050, y: 430},   // Germany
+        'gh': {x: 1005, y: 570},   // Ghana
+        'gr': {x: 1075, y: 460},   // Greece
+        'gt': {x: 610,  y: 535},   // Guatemala
+        'gn': {x: 990,  y: 560},   // Guinea
+        'ht': {x: 650,  y: 520},   // Haiti
+        'hn': {x: 615,  y: 535},   // Honduras
+        'hu': {x: 1065, y: 435},   // Hungary
+        'is': {x: 980,  y: 370},   // Iceland
+        'in': {x: 1270, y: 500},   // India
+        'id': {x: 1440, y: 600},   // Indonesia
+        'ir': {x: 1180, y: 460},   // Iran
+        'iq': {x: 1150, y: 470},   // Iraq
+        'ie': {x: 990,  y: 430},   // Ireland
+        'il': {x: 1115, y: 480},   // Israel
+        'it': {x: 1045, y: 455},   // Italy
+        'ci': {x: 995,  y: 570},   // Ivory Coast
+        'jm': {x: 640,  y: 525},   // Jamaica
+        'jp': {x: 1500, y: 430},   // Japan
+        'jo': {x: 1120, y: 485},   // Jordan
+        'kz': {x: 1210, y: 410},   // Kazakhstan
+        'ke': {x: 1100, y: 600},   // Kenya
+        'kw': {x: 1170, y: 485},   // Kuwait
+        'la': {x: 1390, y: 520},   // Laos
+        'lv': {x: 1090, y: 405},   // Latvia
+        'lb': {x: 1115, y: 475},   // Lebanon
+        'ly': {x: 1060, y: 520},   // Libya
+        'lt': {x: 1085, y: 410},   // Lithuania
+        'lu': {x: 1035, y: 435},   // Luxembourg
+        'mg': {x: 1160, y: 700},   // Madagascar
+        'mw': {x: 1105, y: 660},   // Malawi
+        'my': {x: 1405, y: 570},   // Malaysia
+        'ml': {x: 1000, y: 550},   // Mali
+        'mt': {x: 1060, y: 480},   // Malta
+        'mx': {x: 580,  y: 520},   // Mexico
+        'md': {x: 1080, y: 440},   // Moldova
+        'mc': {x: 1040, y: 450},   // Monaco
+        'mn': {x: 1350, y: 400},   // Mongolia
+        'ma': {x: 980,  y: 520},   // Morocco
+        'mz': {x: 1110, y: 680},   // Mozambique
+        'mm': {x: 1350, y: 520},   // Myanmar
+        'na': {x: 1065, y: 680},   // Namibia
+        'np': {x: 1295, y: 480},   // Nepal
+        'nl': {x: 1035, y: 420},   // Netherlands
+        'nz': {x: 1600, y: 820},   // New Zealand
+        'ni': {x: 615,  y: 540},   // Nicaragua
+        'ne': {x: 1020, y: 550},   // Niger
+        'ng': {x: 1020, y: 570},   // Nigeria
+        'kp': {x: 1460, y: 420},   // North Korea
+        'mk': {x: 1065, y: 455},   // North Macedonia
+        'no': {x: 1050, y: 390},   // Norway
+        'om': {x: 1200, y: 500},   // Oman
+        'pk': {x: 1235, y: 475},   // Pakistan
+        'ps': {x: 1115, y: 485},   // Palestine
+        'pa': {x: 630,  y: 545},   // Panama
+        'py': {x: 690,  y: 720},   // Paraguay
+        'pe': {x: 640,  y: 660},   // Peru
+        'ph': {x: 1450, y: 540},   // Philippines
+        'pl': {x: 1075, y: 420},   // Poland
+        'pt': {x: 990,  y: 460},   // Portugal
+        'qa': {x: 1180, y: 495},   // Qatar
+        'ro': {x: 1075, y: 445},   // Romania
+        'ru': {x: 1250, y: 360},   // Russia (rough central marker)
+        'rw': {x: 1085, y: 600},   // Rwanda
+        'sa': {x: 1150, y: 510},   // Saudi Arabia
+        'sn': {x: 990,  y: 550},   // Senegal
+        'rs': {x: 1065, y: 445},   // Serbia
+        'sg': {x: 1415, y: 585},   // Singapore
+        'sk': {x: 1070, y: 430},   // Slovakia
+        'si': {x: 1055, y: 440},   // Slovenia
+        'so': {x: 1120, y: 590},   // Somalia
+        'za': {x: 1080, y: 740},   // South Africa
+        'kr': {x: 1475, y: 430},   // South Korea
+        'es': {x: 1005, y: 465},   // Spain
+        'lk': {x: 1290, y: 540},   // Sri Lanka
+        'sd': {x: 1075, y: 540},   // Sudan
+        'se': {x: 1070, y: 390},   // Sweden
+        'ch': {x: 1045, y: 440},   // Switzerland
+        'sy': {x: 1120, y: 470},   // Syria
+        'tw': {x: 1465, y: 460},   // Taiwan
+        'tz': {x: 1100, y: 620},   // Tanzania
+        'th': {x: 1390, y: 535},   // Thailand
+        'tg': {x: 1005, y: 565},   // Togo
+        'tt': {x: 680,  y: 530},   // Trinidad and Tobago
+        'tn': {x: 1030, y: 510},   // Tunisia
+        'tr': {x: 1100, y: 455},   // Turkey
+        'ug': {x: 1085, y: 600},   // Uganda
+        'ua': {x: 1095, y: 430},   // Ukraine
+        'ae': {x: 1200, y: 500},   // United Arab Emirates
+        'gb': {x: 1000, y: 420},   // United Kingdom
+        'us': {x: 580,  y: 440},   // United States
+        'uy': {x: 720,  y: 740},   // Uruguay
+        'uz': {x: 1200, y: 430},   // Uzbekistan
+        've': {x: 670,  y: 600},   // Venezuela
+        'vn': {x: 1410, y: 540},   // Vietnam
+        'ye': {x: 1150, y: 530},   // Yemen
+        'zm': {x: 1080, y: 660},   // Zambia
+        'zw': {x: 1090, y: 680}    // Zimbabwe
     };
 
-    const coord = countryCoords[countryCode] || { x: 500, y: 300 };
+    const coord = countryCoords[countryCode] || { x: 1029, y: 518 }; // center fallback
 
     return `
-        <svg viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet"
+        <svg viewBox="0 0 2058 1036" preserveAspectRatio="xMidYMid meet"
              style="width: 100%; height: 100%; border-radius: 8px; overflow: hidden;">
             <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
-                   x="0" y="0" width="1000" height="540" opacity="0.6" />
-            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="8"
+                   x="0" y="0" width="2058" height="1036" opacity="0.6" />
+            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="16"
                     opacity="0.4" style="filter: blur(3px);" />
-            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="5" />
-            <circle cx="${coord.x}" cy="${coord.y}" r="8"
-                    fill="none" stroke="var(--color-error)" stroke-width="2" opacity="0.8">
-                <animate attributeName="r" from="5" to="15" dur="2s" repeatCount="indefinite" />
+            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="10" />
+            <circle cx="${coord.x}" cy="${coord.y}" r="16"
+                    fill="none" stroke="var(--color-error)" stroke-width="4" opacity="0.8">
+                <animate attributeName="r" from="10" to="30" dur="2s" repeatCount="indefinite" />
                 <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite" />
             </circle>
         </svg>
     `;
 }
+
 
 
         function updateStats() {
