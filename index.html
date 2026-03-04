@@ -1069,172 +1069,179 @@
         }
 
 function getGlobeMap(countryCode) {
-    // Coordinates are for the original 2058×1036 equirectangular image
-    // https://commons.wikimedia.org/wiki/File:Equirectangular_projection_SW.jpg [web:226][web:232]
-    const countryCoords = {
-        'af': {x: 1200, y: 460},   // Afghanistan
-        'al': {x: 1045, y: 460},   // Albania
-        'dz': {x: 990,  y: 540},   // Algeria
-        'ao': {x: 1060, y: 650},   // Angola
-        'ar': {x: 620,  y: 760},   // Argentina
-        'am': {x: 1120, y: 440},   // Armenia
-        'au': {x: 1500, y: 780},   // Australia
-        'at': {x: 1060, y: 430},   // Austria
-        'az': {x: 1135, y: 440},   // Azerbaijan
-        'bs': {x: 640,  y: 500},   // Bahamas
-        'bh': {x: 1190, y: 500},   // Bahrain
-        'bd': {x: 1320, y: 500},   // Bangladesh
-        'bb': {x: 680,  y: 520},   // Barbados
-        'by': {x: 1090, y: 410},   // Belarus
-        'be': {x: 1030, y: 430},   // Belgium
-        'bz': {x: 620,  y: 520},   // Belize
-        'bj': {x: 1005, y: 560},   // Benin
-        'bt': {x: 1315, y: 485},   // Bhutan
-        'bo': {x: 650,  y: 680},   // Bolivia
-        'ba': {x: 1055, y: 450},   // Bosnia and Herzegovina
-        'bw': {x: 1080, y: 690},   // Botswana
-        'br': {x: 700,  y: 640},   // Brazil
-        'bn': {x: 1440, y: 570},   // Brunei
-        'bg': {x: 1070, y: 450},   // Bulgaria
-        'bf': {x: 1000, y: 560},   // Burkina Faso
-        'bi': {x: 1085, y: 610},   // Burundi
-        'kh': {x: 1410, y: 550},   // Cambodia
-        'cm': {x: 1040, y: 580},   // Cameroon
-        'ca': {x: 600,  y: 360},   // Canada
-        'td': {x: 1040, y: 550},   // Chad
-        'cl': {x: 640,  y: 780},   // Chile
-        'cn': {x: 1380, y: 430},   // China
-        'co': {x: 640,  y: 600},   // Colombia
-        'cg': {x: 1055, y: 610},   // Congo
-        'cr': {x: 620,  y: 540},   // Costa Rica
-        'hr': {x: 1050, y: 440},   // Croatia
-        'cu': {x: 640,  y: 520},   // Cuba
-        'cy': {x: 1100, y: 470},   // Cyprus
-        'cz': {x: 1060, y: 420},   // Czech Republic
-        'dk': {x: 1050, y: 400},   // Denmark
-        'do': {x: 660,  y: 520},   // Dominican Republic
-        'ec': {x: 620,  y: 620},   // Ecuador
-        'eg': {x: 1070, y: 520},   // Egypt
-        'sv': {x: 620,  y: 535},   // El Salvador
-        'ee': {x: 1090, y: 395},   // Estonia
-        'et': {x: 1090, y: 570},   // Ethiopia
-        'fj': {x: 1600, y: 720},   // Fiji
-        'fi': {x: 1090, y: 370},   // Finland
-        'fr': {x: 1025, y: 440},   // France
-        'ga': {x: 1035, y: 590},   // Gabon
-        'gm': {x: 980,  y: 545},   // Gambia
-        'ge': {x: 1115, y: 440},   // Georgia
-        'de': {x: 1050, y: 430},   // Germany
-        'gh': {x: 1005, y: 570},   // Ghana
-        'gr': {x: 1075, y: 460},   // Greece
-        'gt': {x: 610,  y: 535},   // Guatemala
-        'gn': {x: 990,  y: 560},   // Guinea
-        'ht': {x: 650,  y: 520},   // Haiti
-        'hn': {x: 615,  y: 535},   // Honduras
-        'hu': {x: 1065, y: 435},   // Hungary
-        'is': {x: 980,  y: 370},   // Iceland
-        'in': {x: 1270, y: 500},   // India
-        'id': {x: 1440, y: 600},   // Indonesia
-        'ir': {x: 1180, y: 460},   // Iran
-        'iq': {x: 1150, y: 470},   // Iraq
-        'ie': {x: 990,  y: 430},   // Ireland
-        'il': {x: 1115, y: 480},   // Israel
-        'it': {x: 1045, y: 455},   // Italy
-        'ci': {x: 995,  y: 570},   // Ivory Coast
-        'jm': {x: 640,  y: 525},   // Jamaica
-        'jp': {x: 1500, y: 430},   // Japan
-        'jo': {x: 1120, y: 485},   // Jordan
-        'kz': {x: 1210, y: 410},   // Kazakhstan
-        'ke': {x: 1100, y: 600},   // Kenya
-        'kw': {x: 1170, y: 485},   // Kuwait
-        'la': {x: 1390, y: 520},   // Laos
-        'lv': {x: 1090, y: 405},   // Latvia
-        'lb': {x: 1115, y: 475},   // Lebanon
-        'ly': {x: 1060, y: 520},   // Libya
-        'lt': {x: 1085, y: 410},   // Lithuania
-        'lu': {x: 1035, y: 435},   // Luxembourg
-        'mg': {x: 1160, y: 700},   // Madagascar
-        'mw': {x: 1105, y: 660},   // Malawi
-        'my': {x: 1405, y: 570},   // Malaysia
-        'ml': {x: 1000, y: 550},   // Mali
-        'mt': {x: 1060, y: 480},   // Malta
-        'mx': {x: 580,  y: 520},   // Mexico
-        'md': {x: 1080, y: 440},   // Moldova
-        'mc': {x: 1040, y: 450},   // Monaco
-        'mn': {x: 1350, y: 400},   // Mongolia
-        'ma': {x: 980,  y: 520},   // Morocco
-        'mz': {x: 1110, y: 680},   // Mozambique
-        'mm': {x: 1350, y: 520},   // Myanmar
-        'na': {x: 1065, y: 680},   // Namibia
-        'np': {x: 1295, y: 480},   // Nepal
-        'nl': {x: 1035, y: 420},   // Netherlands
-        'nz': {x: 1600, y: 820},   // New Zealand
-        'ni': {x: 615,  y: 540},   // Nicaragua
-        'ne': {x: 1020, y: 550},   // Niger
-        'ng': {x: 1020, y: 570},   // Nigeria
-        'kp': {x: 1460, y: 420},   // North Korea
-        'mk': {x: 1065, y: 455},   // North Macedonia
-        'no': {x: 1050, y: 390},   // Norway
-        'om': {x: 1200, y: 500},   // Oman
-        'pk': {x: 1235, y: 475},   // Pakistan
-        'ps': {x: 1115, y: 485},   // Palestine
-        'pa': {x: 630,  y: 545},   // Panama
-        'py': {x: 690,  y: 720},   // Paraguay
-        'pe': {x: 640,  y: 660},   // Peru
-        'ph': {x: 1450, y: 540},   // Philippines
-        'pl': {x: 1075, y: 420},   // Poland
-        'pt': {x: 990,  y: 460},   // Portugal
-        'qa': {x: 1180, y: 495},   // Qatar
-        'ro': {x: 1075, y: 445},   // Romania
-        'ru': {x: 1250, y: 360},   // Russia (rough central marker)
-        'rw': {x: 1085, y: 600},   // Rwanda
-        'sa': {x: 1150, y: 510},   // Saudi Arabia
-        'sn': {x: 990,  y: 550},   // Senegal
-        'rs': {x: 1065, y: 445},   // Serbia
-        'sg': {x: 1415, y: 585},   // Singapore
-        'sk': {x: 1070, y: 430},   // Slovakia
-        'si': {x: 1055, y: 440},   // Slovenia
-        'so': {x: 1120, y: 590},   // Somalia
-        'za': {x: 1080, y: 740},   // South Africa
-        'kr': {x: 1475, y: 430},   // South Korea
-        'es': {x: 1005, y: 465},   // Spain
-        'lk': {x: 1290, y: 540},   // Sri Lanka
-        'sd': {x: 1075, y: 540},   // Sudan
-        'se': {x: 1070, y: 390},   // Sweden
-        'ch': {x: 1045, y: 440},   // Switzerland
-        'sy': {x: 1120, y: 470},   // Syria
-        'tw': {x: 1465, y: 460},   // Taiwan
-        'tz': {x: 1100, y: 620},   // Tanzania
-        'th': {x: 1390, y: 535},   // Thailand
-        'tg': {x: 1005, y: 565},   // Togo
-        'tt': {x: 680,  y: 530},   // Trinidad and Tobago
-        'tn': {x: 1030, y: 510},   // Tunisia
-        'tr': {x: 1100, y: 455},   // Turkey
-        'ug': {x: 1085, y: 600},   // Uganda
-        'ua': {x: 1095, y: 430},   // Ukraine
-        'ae': {x: 1200, y: 500},   // United Arab Emirates
-        'gb': {x: 1000, y: 420},   // United Kingdom
-        'us': {x: 580,  y: 440},   // United States
-        'uy': {x: 720,  y: 740},   // Uruguay
-        'uz': {x: 1200, y: 430},   // Uzbekistan
-        've': {x: 670,  y: 600},   // Venezuela
-        'vn': {x: 1410, y: 540},   // Vietnam
-        'ye': {x: 1150, y: 530},   // Yemen
-        'zm': {x: 1080, y: 660},   // Zambia
-        'zw': {x: 1090, y: 680}    // Zimbabwe
+    // Center lat/lon per country (very approximate is fine)
+    const countryLatLon = {
+        af: { lat: 34,  lon: 66 },
+        al: { lat: 41,  lon: 20 },
+        dz: { lat: 28,  lon: 3 },
+        ao: { lat: -12, lon: 18 },
+        ar: { lat: -34, lon: -64 },
+        am: { lat: 40,  lon: 45 },
+        au: { lat: -25, lon: 135 },
+        at: { lat: 47.5, lon: 14.5 },
+        az: { lat: 40.5, lon: 47.5 },
+        bs: { lat: 25,  lon: -77 },
+        bh: { lat: 26,  lon: 50.5 },
+        bd: { lat: 24,  lon: 90 },
+        bb: { lat: 13.2, lon: -59.5 },
+        by: { lat: 53,  lon: 28 },
+        be: { lat: 50.8, lon: 4.5 },
+        bz: { lat: 17.2, lon: -88.7 },
+        bj: { lat: 9.5, lon: 2.3 },
+        bt: { lat: 27.5, lon: 90.5 },
+        bo: { lat: -16.7, lon: -64.7 },
+        ba: { lat: 44,  lon: 18 },
+        bw: { lat: -22, lon: 24 },
+        br: { lat: -10, lon: -52 },
+        bn: { lat: 4.5, lon: 114.7 },
+        bg: { lat: 42.7, lon: 25.5 },
+        bf: { lat: 12.4, lon: -1.6 },
+        bi: { lat: -3.4, lon: 29.9 },
+        kh: { lat: 12.5, lon: 105 },
+        cm: { lat: 5,   lon: 12 },
+        ca: { lat: 57,  lon: -106 },
+        td: { lat: 15.5, lon: 19 },
+        cl: { lat: -30, lon: -71 },
+        cn: { lat: 35,  lon: 103 },
+        co: { lat: 4,   lon: -72 },
+        cg: { lat: -1,  lon: 15 },
+        cr: { lat: 10,  lon: -84 },
+        hr: { lat: 45.1, lon: 15.2 },
+        cu: { lat: 21.5, lon: -79.5 },
+        cy: { lat: 35,  lon: 33 },
+        cz: { lat: 49.8, lon: 15.5 },
+        dk: { lat: 56,  lon: 10 },
+        do: { lat: 19,  lon: -70.7 },
+        ec: { lat: -1.4, lon: -78.2 },
+        eg: { lat: 27,  lon: 30 },
+        sv: { lat: 13.7, lon: -89.2 },
+        ee: { lat: 58.7, lon: 25 },
+        et: { lat: 9,   lon: 40.5 },
+        fj: { lat: -17.8, lon: 178 },
+        fi: { lat: 64,  lon: 26 },
+        fr: { lat: 46.5, lon: 2.8 },
+        ga: { lat: -0.8, lon: 11.6 },
+        gm: { lat: 13.4, lon: -16 },
+        ge: { lat: 42,  lon: 43.5 },
+        de: { lat: 51,  lon: 9 },
+        gh: { lat: 7.9, lon: -1.0 },
+        gr: { lat: 39,  lon: 22 },
+        gt: { lat: 15.8, lon: -90.2 },
+        gn: { lat: 10.5, lon: -10.5 },
+        ht: { lat: 19,  lon: -72.7 },
+        hn: { lat: 14.8, lon: -86.2 },
+        hu: { lat: 47,  lon: 19.5 },
+        is: { lat: 65,  lon: -19 },
+        in: { lat: 22,  lon: 79 },
+        id: { lat: -2,  lon: 118 },
+        ir: { lat: 32,  lon: 53 },
+        iq: { lat: 33,  lon: 44 },
+        ie: { lat: 53.4, lon: -8 },
+        il: { lat: 31.5, lon: 35 },
+        it: { lat: 42.8, lon: 12.5 },
+        ci: { lat: 7.5, lon: -5.5 },
+        jm: { lat: 18.1, lon: -77.3 },
+        jp: { lat: 36,  lon: 138 },
+        jo: { lat: 31,  lon: 36 },
+        kz: { lat: 48,  lon: 68 },
+        ke: { lat: 0,   lon: 38 },
+        kw: { lat: 29.5, lon: 47.8 },
+        la: { lat: 18,  lon: 105 },
+        lv: { lat: 56.9, lon: 24.6 },
+        lb: { lat: 33.9, lon: 35.9 },
+        ly: { lat: 27,  lon: 18 },
+        lt: { lat: 55.3, lon: 23.9 },
+        lu: { lat: 49.8, lon: 6.1 },
+        mg: { lat: -20, lon: 47 },
+        mw: { lat: -13.5, lon: 34 },
+        my: { lat: 4,   lon: 109.5 },
+        ml: { lat: 17.5, lon: -4 },
+        mt: { lat: 35.9, lon: 14.4 },
+        mx: { lat: 23,  lon: -102 },
+        md: { lat: 47,  lon: 28.5 },
+        mc: { lat: 43.7, lon: 7.4 },
+        mn: { lat: 46.8, lon: 104 },
+        ma: { lat: 31.8, lon: -7 },
+        mz: { lat: -18.3, lon: 35 },
+        mm: { lat: 21,  lon: 96 },
+        na: { lat: -22, lon: 17 },
+        np: { lat: 28.4, lon: 84 },
+        nl: { lat: 52.3, lon: 5.5 },
+        nz: { lat: -41, lon: 173 },
+        ni: { lat: 12.8, lon: -85 },
+        ne: { lat: 17.6, lon: 8 },
+        ng: { lat: 9,   lon: 8 },
+        kp: { lat: 40,  lon: 127 },
+        mk: { lat: 41.6, lon: 21.7 },
+        no: { lat: 64.5, lon: 11 },
+        om: { lat: 20.5, lon: 57 },
+        pk: { lat: 30,  lon: 70 },
+        ps: { lat: 31.5, lon: 35.3 },
+        pa: { lat: 8.5, lon: -80 },
+        py: { lat: -23, lon: -58 },
+        pe: { lat: -9.2, lon: -75 },
+        ph: { lat: 13,  lon: 122 },
+        pl: { lat: 52,  lon: 19 },
+        pt: { lat: 39.5, lon: -8 },
+        qa: { lat: 25.3, lon: 51.2 },
+        ro: { lat: 45.9, lon: 24.9 },
+        ru: { lat: 60,  lon: 90 },
+        rw: { lat: -1.9, lon: 29.9 },
+        sa: { lat: 24,  lon: 45 },
+        sn: { lat: 14.4, lon: -14.5 },
+        rs: { lat: 44,  lon: 21 },
+        sg: { lat: 1.3, lon: 103.8 },
+        sk: { lat: 48.7, lon: 19.7 },
+        si: { lat: 46.1, lon: 14.8 },
+        so: { lat: 6,   lon: 46 },
+        za: { lat: -29, lon: 24 },
+        kr: { lat: 36.5, lon: 127.8 },
+        es: { lat: 40,  lon: -4 },
+        lk: { lat: 7.8, lon: 80.7 },
+        sd: { lat: 15.6, lon: 30.5 },
+        se: { lat: 62,  lon: 15 },
+        ch: { lat: 47,  lon: 8.2 },
+        sy: { lat: 35,  lon: 38 },
+        tw: { lat: 23.6, lon: 121 },   // Taiwan – will now be near SE China, not India
+        tz: { lat: -6,  lon: 35 },
+        th: { lat: 15,  lon: 101 },
+        tg: { lat: 8.5, lon: 1.1 },
+        tt: { lat: 10.4, lon: -61.3 },
+        tn: { lat: 34,  lon: 9 },
+        tr: { lat: 39,  lon: 35 },
+        ug: { lat: 1.5, lon: 32 },
+        ua: { lat: 49,  lon: 32 },
+        ae: { lat: 24,  lon: 54 },
+        gb: { lat: 55,  lon: -3 },
+        us: { lat: 38,  lon: -97 },
+        uy: { lat: -33, lon: -56 },
+        uz: { lat: 41.3, lon: 64.6 },
+        ve: { lat: 7,   lon: -66 },
+        vn: { lat: 16,  lon: 108 },
+        ye: { lat: 15.5, lon: 47.5 },
+        zm: { lat: -13.1, lon: 27.8 },
+        zw: { lat: -19, lon: 29.2 }
     };
 
-    const coord = countryCoords[countryCode] || { x: 1029, y: 518 }; // center fallback
+    // Map size in pixels (original image is 2058 × 1036)[web:232][web:226]
+    const mapWidth = 2058;
+    const mapHeight = 1036;
+
+    const pos = countryLatLon[countryCode] || { lat: 0, lon: 0 };
+
+    // Equirectangular projection: lon → x, lat → y.[web:245][web:248]
+    const x = ((pos.lon + 180) * (mapWidth / 360));
+    const y = (((pos.lat * -1) + 90) * (mapHeight / 180));
 
     return `
-        <svg viewBox="0 0 2058 1036" preserveAspectRatio="xMidYMid meet"
+        <svg viewBox="0 0 ${mapWidth} ${mapHeight}" preserveAspectRatio="xMidYMid meet"
              style="width: 100%; height: 100%; border-radius: 8px; overflow: hidden;">
             <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
-                   x="0" y="0" width="2058" height="1036" opacity="0.6" />
-            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="16"
+                   x="0" y="0" width="${mapWidth}" height="${mapHeight}" opacity="0.6" />
+            <circle class="location-dot" cx="${x}" cy="${y}" r="16"
                     opacity="0.4" style="filter: blur(3px);" />
-            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="10" />
-            <circle cx="${coord.x}" cy="${coord.y}" r="16"
+            <circle class="location-dot" cx="${x}" cy="${y}" r="10" />
+            <circle cx="${x}" cy="${y}" r="16"
                     fill="none" stroke="var(--color-error)" stroke-width="4" opacity="0.8">
                 <animate attributeName="r" from="10" to="30" dur="2s" repeatCount="indefinite" />
                 <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite" />
