@@ -249,15 +249,16 @@
             font-weight: 600;
         }
 
-        .globe-map {
-            width: 100%;
-            height: 140px;
-            background: var(--color-surface);
-            border-radius: 8px;
-            border: 2px solid var(--color-border);
-            position: relative;
-            overflow: hidden;
-        }
+.globe-map {
+    width: 100%;
+    height: 140px;
+    background: var(--color-surface);
+    border-radius: 8px;
+    border: 2px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+}
+
 
         .globe-map svg {
             width: 100%;
@@ -1067,61 +1068,60 @@
             feedback.classList.remove('hidden');
         }
 
-        function getGlobeMap(countryCode) {
-            const countryCoords = {
-                'af': {x: 644, y: 216}, 'al': {x: 518, y: 238}, 'dz': {x: 488, y: 274}, 'ad': {x: 486, y: 238}, 'ao': {x: 520, y: 396},
-                'ar': {x: 292, y: 448}, 'am': {x: 570, y: 238}, 'au': {x: 828, y: 456}, 'at': {x: 514, y: 226}, 'az': {x: 586, y: 238},
-                'bs': {x: 266, y: 278}, 'bh': {x: 596, y: 280}, 'bd': {x: 700, y: 278}, 'bb': {x: 310, y: 298}, 'by': {x: 540, y: 212},
-                'be': {x: 488, y: 216}, 'bz': {x: 236, y: 288}, 'bj': {x: 484, y: 308}, 'bt': {x: 700, y: 272}, 'bo': {x: 282, y: 408},
-                'ba': {x: 518, y: 242}, 'bw': {x: 524, y: 436}, 'br': {x: 290, y: 380}, 'bn': {x: 754, y: 320}, 'bg': {x: 530, y: 232},
-                'bf': {x: 476, y: 300}, 'bi': {x: 536, y: 348}, 'kh': {x: 727, y: 300}, 'cm': {x: 506, y: 316}, 'ca': {x: 186, y: 168},
-                'td': {x: 514, y: 300}, 'cl': {x: 282, y: 452}, 'cn': {x: 722, y: 226}, 'co': {x: 270, y: 332}, 'cg': {x: 514, y: 344},
-                'cr': {x: 238, y: 312}, 'hr': {x: 516, y: 236}, 'cu': {x: 262, y: 278}, 'cy': {x: 558, y: 248}, 'cz': {x: 514, y: 222},
-                'dk': {x: 502, y: 204}, 'do': {x: 284, y: 288}, 'ec': {x: 236, y: 344}, 'eg': {x: 538, y: 272}, 'sv': {x: 230, y: 300},
-                'ee': {x: 530, y: 198}, 'et': {x: 564, y: 312}, 'fj': {x: 890, y: 408}, 'fi': {x: 530, y: 182}, 'fr': {x: 486, y: 224},
-                'ga': {x: 502, y: 344}, 'gm': {x: 450, y: 300}, 'ge': {x: 582, y: 232}, 'de': {x: 506, y: 216}, 'gh': {x: 476, y: 316},
-                'gr': {x: 530, y: 246}, 'gt': {x: 230, y: 294}, 'gn': {x: 458, y: 312}, 'ht': {x: 284, y: 288}, 'hn': {x: 230, y: 294},
-                'hu': {x: 518, y: 224}, 'is': {x: 450, y: 166}, 'in': {x: 668, y: 278}, 'id': {x: 754, y: 344}, 'ir': {x: 614, y: 226},
-                'iq': {x: 582, y: 226}, 'ie': {x: 464, y: 206}, 'il': {x: 558, y: 254}, 'it': {x: 506, y: 236}, 'ci': {x: 470, y: 316},
-                'jm': {x: 266, y: 288}, 'jp': {x: 798, y: 228}, 'jo': {x: 564, y: 254}, 'kz': {x: 650, y: 220}, 'ke': {x: 564, y: 344},
-                'kw': {x: 592, y: 260}, 'la': {x: 727, y: 288}, 'lv': {x: 530, y: 202}, 'lb': {x: 558, y: 248}, 'ly': {x: 514, y: 272},
-                'lt': {x: 530, y: 206}, 'lu': {x: 492, y: 220}, 'mg': {x: 592, y: 408}, 'mw': {x: 558, y: 396}, 'my': {x: 727, y: 332},
-                'ml': {x: 470, y: 294}, 'mt': {x: 514, y: 248}, 'mx': {x: 200, y: 278}, 'md': {x: 536, y: 224}, 'mc': {x: 492, y: 238},
-                'mn': {x: 727, y: 220}, 'ma': {x: 470, y: 254}, 'mz': {x: 558, y: 408}, 'mm': {x: 710, y: 278}, 'na': {x: 514, y: 428},
-                'np': {x: 686, y: 266}, 'nl': {x: 488, y: 206}, 'nz': {x: 888, y: 500}, 'ni': {x: 230, y: 300}, 'ne': {x: 486, y: 294},
-                'ng': {x: 492, y: 312}, 'kp': {x: 774, y: 238}, 'mk': {x: 530, y: 238}, 'no': {x: 506, y: 182}, 'om': {x: 614, y: 280},
-                'pk': {x: 650, y: 260}, 'ps': {x: 558, y: 254}, 'pa': {x: 264, y: 312}, 'py': {x: 290, y: 436}, 'pe': {x: 236, y: 372},
-                'ph': {x: 766, y: 300}, 'pl': {x: 522, y: 216}, 'pt': {x: 462, y: 246}, 'qa': {x: 604, y: 272}, 'ro': {x: 530, y: 232},
-                'ru': {x: 634, y: 168}, 'rw': {x: 536, y: 348}, 'sa': {x: 592, y: 272}, 'sn': {x: 450, y: 294}, 'rs': {x: 522, y: 238},
-                'sg': {x: 727, y: 344}, 'sk': {x: 522, y: 222}, 'si': {x: 514, y: 232}, 'so': {x: 582, y: 316}, 'za': {x: 524, y: 452},
-                'kr': {x: 780, y: 228}, 'es': {x: 476, y: 238}, 'lk': {x: 686, y: 316}, 'sd': {x: 538, y: 294}, 'se': {x: 514, y: 182},
-                'ch': {x: 498, y: 224}, 'sy': {x: 564, y: 248}, 'tw': {x: 766, y: 280}, 'tz': {x: 558, y: 364}, 'th': {x: 722, y: 294},
-                'tg': {x: 486, y: 316}, 'tt': {x: 308, y: 312}, 'tn': {x: 502, y: 254}, 'tr': {x: 558, y: 246}, 'ug': {x: 546, y: 344},
-                'ua': {x: 546, y: 222}, 'ae': {x: 612, y: 280}, 'gb': {x: 476, y: 206}, 'us': {x: 200, y: 244}, 'uy': {x: 294, y: 464},
-                'uz': {x: 650, y: 238}, 've': {x: 290, y: 316}, 'vn': {x: 727, y: 294}, 'ye': {x: 592, y: 294}, 'zm': {x: 536, y: 396},
-                'zw': {x: 546, y: 408}
-            };
-            
-            const coord = countryCoords[countryCode] || { x: 500, y: 300 };
-            
-            return `
-                <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg" 
-                         alt="World Map" 
-                         style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
-                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
-                         viewBox="0 0 1000 540" 
-                         preserveAspectRatio="xMidYMid slice">
-                        <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="8" opacity="0.4" style="filter: blur(3px);"/>
-                        <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="5"/>
-                        <circle cx="${coord.x}" cy="${coord.y}" r="8" fill="none" stroke="var(--color-error)" stroke-width="2" opacity="0.8">
-                            <animate attributeName="r" from="5" to="15" dur="2s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
-                        </circle>
-                    </svg>
-                </div>
-            `;
-        }
+function getGlobeMap(countryCode) {
+    const countryCoords = {
+        'af': {x: 644, y: 216}, 'al': {x: 518, y: 238}, 'dz': {x: 488, y: 274}, 'ad': {x: 486, y: 238}, 'ao': {x: 520, y: 396},
+        'ar': {x: 292, y: 448}, 'am': {x: 570, y: 238}, 'au': {x: 828, y: 456}, 'at': {x: 514, y: 226}, 'az': {x: 586, y: 238},
+        'bs': {x: 266, y: 278}, 'bh': {x: 596, y: 280}, 'bd': {x: 700, y: 278}, 'bb': {x: 310, y: 298}, 'by': {x: 540, y: 212},
+        'be': {x: 488, y: 216}, 'bz': {x: 236, y: 288}, 'bj': {x: 484, y: 308}, 'bt': {x: 700, y: 272}, 'bo': {x: 282, y: 408},
+        'ba': {x: 518, y: 242}, 'bw': {x: 524, y: 436}, 'br': {x: 290, y: 380}, 'bn': {x: 754, y: 320}, 'bg': {x: 530, y: 232},
+        'bf': {x: 476, y: 300}, 'bi': {x: 536, y: 348}, 'kh': {x: 727, y: 300}, 'cm': {x: 506, y: 316}, 'ca': {x: 186, y: 168},
+        'td': {x: 514, y: 300}, 'cl': {x: 282, y: 452}, 'cn': {x: 722, y: 226}, 'co': {x: 270, y: 332}, 'cg': {x: 514, y: 344},
+        'cr': {x: 238, y: 312}, 'hr': {x: 516, y: 236}, 'cu': {x: 262, y: 278}, 'cy': {x: 558, y: 248}, 'cz': {x: 514, y: 222},
+        'dk': {x: 502, y: 204}, 'do': {x: 284, y: 288}, 'ec': {x: 236, y: 344}, 'eg': {x: 538, y: 272}, 'sv': {x: 230, y: 300},
+        'ee': {x: 530, y: 198}, 'et': {x: 564, y: 312}, 'fj': {x: 890, y: 408}, 'fi': {x: 530, y: 182}, 'fr': {x: 486, y: 224},
+        'ga': {x: 502, y: 344}, 'gm': {x: 450, y: 300}, 'ge': {x: 582, y: 232}, 'de': {x: 506, y: 216}, 'gh': {x: 476, y: 316},
+        'gr': {x: 530, y: 246}, 'gt': {x: 230, y: 294}, 'gn': {x: 458, y: 312}, 'ht': {x: 284, y: 288}, 'hn': {x: 230, y: 294},
+        'hu': {x: 518, y: 224}, 'is': {x: 450, y: 166}, 'in': {x: 668, y: 278}, 'id': {x: 754, y: 344}, 'ir': {x: 614, y: 226},
+        'iq': {x: 582, y: 226}, 'ie': {x: 464, y: 206}, 'il': {x: 558, y: 254}, 'it': {x: 506, y: 236}, 'ci': {x: 470, y: 316},
+        'jm': {x: 266, y: 288}, 'jp': {x: 798, y: 228}, 'jo': {x: 564, y: 254}, 'kz': {x: 650, y: 220}, 'ke': {x: 564, y: 344},
+        'kw': {x: 592, y: 260}, 'la': {x: 727, y: 288}, 'lv': {x: 530, y: 202}, 'lb': {x: 558, y: 248}, 'ly': {x: 514, y: 272},
+        'lt': {x: 530, y: 206}, 'lu': {x: 492, y: 220}, 'mg': {x: 592, y: 408}, 'mw': {x: 558, y: 396}, 'my': {x: 727, y: 332},
+        'ml': {x: 470, y: 294}, 'mt': {x: 514, y: 248}, 'mx': {x: 200, y: 278}, 'md': {x: 536, y: 224}, 'mc': {x: 492, y: 238},
+        'mn': {x: 727, y: 220}, 'ma': {x: 470, y: 254}, 'mz': {x: 558, y: 408}, 'mm': {x: 710, y: 278}, 'na': {x: 514, y: 428},
+        'np': {x: 686, y: 266}, 'nl': {x: 488, y: 206}, 'nz': {x: 888, y: 500}, 'ni': {x: 230, y: 300}, 'ne': {x: 486, y: 294},
+        'ng': {x: 492, y: 312}, 'kp': {x: 774, y: 238}, 'mk': {x: 530, y: 238}, 'no': {x: 506, y: 182}, 'om': {x: 614, y: 280},
+        'pk': {x: 650, y: 260}, 'ps': {x: 558, y: 254}, 'pa': {x: 264, y: 312}, 'py': {x: 290, y: 436}, 'pe': {x: 236, y: 372},
+        'ph': {x: 766, y: 300}, 'pl': {x: 522, y: 216}, 'pt': {x: 462, y: 246}, 'qa': {x: 604, y: 272}, 'ro': {x: 530, y: 232},
+        'ru': {x: 634, y: 168}, 'rw': {x: 536, y: 348}, 'sa': {x: 592, y: 272}, 'sn': {x: 450, y: 294}, 'rs': {x: 522, y: 238},
+        'sg': {x: 727, y: 344}, 'sk': {x: 522, y: 222}, 'si': {x: 514, y: 232}, 'so': {x: 582, y: 316}, 'za': {x: 524, y: 452},
+        'kr': {x: 780, y: 228}, 'es': {x: 476, y: 238}, 'lk': {x: 686, y: 316}, 'sd': {x: 538, y: 294}, 'se': {x: 514, y: 182},
+        'ch': {x: 498, y: 224}, 'sy': {x: 564, y: 248}, 'tw': {x: 766, y: 280}, 'tz': {x: 558, y: 364}, 'th': {x: 722, y: 294},
+        'tg': {x: 486, y: 316}, 'tt': {x: 308, y: 312}, 'tn': {x: 502, y: 254}, 'tr': {x: 558, y: 246}, 'ug': {x: 546, y: 344},
+        'ua': {x: 546, y: 222}, 'ae': {x: 612, y: 280}, 'gb': {x: 476, y: 206}, 'us': {x: 200, y: 244}, 'uy': {x: 294, y: 464},
+        'uz': {x: 650, y: 238}, 've': {x: 290, y: 316}, 'vn': {x: 727, y: 294}, 'ye': {x: 592, y: 294}, 'zm': {x: 536, y: 396},
+        'zw': {x: 546, y: 408}
+    };
+
+    const coord = countryCoords[countryCode] || { x: 500, y: 300 };
+
+    return `
+        <svg viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet"
+             style="width: 100%; height: 100%; border-radius: 8px; overflow: hidden;">
+            <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
+                   x="0" y="0" width="1000" height="540" opacity="0.6" />
+            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="8"
+                    opacity="0.4" style="filter: blur(3px);" />
+            <circle class="location-dot" cx="${coord.x}" cy="${coord.y}" r="5" />
+            <circle cx="${coord.x}" cy="${coord.y}" r="8"
+                    fill="none" stroke="var(--color-error)" stroke-width="2" opacity="0.8">
+                <animate attributeName="r" from="5" to="15" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite" />
+            </circle>
+        </svg>
+    `;
+}
+
 
         function updateStats() {
             document.getElementById('correct-count').textContent = state.stats.correct;
