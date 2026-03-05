@@ -155,6 +155,13 @@
                 </optgroup>
             </select>
             <div class="filter-info" id="filter-info">Showing all 197 flags</div>
+
+            <div class="toggle-row" style="margin-top:var(--spacing-md);">
+                <span class="toggle-label">Regional zoom:</span>
+                <input type="range" id="zoom-slider" min="2" max="12" value="4" step="0.5"
+                       style="flex:1;margin:0 10px;accent-color:var(--color-primary);">
+                <span id="zoom-value" style="font-size:13px;color:var(--color-text-secondary);min-width:24px;">4×</span>
+            </div>
         </div>
     </div>
 
@@ -342,7 +349,7 @@ const FLAGS = [
 ];
 
 let state = {
-    mode:'practice', direction:'flag-to-country', weakMode:false, filter:'all',
+    mode:'practice', direction:'flag-to-country', weakMode:false, filter:'all', regionalZoom:4,
     filtered:[...FLAGS], current:null, previous:null, answered:false,
     stats:{correct:0,incorrect:0,total:0}, flagData:{},
     upcomingQueue:[], recentHistory:[], unseenFlags:[]
@@ -369,6 +376,10 @@ function setupEventListeners(){
         state.weakMode=!state.weakMode;e.target.textContent=state.weakMode?'On':'Off';e.target.classList.toggle('active');nextFlag();
     });
     document.getElementById('filter-select').addEventListener('change',e=>applyFilter(e.target.value));
+    document.getElementById('zoom-slider').addEventListener('input', e => {
+        state.regionalZoom = parseFloat(e.target.value);
+        document.getElementById('zoom-value').textContent = state.regionalZoom + '×';
+    });
     document.getElementById('reveal-btn').addEventListener('click',revealAnswer);
     document.getElementById('correct-btn').addEventListener('click',()=>markAnswer(true));
     document.getElementById('missed-btn').addEventListener('click',()=>markAnswer(false));
@@ -588,7 +599,7 @@ function getWorldometerLocatorHTML(country){
                  onerror="this.parentElement.innerHTML='<div style=\'color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;\'>Map unavailable</div>'">`;
 }
 
-function getRegionalMap(countryCode){
+function getMapSVG(countryCode, zoomFactor){
     const countryLatLon={
         af:{lat:34,lon:66},al:{lat:41,lon:20},dz:{lat:28,lon:3},ad:{lat:42.5,lon:1.5},
         ao:{lat:-12,lon:18},ar:{lat:-34,lon:-64},am:{lat:40,lon:45},au:{lat:-25,lon:135},
@@ -629,76 +640,44 @@ function getRegionalMap(countryCode){
         uy:{lat:-33,lon:-56},uz:{lat:41.3,lon:64.6},ve:{lat:7,lon:-66},vn:{lat:16,lon:108},
         ye:{lat:15.5,lon:47.5},zm:{lat:-13.1,lon:27.8},zw:{lat:-19,lon:29.2}
     };
-    const mapWidth=2058,mapHeight=1036;
-    const pos=countryLatLon[countryCode]||{lat:0,lon:0};
-    const x=(pos.lon+180)*(mapWidth/360);
-    const y=(-pos.lat+90)*(mapHeight/180);
-    const vw=mapWidth/4,vh=mapHeight/4;
-    let minX=x-vw/2,minY=y-vh/2;
-    if(minX<0)minX=0;if(minY<0)minY=0;
-    if(minX+vw>mapWidth)minX=mapWidth-vw;
-    if(minY+vh>mapHeight)minY=mapHeight-vh;
-    return `<svg viewBox="${minX} ${minY} ${vw} ${vh}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;">
-        <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
-               x="0" y="0" width="${mapWidth}" height="${mapHeight}" opacity="0.8"/>
-        <circle cx="${x}" cy="${y}" r="8" fill="#ff5459" opacity="0.9"/>
-    </svg>`;
-}
+    const mapW=2058, mapH=1036;
+    const pos = countryLatLon[countryCode] || {lat:0,lon:0};
+    const cx = (pos.lon + 180) * (mapW / 360);
+    const cy = (-pos.lat + 90) * (mapH / 180);
 
-function getGlobeMap(countryCode){
-    const countryLatLon={
-        af:{lat:34,lon:66},al:{lat:41,lon:20},dz:{lat:28,lon:3},ad:{lat:42.5,lon:1.5},
-        ao:{lat:-12,lon:18},ar:{lat:-34,lon:-64},am:{lat:40,lon:45},au:{lat:-25,lon:135},
-        at:{lat:47.5,lon:14.5},az:{lat:40.5,lon:47.5},bs:{lat:25,lon:-77},bh:{lat:26,lon:50.5},
-        bd:{lat:24,lon:90},bb:{lat:13.2,lon:-59.5},by:{lat:53,lon:28},be:{lat:50.8,lon:4.5},
-        bz:{lat:17.2,lon:-88.7},bj:{lat:9.5,lon:2.3},bt:{lat:27.5,lon:90.5},bo:{lat:-16.7,lon:-64.7},
-        ba:{lat:44,lon:18},bw:{lat:-22,lon:24},br:{lat:-10,lon:-52},bn:{lat:4.5,lon:114.7},
-        bg:{lat:42.7,lon:25.5},bf:{lat:12.4,lon:-1.6},bi:{lat:-3.4,lon:29.9},kh:{lat:12.5,lon:105},
-        cm:{lat:5,lon:12},ca:{lat:57,lon:-106},td:{lat:15.5,lon:19},cl:{lat:-30,lon:-71},
-        cn:{lat:35,lon:103},co:{lat:4,lon:-72},cg:{lat:-1,lon:15},cr:{lat:10,lon:-84},
-        hr:{lat:45.1,lon:15.2},cu:{lat:21.5,lon:-79.5},cy:{lat:35,lon:33},cz:{lat:49.8,lon:15.5},
-        dk:{lat:56,lon:10},do:{lat:19,lon:-70.7},ec:{lat:-1.4,lon:-78.2},eg:{lat:27,lon:30},
-        sv:{lat:13.7,lon:-89.2},ee:{lat:58.7,lon:25},et:{lat:9,lon:40.5},fj:{lat:-17.8,lon:178},
-        fi:{lat:64,lon:26},fr:{lat:46.5,lon:2.8},ga:{lat:-0.8,lon:11.6},gm:{lat:13.4,lon:-16},
-        ge:{lat:42,lon:43.5},de:{lat:51,lon:9},gh:{lat:7.9,lon:-1.0},gr:{lat:39,lon:22},
-        gt:{lat:15.8,lon:-90.2},gn:{lat:10.5,lon:-10.5},ht:{lat:19,lon:-72.7},hn:{lat:14.8,lon:-86.2},
-        hu:{lat:47,lon:19.5},is:{lat:65,lon:-19},in:{lat:22,lon:79},id:{lat:-2,lon:118},
-        ir:{lat:32,lon:53},iq:{lat:33,lon:44},ie:{lat:53.4,lon:-8},il:{lat:31.5,lon:35},
-        it:{lat:42.8,lon:12.5},ci:{lat:7.5,lon:-5.5},jm:{lat:18.1,lon:-77.3},jp:{lat:36,lon:138},
-        jo:{lat:31,lon:36},kz:{lat:48,lon:68},ke:{lat:0,lon:38},kw:{lat:29.5,lon:47.8},
-        la:{lat:18,lon:105},lv:{lat:56.9,lon:24.6},lb:{lat:33.9,lon:35.9},ly:{lat:27,lon:18},
-        lt:{lat:55.3,lon:23.9},lu:{lat:49.8,lon:6.1},mg:{lat:-20,lon:47},mw:{lat:-13.5,lon:34},
-        my:{lat:4,lon:109.5},ml:{lat:17.5,lon:-4},mt:{lat:35.9,lon:14.4},mx:{lat:23,lon:-102},
-        md:{lat:47,lon:28.5},mc:{lat:43.7,lon:7.4},mn:{lat:46.8,lon:104},ma:{lat:31.8,lon:-7},
-        mz:{lat:-18.3,lon:35},mm:{lat:21,lon:96},na:{lat:-22,lon:17},np:{lat:28.4,lon:84},
-        nl:{lat:52.3,lon:5.5},nz:{lat:-41,lon:173},ni:{lat:12.8,lon:-85},ne:{lat:17.6,lon:8},
-        ng:{lat:9,lon:8},kp:{lat:40,lon:127},mk:{lat:41.6,lon:21.7},no:{lat:64.5,lon:11},
-        om:{lat:20.5,lon:57},pk:{lat:30,lon:70},ps:{lat:31.5,lon:35.3},pa:{lat:8.5,lon:-80},
-        py:{lat:-23,lon:-58},pe:{lat:-9.2,lon:-75},ph:{lat:13,lon:122},pl:{lat:52,lon:19},
-        pt:{lat:39.5,lon:-8},qa:{lat:25.3,lon:51.2},ro:{lat:45.9,lon:24.9},ru:{lat:60,lon:90},
-        rw:{lat:-1.9,lon:29.9},sa:{lat:24,lon:45},sn:{lat:14.4,lon:-14.5},rs:{lat:44,lon:21},
-        sg:{lat:1.3,lon:103.8},sk:{lat:48.7,lon:19.7},si:{lat:46.1,lon:14.8},so:{lat:6,lon:46},
-        za:{lat:-29,lon:24},kr:{lat:36.5,lon:127.8},es:{lat:40,lon:-4},lk:{lat:7.8,lon:80.7},
-        sd:{lat:15.6,lon:30.5},se:{lat:62,lon:15},ch:{lat:47,lon:8.2},sy:{lat:35,lon:38},
-        tw:{lat:23.6,lon:121},tz:{lat:-6,lon:35},th:{lat:15,lon:101},tg:{lat:8.5,lon:1.1},
-        tt:{lat:10.4,lon:-61.3},tn:{lat:34,lon:9},tr:{lat:39,lon:35},ug:{lat:1.5,lon:32},
-        ua:{lat:49,lon:32},ae:{lat:24,lon:54},gb:{lat:55,lon:-3},us:{lat:38,lon:-97},
-        uy:{lat:-33,lon:-56},uz:{lat:41.3,lon:64.6},ve:{lat:7,lon:-66},vn:{lat:16,lon:108},
-        ye:{lat:15.5,lon:47.5},zm:{lat:-13.1,lon:27.8},zw:{lat:-19,lon:29.2}
-    };
-    const mapWidth=2058,mapHeight=1036;
-    const pos=countryLatLon[countryCode]||{lat:0,lon:0};
-    const x=(pos.lon+180)*(mapWidth/360);
-    const y=(-pos.lat+90)*(mapHeight/180);
-    return `<svg viewBox="0 0 ${mapWidth} ${mapHeight}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;">
+    // square viewport size = mapH / zoomFactor
+    const vSize = mapH / zoomFactor;
+
+    // center on country, clamped so we never show outside the map
+    let vx = cx - vSize/2;
+    let vy = cy - vSize/2;
+    vx = Math.max(0, Math.min(mapW - vSize, vx));
+    vy = Math.max(0, Math.min(mapH - vSize, vy));
+
+    // dot size scales with zoom
+    const dotR = Math.max(4, 14 / zoomFactor * 2);
+    const ringR1 = dotR * 1.6;
+    const ringR2 = dotR * 3;
+
+    return `<svg viewBox="${vx} ${vy} ${vSize} ${vSize}"
+                 preserveAspectRatio="xMidYMid slice"
+                 style="width:100%;height:100%;display:block;">
         <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
-               x="0" y="0" width="${mapWidth}" height="${mapHeight}" opacity="0.7"/>
-        <circle cx="${x}" cy="${y}" r="12" fill="#ff5459" opacity="0.85"/>
-        <circle cx="${x}" cy="${y}" r="22" fill="none" stroke="#ff5459" stroke-width="4" opacity="0.8">
-            <animate attributeName="r" from="14" to="36" dur="2s" repeatCount="indefinite"/>
+               x="0" y="0" width="${mapW}" height="${mapH}"/>
+        <circle cx="${cx}" cy="${cy}" r="${dotR}" fill="#ff5459" opacity="0.95"/>
+        <circle cx="${cx}" cy="${cy}" r="${ringR1}" fill="none" stroke="#ff5459" stroke-width="${dotR*0.4}" opacity="0.8">
+            <animate attributeName="r" from="${dotR*1.2}" to="${ringR2}" dur="2s" repeatCount="indefinite"/>
             <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
         </circle>
     </svg>`;
+}
+
+function getRegionalMap(countryCode){
+    return getMapSVG(countryCode, state.regionalZoom);
+}
+
+function getGlobeMap(countryCode){
+    return getMapSVG(countryCode, 1);
 }
 
 function updateStats(){
