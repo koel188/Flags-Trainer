@@ -787,13 +787,14 @@
         ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
     };
 
-    function getWorldometerLocatorHTML(country) {
-        const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
-        const url = `https://www.worldometers.info/img/maps/${fips}-locator-map.gif`;
-        return `<img src="${url}" alt="${country.name} locator map"
-                style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
-                onerror="this.parentElement.innerHTML='<div style=&quot;color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;&quot;>Map unavailable</div>'">`;
-    }
+function getWorldometerLocatorHTML(country) {
+    const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
+    const url = `https://www.worldometers.info/img/maps_cl/${fips}-locator-map.gif`;
+    return `<img src="${url}" alt="${country.name} locator map"
+            style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
+            onerror="this.parentElement.innerHTML='<div style=&quot;color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;&quot;>Map unavailable</div>'">`;
+}
+
 
     function getMapSVG(countryCode, zoomFactor) {
         const countryLatLon = {
