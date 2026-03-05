@@ -684,24 +684,32 @@
             { name: 'Zimbabwe', code: 'zw', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '16M' }
         ];
 
-        let state = {
-            mode: 'practice',
-            direction: 'flag-to-country',
-            weakMode: false,
-            filter: 'all',
-            filtered: [...FLAGS],
-            current: null,
-            previous: null,
-            answered: false,
-            stats: { correct: 0, incorrect: 0, total: 0 },
-            flagData: {}
-        };
+let state = {
+    mode: 'practice',
+    direction: 'flag-to-country',
+    weakMode: false,
+    filter: 'all',
+    filtered: [...FLAGS],
+    current: null,
+    previous: null,
+    answered: false,
+    stats: { correct: 0, incorrect: 0, total: 0 },
+    flagData: {},
+    
+    // NEW: Queue system for better distribution
+    upcomingQueue: [],
+    recentHistory: [],
+    unseenFlags: []
+};
 
-        function init() {
-            loadData();
-            setupEventListeners();
-            nextFlag();
-        }
+
+function init() {
+    loadData();
+    setupEventListeners();
+    initializeQueue();  // ADD THIS LINE
+    nextFlag();
+}
+
 
         function loadData() {
             try {
@@ -773,6 +781,7 @@
             }
             
             document.getElementById('filter-info').textContent = `Showing ${state.filtered.length} flags`;
+                initializeQueue(); 
             nextFlag();
         }
 
@@ -786,46 +795,50 @@
             }
             nextFlag();
         }
-
-        function getRandomFlag() {
-            if (state.filtered.length === 0) return FLAGS[0];
-            
-            if (state.weakMode) {
-                const scored = state.filtered.map(f => {
-                    const data = state.flagData[f.code] || { seen: 0, correct: 0 };
-                    const accuracy = data.seen > 0 ? data.correct / data.seen : 0.5;
-                    return { flag: f, weight: 1 - accuracy };
-                });
-                
-                const total = scored.reduce((sum, s) => sum + s.weight, 0);
-                let random = Math.random() * total;
-                
-                for (let item of scored) {
-                    random -= item.weight;
-                    if (random <= 0) return item.flag;
-                }
-                return scored[0].flag;
+function getNextFlag() {
+    // Priority: Upcoming queue (ensures even distribution)
+    if (state.upcomingQueue.length > 0) {
+        const next = state.upcomingQueue.shift();
+        
+        // Refill queue if running low
+        if (state.upcomingQueue.length < 5) {
+            if (state.unseenFlags.length === 0) {
+                // Reset the cycle
+                state.unseenFlags = [...state.filtered];
+                shuffleArray(state.unseenFlags);
             }
-            
-            return state.filtered[Math.floor(Math.random() * state.filtered.length)];
+            const newFlags = state.unseenFlags.splice(0, 5);
+            state.upcomingQueue.push(...newFlags);
         }
+        
+        return next;
+    }
 
-        function nextFlag() {
-            let newFlag;
-            do {
-                newFlag = getRandomFlag();
-            } while (newFlag.code === state.previous && state.filtered.length > 1);
-            
-            state.previous = state.current ? state.current.code : null;
-            state.current = newFlag;
-            state.answered = false;
-            
-            if (state.mode === 'practice') {
-                loadPracticeMode();
-            } else {
-                loadQuizMode();
-            }
-        }
+    // Fallback: Just pick a random one
+    return state.filtered[Math.floor(Math.random() * state.filtered.length)];
+}
+
+
+function nextFlag() {
+    const newFlag = getNextFlag();  // Changed from getRandomFlag()
+    
+    state.previous = state.current ? state.current.code : null;
+    state.current = newFlag;
+    state.answered = false;
+    
+    // Track recent history
+    state.recentHistory.push(newFlag.code);
+    if (state.recentHistory.length > 10) {
+        state.recentHistory.shift();
+    }
+    
+    if (state.mode === 'practice') {
+        loadPracticeMode();
+    } else {
+        loadQuizMode();
+    }
+}
+
 
         function loadPracticeMode() {
             document.getElementById('answer-section').classList.add('hidden');
@@ -912,6 +925,11 @@
             }
             state.flagData[state.current.code].seen++;
             if (correct) state.flagData[state.current.code].correct++;
+            if (!correct) {
+    // Schedule failed flag to repeat 2 times within next 10
+    scheduleFailedFlag(state.current);
+}
+
             
             saveData();
             updateStats();
@@ -998,9 +1016,13 @@
                 state.stats.correct++;
                 btn.classList.add('correct');
                 showFeedback('✅ Correct!', 'correct');
-            } else {
-                state.stats.incorrect++;
-                btn.classList.add('incorrect');
+} else {
+    state.stats.incorrect++;
+    btn.classList.add('incorrect');
+    
+    // Schedule failed flag to repeat 2 times within next 10
+    scheduleFailedFlag(state.current);
+
                 
                 allBtns.forEach(b => {
                     if (state.direction === 'flag-to-country') {
@@ -1259,6 +1281,37 @@ function getGlobeMap(countryCode) {
         }
 
         init();
+function initializeQueue() {
+    // Initialize with shuffled flags
+    state.unseenFlags = [...state.filtered];
+    shuffleArray(state.unseenFlags);
+    state.upcomingQueue = state.unseenFlags.splice(0, Math.min(10, state.unseenFlags.length));
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function scheduleFailedFlag(flag) {
+    // Schedule to appear 2 times within the next 10 flags
+    const positions = [
+        Math.floor(Math.random() * 5) + 1,  // First appearance: within next 1-5 flags
+        Math.floor(Math.random() * 5) + 6   // Second appearance: within next 6-10 flags
+    ];
+    
+    positions.sort((a, b) => a - b);
+    
+    // Insert into upcoming queue at calculated positions
+    positions.forEach(pos => {
+        const insertPos = Math.min(pos, state.upcomingQueue.length);
+        state.upcomingQueue.splice(insertPos, 0, flag);
+    });
+}
+
+        
     </script>
 </body>
 </html>
