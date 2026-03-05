@@ -122,20 +122,14 @@
             <span id="total-count">0</span>
         </div>
     </div>
-    <div class="settings-header" onclick="toggleSettings()">
-        <h3>⚙️</h3>
-        <span class="toggle-icon">▼</span>
-    </div>
+
 </header>
 
 
 
 
     <div class="card settings-card" id="settings-card">
-        <div class="settings-header" id="settings-toggle">
-            <h3>⚙️ Settings & Filters</h3>
-            <span class="toggle-icon">▼</span>
-        </div>
+
         <div class="settings-content">
             <div class="mode-selector">
                 <button class="mode-btn active" data-mode="practice">Flashcard</button>
@@ -657,10 +651,8 @@ function getMapSVG(countryCode, zoomFactor){
         ye:{lat:15.5,lon:47.5},zm:{lat:-13.1,lon:27.8},zw:{lat:-19,lon:29.2}
     };
     const mapW=1100, mapH=550;
-const mapImg = zoomFactor === 1
-    ? "https://upload.wikimedia.org/wikipedia/commons/7/74/Worldmap_location_NED_50m.svg"
-    : "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Solarsystemscope_texture_2k_earth_daymap.jpg/2048px-Solarsystemscope_texture_2k_earth_daymap.jpg";
-
+// Simple version (no zoom logic yet) — just use the SVG map:
+<image href="https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg"
 
     const pos = countryLatLon[countryCode] || {lat:0,lon:0};
     const cx = (pos.lon + 180) * (mapW / 360);
