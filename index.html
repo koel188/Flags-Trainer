@@ -593,12 +593,9 @@
         return `
             <div class="country-info-item">${cfmStatus}</div>
             <div class="country-info-item">
-                <strong>Continent</strong> ${state.current.continent}
+                <strong>Capital</strong> ${capital}
                 &nbsp;&nbsp;
                 <strong>Population</strong> ${state.current.population}
-            </div>
-            <div class="country-info-item">
-                <strong>Capital</strong> ${capital}
             </div>
             <div class="map-row-top">
                 <div class="map-box">
@@ -853,7 +850,7 @@
         vx = Math.max(0, Math.min(mapW - vSize, vx));
         vy = Math.max(0, Math.min(mapH - vSize, vy));
 
-        const dotR = 6;
+        const dotR = 4; // small, fixed size
         const ringR1 = dotR * 1.6;
         const ringR2 = dotR * 3;
 
@@ -883,6 +880,7 @@
 
     init();
 </script>
+
 
 </body>
 </html>
