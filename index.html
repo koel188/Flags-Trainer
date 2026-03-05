@@ -55,8 +55,8 @@
         .settings-card { transition:all 0.3s ease; overflow:hidden; }
         .settings-card.collapsed { padding:var(--spacing-md) var(--spacing-lg); }
         .settings-card.collapsed .settings-content { display:none; }
-        .settings-header { display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; }
-        .settings-header h3 { margin:0; font-size:16px; }
+
+    
         .toggle-icon { font-size:20px; transition:transform 0.3s ease; }
         .settings-card.collapsed .toggle-icon { transform:rotate(180deg); }
         .settings-content { margin-top:var(--spacing-md); }
@@ -106,14 +106,30 @@
 </head>
 <body>
 <div class="container">
-    <header>
-        <h1>🌍 World Flags Trainer</h1>
-        <div class="stats">
-            <div class="stat-item"><span>✅</span><span id="correct-count">0</span></div>
-            <div class="stat-item"><span>❌</span><span id="incorrect-count">0</span></div>
-            <div class="stat-item"><span>📊</span><span id="total-count">0</span></div>
+<header style="position:relative; display:flex; align-items:center; justify-content:space-between;">
+    <h1>🌍 World Flags Trainer</h1>
+    <div class="stats">
+        <div class="stat-item">
+            <span>✅</span>
+            <span id="correct-count">0</span>
         </div>
-    </header>
+        <div class="stat-item">
+            <span>❌</span>
+            <span id="incorrect-count">0</span>
+        </div>
+        <div class="stat-item">
+            <span>📊</span>
+            <span id="total-count">0</span>
+        </div>
+    </div>
+    <div class="settings-header" onclick="toggleSettings()">
+        <h3>⚙️</h3>
+        <span class="toggle-icon">▼</span>
+    </div>
+</header>
+
+
+
 
     <div class="card settings-card" id="settings-card">
         <div class="settings-header" id="settings-toggle">
@@ -363,7 +379,7 @@ function loadData(){try{const s=localStorage.getItem('flagStats');if(s)state.fla
 function saveData(){try{localStorage.setItem('flagStats',JSON.stringify(state.flagData));}catch(e){}}
 
 function setupEventListeners(){
-    document.getElementById('settings-toggle').addEventListener('click',toggleSettings);
+
     document.querySelectorAll('.mode-btn').forEach(btn=>btn.addEventListener('click',()=>{
         document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');state.mode=btn.dataset.mode;switchMode();
@@ -641,9 +657,10 @@ function getMapSVG(countryCode, zoomFactor){
         ye:{lat:15.5,lon:47.5},zm:{lat:-13.1,lon:27.8},zw:{lat:-19,lon:29.2}
     };
     const mapW=1100, mapH=550;
-    const mapImg = zoomFactor === 1
-    ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Solarsystemscope_texture_8k_earth_daymap.jpg/2560px-Solarsystemscope_texture_8k_earth_daymap.jpg"
-    : "https://upload.wikimedia.org/wikipedia/commons/7/74/Worldmap_location_NED_50m.svg";
+const mapImg = zoomFactor === 1
+    ? "https://upload.wikimedia.org/wikipedia/commons/7/74/Worldmap_location_NED_50m.svg"
+    : "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Solarsystemscope_texture_2k_earth_daymap.jpg/2048px-Solarsystemscope_texture_2k_earth_daymap.jpg";
+
 
     const pos = countryLatLon[countryCode] || {lat:0,lon:0};
     const cx = (pos.lon + 180) * (mapW / 360);
