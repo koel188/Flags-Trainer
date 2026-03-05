@@ -66,12 +66,15 @@
         .country-info { margin-top:var(--spacing-md); padding:var(--spacing-md); background:var(--color-secondary); border-radius:12px; font-size:13px; line-height:1.6; }
         .country-info-item { display:flex; align-items:center; gap:6px; margin-bottom:var(--spacing-xs); }
         .country-info-item:last-child { margin-bottom:0; }
-        .map-container { margin-top:var(--spacing-md); display:grid; grid-template-columns:repeat(3,1fr); gap:var(--spacing-sm); }
+        .map-row-top { margin-top:var(--spacing-md); display:grid; grid-template-columns:1fr 1fr; gap:var(--spacing-sm); }
+        .map-row-bottom { margin-top:var(--spacing-sm); }
         .map-box { border-radius:10px; overflow:hidden; display:flex; flex-direction:column; background:var(--color-surface); }
-        .map-box h4 { font-size:10px; color:var(--color-text-secondary); padding:var(--spacing-xs) var(--spacing-sm); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; text-align:center; background:var(--color-secondary); border-bottom:1px solid var(--color-border); }
-        .globe-map, .country-region-map { width:100%; aspect-ratio:2/1; overflow:hidden; }
+        .globe-map, .country-region-map { width:100%; aspect-ratio:1/1; overflow:hidden; }
         .globe-map svg { width:100%; height:100%; display:block; }
         .country-region-map img { width:100%; height:100%; object-fit:cover; display:block; }
+        .locator-box { background:transparent; border-radius:10px; overflow:hidden; }
+        .locator-map { width:100%; }
+        .locator-map img { width:100%; height:auto; display:block; border-radius:10px; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
         .cfm-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600; }
         .cfm-badge.has-church { background:rgba(33,128,141,0.2); color:var(--color-success); }
@@ -97,8 +100,8 @@
         select { width:100%; padding:var(--spacing-sm); border-radius:8px; border:2px solid var(--color-border); background:var(--color-surface); color:var(--color-text); font-size:16px; cursor:pointer; }
         .filter-info { margin-top:var(--spacing-xs); font-size:14px; color:var(--color-text-secondary); }
         .settings-section-title { margin-bottom:var(--spacing-sm); margin-top:var(--spacing-md); font-size:16px; }
-        @media (max-width:700px) { .map-container { grid-template-columns:1fr 1fr; } }
-        @media (max-width:500px) { .map-container { grid-template-columns:1fr; } body { padding:var(--spacing-sm); } h1 { font-size:24px; } .card { padding:var(--spacing-md); } .flag { height:140px; max-width:260px; } }
+        @media (max-width:500px) { .map-row-top { grid-template-columns:1fr; } }
+        @media (max-width:500px) { body { padding:var(--spacing-sm); } h1 { font-size:24px; } .card { padding:var(--spacing-md); } .flag { height:140px; max-width:260px; } }
     </style>
 </head>
 <body>
@@ -450,18 +453,17 @@ function buildInfoHTML(){
             <strong>🌍 Continent:</strong> ${state.current.continent}
             &nbsp;<strong>👥 Population:</strong> ${state.current.population}
         </div>
-        <div class="map-container">
+        <div class="map-row-top">
             <div class="map-box">
-                <h4>World</h4>
                 <div class="globe-map">${getGlobeMap(state.current.code)}</div>
             </div>
             <div class="map-box">
-                <h4>Region</h4>
                 <div class="country-region-map">${getRegionalMap(state.current.code)}</div>
             </div>
-            <div class="map-box">
-                <h4>Locator</h4>
-                <div class="country-region-map">${getWorldometerLocatorHTML(state.current)}</div>
+        </div>
+        <div class="map-row-bottom">
+            <div class="map-box locator-box">
+                <div class="locator-map">${getWorldometerLocatorHTML(state.current)}</div>
             </div>
         </div>`;
 }
@@ -560,11 +562,29 @@ function showFeedback(text,type){
     fb.className=`feedback ${type}`;fb.classList.remove('hidden');
 }
 
+const ISO_TO_FIPS = {
+    af:'AF',al:'AL',dz:'AG',ad:'AN',ao:'AO',ar:'AR',am:'AM',au:'AS',at:'AU',az:'AJ',
+    bs:'BF',bh:'BA',bd:'BG',bb:'BB',by:'BO',be:'BE',bz:'BH',bj:'BN',bt:'BT',bo:'BL',
+    ba:'BK',bw:'BC',br:'BR',bn:'BX',bg:'BU',bf:'UV',bi:'BY',kh:'CB',cm:'CM',ca:'CA',
+    td:'CD',cl:'CI',cn:'CH',co:'CO',cg:'CF',cr:'CS',hr:'HR',cu:'CU',cy:'CY',cz:'EZ',
+    dk:'DA',do:'DR',ec:'EC',eg:'EG',sv:'ES',ee:'EN',et:'ET',fj:'FJ',fi:'FI',fr:'FR',
+    ga:'GB',gm:'GA',ge:'GG',de:'GM',gh:'GH',gr:'GR',gt:'GT',gn:'GV',ht:'HA',hn:'HO',
+    hu:'HU',is:'IC',in:'IN',id:'ID',ir:'IR',iq:'IZ',ie:'EI',il:'IS',it:'IT',ci:'IV',
+    jm:'JM',jp:'JA',jo:'JO',kz:'KZ',ke:'KE',kw:'KU',la:'LA',lv:'LG',lb:'LE',ly:'LY',
+    lt:'LH',lu:'LU',mg:'MA',mw:'MI',my:'MY',ml:'ML',mt:'MT',mx:'MX',md:'MD',mc:'MN',
+    mn:'MG',ma:'MO',mz:'MZ',mm:'BM',na:'WA',np:'NP',nl:'NL',nz:'NZ',ni:'NU',ne:'NG',
+    ng:'NI',kp:'KN',mk:'MK',no:'NO',om:'MU',pk:'PK',ps:'WE',pa:'PM',py:'PA',pe:'PE',
+    ph:'RP',pl:'PL',pt:'PO',qa:'QA',ro:'RO',ru:'RS',rw:'RW',sa:'SA',sn:'SG',rs:'RB',
+    sg:'SN',sk:'LO',si:'SI',so:'SO',za:'SF',kr:'KS',es:'SP',lk:'CE',sd:'SU',se:'SW',
+    ch:'SZ',sy:'SY',tw:'TW',tz:'TZ',th:'TH',tg:'TO',tt:'TD',tn:'TS',tr:'TU',ug:'UG',
+    ua:'UP',ae:'TC',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
+};
+
 function getWorldometerLocatorHTML(country){
-    const code=country.code.toUpperCase();
-    const url=`https://www.worldometers.info/img/maps_cl/${code}-locator-map.gif`;
+    const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
+    const url = `https://www.worldometers.info/img/maps_cl/${fips}-locator-map.gif`;
     return `<img src="${url}" alt="${country.name} locator map"
-                 style="width:100%;height:100%;object-fit:cover;"
+                 style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
                  onerror="this.parentElement.innerHTML='<div style=\'color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;\'>Map unavailable</div>'">`;
 }
 
