@@ -233,54 +233,59 @@
             margin-bottom: 0;
         }
 
-        /* map layout */
         .map-container {
             margin-top: var(--spacing-md);
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-sm);
+            gap: var(--spacing-md);
         }
 
         .map-box {
+            background: var(--color-surface);
             border-radius: 10px;
-            overflow: hidden;
+            border: 2px solid var(--color-border);
+            padding: var(--spacing-sm);
             display: flex;
             flex-direction: column;
-            background: var(--color-surface);
         }
 
         .map-box h4 {
             font-size: 10px;
             color: var(--color-text-secondary);
-            padding: var(--spacing-xs) var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-align: center;
-            background: var(--color-secondary);
-            border-bottom: 1px solid var(--color-border);
         }
 
-        .globe-map,
-        .country-region-map {
+        .globe-map {
             width: 100%;
             aspect-ratio: 2 / 1;
-            border: none;
-            border-radius: 0;
+            border-radius: 6px;
             overflow: hidden;
+            flex: 1;
         }
 
         .globe-map svg {
             width: 100%;
             height: 100%;
-            display: block;
         }
 
-        .country-region-map img {
+        .country-silhouette {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .country-silhouette img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
         }
 
         .location-dot {
@@ -480,6 +485,11 @@
 
             .map-container {
                 grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+
+            .country-silhouette {
+                aspect-ratio: 2 / 1;
             }
         }
 
@@ -592,11 +602,157 @@
     </div>
 
     <script>
-        /* FLAGS – same as before (truncated here for brevity, keep your full array) */
         const FLAGS = [
             { name: 'Afghanistan', code: 'af', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '40M' },
             { name: 'Albania', code: 'al', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: false, population: '2.8M' },
-            /* ... keep all countries ... */
+            { name: 'Algeria', code: 'dz', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '45M' },
+            { name: 'Andorra', code: 'ad', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: false, population: '80K' },
+            { name: 'Angola', code: 'ao', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: false, population: '35M' },
+            { name: 'Argentina', code: 'ar', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '46M' },
+            { name: 'Armenia', code: 'am', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.8M' },
+            { name: 'Australia', code: 'au', continent: 'Oceania', popularity: 'popular', difficulty: 'easy', cfm: true, population: '26M' },
+            { name: 'Austria', code: 'at', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '9M' },
+            { name: 'Azerbaijan', code: 'az', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '10M' },
+            { name: 'Bahamas', code: 'bs', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '400K' },
+            { name: 'Bahrain', code: 'bh', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '1.5M' },
+            { name: 'Bangladesh', code: 'bd', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '170M' },
+            { name: 'Barbados', code: 'bb', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '280K' },
+            { name: 'Belarus', code: 'by', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: true, population: '9.2M' },
+            { name: 'Belgium', code: 'be', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '11.6M' },
+            { name: 'Belize', code: 'bz', continent: 'Americas', popularity: 'less', difficulty: 'hard', cfm: false, population: '400K' },
+            { name: 'Benin', code: 'bj', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: false, population: '13M' },
+            { name: 'Bhutan', code: 'bt', continent: 'Asia', popularity: 'less', difficulty: 'hard', cfm: false, population: '780K' },
+            { name: 'Bolivia', code: 'bo', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '12M' },
+            { name: 'Bosnia and Herzegovina', code: 'ba', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: false, population: '3.2M' },
+            { name: 'Botswana', code: 'bw', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.6M' },
+            { name: 'Brazil', code: 'br', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '215M' },
+            { name: 'Brunei', code: 'bn', continent: 'Asia', popularity: 'less', difficulty: 'hard', cfm: false, population: '450K' },
+            { name: 'Bulgaria', code: 'bg', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: true, population: '6.8M' },
+            { name: 'Burkina Faso', code: 'bf', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '22M' },
+            { name: 'Burundi', code: 'bi', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '12.5M' },
+            { name: 'Cambodia', code: 'kh', continent: 'Asia', popularity: 'less', difficulty: 'hard', cfm: false, population: '17M' },
+            { name: 'Cameroon', code: 'cm', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '28M' },
+            { name: 'Canada', code: 'ca', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '39M' },
+            { name: 'Chad', code: 'td', continent: 'Africa', popularity: 'less', difficulty: 'hard', cfm: false, population: '18M' },
+            { name: 'Chile', code: 'cl', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '19M' },
+            { name: 'China', code: 'cn', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '1.4B' },
+            { name: 'Colombia', code: 'co', continent: 'Americas', popularity: 'popular', difficulty: 'medium', cfm: true, population: '52M' },
+            { name: 'Congo', code: 'cg', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '6M' },
+            { name: 'Costa Rica', code: 'cr', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '5.2M' },
+            { name: 'Croatia', code: 'hr', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: true, population: '3.9M' },
+            { name: 'Cuba', code: 'cu', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: false, population: '11M' },
+            { name: 'Cyprus', code: 'cy', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: false, population: '1.2M' },
+            { name: 'Czech Republic', code: 'cz', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '10.5M' },
+            { name: 'Denmark', code: 'dk', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '5.9M' },
+            { name: 'Dominican Republic', code: 'do', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '11M' },
+            { name: 'Ecuador', code: 'ec', continent: 'Americas', popularity: 'less', difficulty: 'hard', cfm: true, population: '18M' },
+            { name: 'Egypt', code: 'eg', continent: 'Africa', popularity: 'popular', difficulty: 'medium', cfm: false, population: '105M' },
+            { name: 'El Salvador', code: 'sv', continent: 'Americas', popularity: 'less', difficulty: 'hard', cfm: false, population: '6.3M' },
+            { name: 'Estonia', code: 'ee', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: true, population: '1.3M' },
+            { name: 'Ethiopia', code: 'et', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: true, population: '120M' },
+            { name: 'Fiji', code: 'fj', continent: 'Oceania', popularity: 'less', difficulty: 'medium', cfm: false, population: '920K' },
+            { name: 'Finland', code: 'fi', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '5.5M' },
+            { name: 'France', code: 'fr', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '68M' },
+            { name: 'Gabon', code: 'ga', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.3M' },
+            { name: 'Gambia', code: 'gm', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.6M' },
+            { name: 'Georgia', code: 'ge', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: true, population: '3.7M' },
+            { name: 'Germany', code: 'de', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '84M' },
+            { name: 'Ghana', code: 'gh', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '33M' },
+            { name: 'Greece', code: 'gr', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '10.3M' },
+            { name: 'Guatemala', code: 'gt', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '18M' },
+            { name: 'Guinea', code: 'gn', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '14M' },
+            { name: 'Haiti', code: 'ht', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '11.5M' },
+            { name: 'Honduras', code: 'hn', continent: 'Americas', popularity: 'less', difficulty: 'hard', cfm: false, population: '10M' },
+            { name: 'Hungary', code: 'hu', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: true, population: '9.6M' },
+            { name: 'Iceland', code: 'is', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: false, population: '370K' },
+            { name: 'India', code: 'in', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: true, population: '1.4B' },
+            { name: 'Indonesia', code: 'id', continent: 'Asia', popularity: 'popular', difficulty: 'hard', cfm: false, population: '275M' },
+            { name: 'Iran', code: 'ir', continent: 'Asia', popularity: 'popular', difficulty: 'medium', cfm: false, population: '87M' },
+            { name: 'Iraq', code: 'iq', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '42M' },
+            { name: 'Ireland', code: 'ie', continent: 'Europe', popularity: 'popular', difficulty: 'hard', cfm: true, population: '5.1M' },
+            { name: 'Israel', code: 'il', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: true, population: '9.5M' },
+            { name: 'Italy', code: 'it', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '59M' },
+            { name: 'Ivory Coast', code: 'ci', continent: 'Africa', popularity: 'less', difficulty: 'hard', cfm: false, population: '28M' },
+            { name: 'Jamaica', code: 'jm', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '2.8M' },
+            { name: 'Japan', code: 'jp', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: true, population: '125M' },
+            { name: 'Jordan', code: 'jo', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '11M' },
+            { name: 'Kazakhstan', code: 'kz', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '19M' },
+            { name: 'Kenya', code: 'ke', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '55M' },
+            { name: 'Kuwait', code: 'kw', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '4.3M' },
+            { name: 'Laos', code: 'la', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '7.5M' },
+            { name: 'Latvia', code: 'lv', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: true, population: '1.9M' },
+            { name: 'Lebanon', code: 'lb', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '5.5M' },
+            { name: 'Libya', code: 'ly', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '7M' },
+            { name: 'Lithuania', code: 'lt', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: true, population: '2.8M' },
+            { name: 'Luxembourg', code: 'lu', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: false, population: '650K' },
+            { name: 'Madagascar', code: 'mg', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '29M' },
+            { name: 'Malawi', code: 'mw', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: true, population: '20M' },
+            { name: 'Malaysia', code: 'my', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '33M' },
+            { name: 'Mali', code: 'ml', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '22M' },
+            { name: 'Malta', code: 'mt', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: false, population: '520K' },
+            { name: 'Mexico', code: 'mx', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '130M' },
+            { name: 'Moldova', code: 'md', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: true, population: '2.6M' },
+            { name: 'Monaco', code: 'mc', continent: 'Europe', popularity: 'less', difficulty: 'hard', cfm: false, population: '40K' },
+            { name: 'Mongolia', code: 'mn', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '3.4M' },
+            { name: 'Morocco', code: 'ma', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '37M' },
+            { name: 'Mozambique', code: 'mz', continent: 'Africa', popularity: 'less', difficulty: 'hard', cfm: true, population: '33M' },
+            { name: 'Myanmar', code: 'mm', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '55M' },
+            { name: 'Namibia', code: 'na', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: false, population: '2.6M' },
+            { name: 'Nepal', code: 'np', continent: 'Asia', popularity: 'less', difficulty: 'hard', cfm: false, population: '30M' },
+            { name: 'Netherlands', code: 'nl', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '17.5M' },
+            { name: 'New Zealand', code: 'nz', continent: 'Oceania', popularity: 'popular', difficulty: 'easy', cfm: true, population: '5.1M' },
+            { name: 'Nicaragua', code: 'ni', continent: 'Americas', popularity: 'less', difficulty: 'hard', cfm: false, population: '7M' },
+            { name: 'Niger', code: 'ne', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '26M' },
+            { name: 'Nigeria', code: 'ng', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '220M' },
+            { name: 'North Korea', code: 'kp', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '26M' },
+            { name: 'North Macedonia', code: 'mk', continent: 'Europe', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.1M' },
+            { name: 'Norway', code: 'no', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '5.5M' },
+            { name: 'Oman', code: 'om', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '4.6M' },
+            { name: 'Pakistan', code: 'pk', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '230M' },
+            { name: 'Palestine', code: 'ps', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '5.3M' },
+            { name: 'Panama', code: 'pa', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: false, population: '4.4M' },
+            { name: 'Paraguay', code: 'py', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '6.8M' },
+            { name: 'Peru', code: 'pe', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '34M' },
+            { name: 'Philippines', code: 'ph', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: true, population: '115M' },
+            { name: 'Poland', code: 'pl', continent: 'Europe', popularity: 'popular', difficulty: 'hard', cfm: true, population: '38M' },
+            { name: 'Portugal', code: 'pt', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '10.3M' },
+            { name: 'Qatar', code: 'qa', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '2.9M' },
+            { name: 'Romania', code: 'ro', continent: 'Europe', popularity: 'less', difficulty: 'hard', cfm: true, population: '19M' },
+            { name: 'Russia', code: 'ru', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '145M' },
+            { name: 'Rwanda', code: 'rw', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '13.5M' },
+            { name: 'Saudi Arabia', code: 'sa', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '36M' },
+            { name: 'Senegal', code: 'sn', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '17M' },
+            { name: 'Serbia', code: 'rs', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: true, population: '6.7M' },
+            { name: 'Singapore', code: 'sg', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: false, population: '5.9M' },
+            { name: 'Slovakia', code: 'sk', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: true, population: '5.5M' },
+            { name: 'Slovenia', code: 'si', continent: 'Europe', popularity: 'less', difficulty: 'medium', cfm: false, population: '2.1M' },
+            { name: 'Somalia', code: 'so', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '17M' },
+            { name: 'South Africa', code: 'za', continent: 'Africa', popularity: 'popular', difficulty: 'easy', cfm: true, population: '60M' },
+            { name: 'South Korea', code: 'kr', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: true, population: '52M' },
+            { name: 'Spain', code: 'es', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '48M' },
+            { name: 'Sri Lanka', code: 'lk', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '22M' },
+            { name: 'Sudan', code: 'sd', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '46M' },
+            { name: 'Sweden', code: 'se', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '10.5M' },
+            { name: 'Switzerland', code: 'ch', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '8.7M' },
+            { name: 'Syria', code: 'sy', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '22M' },
+            { name: 'Taiwan', code: 'tw', continent: 'Asia', popularity: 'less', difficulty: 'easy', cfm: true, population: '23.5M' },
+            { name: 'Tanzania', code: 'tz', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: false, population: '65M' },
+            { name: 'Thailand', code: 'th', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '70M' },
+            { name: 'Togo', code: 'tg', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '8.6M' },
+            { name: 'Trinidad and Tobago', code: 'tt', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: false, population: '1.5M' },
+            { name: 'Tunisia', code: 'tn', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: false, population: '12M' },
+            { name: 'Turkey', code: 'tr', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '85M' },
+            { name: 'Uganda', code: 'ug', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '48M' },
+            { name: 'Ukraine', code: 'ua', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '38M' },
+            { name: 'United Arab Emirates', code: 'ae', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '10M' },
+            { name: 'United Kingdom', code: 'gb', continent: 'Europe', popularity: 'popular', difficulty: 'easy', cfm: true, population: '68M' },
+            { name: 'United States', code: 'us', continent: 'Americas', popularity: 'popular', difficulty: 'easy', cfm: true, population: '335M' },
+            { name: 'Uruguay', code: 'uy', continent: 'Americas', popularity: 'less', difficulty: 'easy', cfm: true, population: '3.4M' },
+            { name: 'Uzbekistan', code: 'uz', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '35M' },
+            { name: 'Venezuela', code: 've', continent: 'Americas', popularity: 'less', difficulty: 'medium', cfm: false, population: '28M' },
+            { name: 'Vietnam', code: 'vn', continent: 'Asia', popularity: 'popular', difficulty: 'easy', cfm: false, population: '98M' },
+            { name: 'Yemen', code: 'ye', continent: 'Asia', popularity: 'less', difficulty: 'medium', cfm: false, population: '33M' },
+            { name: 'Zambia', code: 'zm', continent: 'Africa', popularity: 'less', difficulty: 'easy', cfm: true, population: '20M' },
             { name: 'Zimbabwe', code: 'zw', continent: 'Africa', popularity: 'less', difficulty: 'medium', cfm: true, population: '16M' }
         ];
 
@@ -615,33 +771,30 @@
             recentHistory: [],
             unseenFlags: []
         };
-
-        /* Worldometer code overrides – extend as you find differences */
         const WM_OVERRIDES = {
-            // examples / guesses; adjust if you see 404s
-            gb: "UK",
-            gr: "GR", // same as ISO, here just illustrative
-            // if you know that AJ = Azerbaijan, etc., add it:
-            // az: "AJ"
-        };
+  // fill in only when filename ≠ ISO-2; start empty:
+  // gb: "UK",
+  // az: "AJ",
+};
 
-        function getWorldometerCode(iso2) {
-            const lower = iso2.toLowerCase();
-            if (WM_OVERRIDES[lower]) return WM_OVERRIDES[lower];
-            return iso2.toUpperCase();
-        }
+function getWorldometerCode(iso2) {
+  const lower = iso2.toLowerCase();
+  if (WM_OVERRIDES[lower]) return WM_OVERRIDES[lower];
+  return iso2.toUpperCase();
+}
 
-        function getWorldometerLocatorMap(code, name) {
-            const wmCode = getWorldometerCode(code);
-            const url = `https://www.worldometers.info/img/maps_cl/${wmCode}-locator-map.gif`;[web:437][web:432]
+function getWorldometerLocatorMap(code, name) {
+  const wmCode = getWorldometerCode(code);
+  const url = `https://www.worldometers.info/img/maps_cl/${wmCode}-locator-map.gif`;
 
-            return `
-                <img src="${url}"
-                     alt="${name} locator map"
-                     style="width: 100%; height: 100%; object-fit: cover;"
-                     onerror="this.parentElement.innerHTML='<div style=&quot;color: var(--color-text-secondary); font-size: 12px; text-align:center; padding:12px;&quot;>Locator map not available</div>'">
-            `;
-        }
+  return `
+    <img src="${url}"
+         alt="${name} locator map"
+         style="width: 100%; height: 100%; object-fit: cover;"
+         onerror="this.parentElement.innerHTML='<div style=&quot;color: var(--color-text-secondary); font-size: 12px; text-align:center; padding:12px;&quot;>Locator map not available</div>'">
+  `;
+}
+
 
         function initializeQueue() {
             state.unseenFlags = [...state.filtered];
@@ -690,7 +843,7 @@
 
         function setupEventListeners() {
             document.getElementById('settings-toggle').addEventListener('click', toggleSettings);
-
+            
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -733,7 +886,7 @@
 
         function applyFilter(value) {
             state.filter = value;
-
+            
             if (value === 'all') {
                 state.filtered = [...FLAGS];
             } else if (['europe', 'asia', 'africa', 'americas', 'oceania'].includes(value)) {
@@ -743,7 +896,7 @@
             } else if (['easy', 'medium', 'hard'].includes(value)) {
                 state.filtered = FLAGS.filter(f => f.difficulty === value);
             }
-
+            
             document.getElementById('filter-info').textContent = `Showing ${state.filtered.length} flags`;
             initializeQueue();
             nextFlag();
@@ -763,7 +916,7 @@
         function getNextFlag() {
             if (state.upcomingQueue.length > 0) {
                 const next = state.upcomingQueue.shift();
-
+                
                 if (state.upcomingQueue.length < 5) {
                     if (state.unseenFlags.length === 0) {
                         state.unseenFlags = [...state.filtered];
@@ -772,7 +925,7 @@
                     const newFlags = state.unseenFlags.splice(0, 5);
                     state.upcomingQueue.push(...newFlags);
                 }
-
+                
                 return next;
             }
 
@@ -781,16 +934,16 @@
 
         function nextFlag() {
             const newFlag = getNextFlag();
-
+            
             state.previous = state.current ? state.current.code : null;
             state.current = newFlag;
             state.answered = false;
-
+            
             state.recentHistory.push(newFlag.code);
             if (state.recentHistory.length > 10) {
                 state.recentHistory.shift();
             }
-
+            
             if (state.mode === 'practice') {
                 loadPracticeMode();
             } else {
@@ -801,12 +954,12 @@
         function loadPracticeMode() {
             document.getElementById('answer-section').classList.add('hidden');
             document.getElementById('reveal-btn').classList.remove('hidden');
-
+            
             const flagContainer = document.getElementById('flag-container');
             const questionContainer = document.getElementById('question-container');
             const flagImage = document.getElementById('flag-image');
             const questionText = document.getElementById('question-text');
-
+            
             if (state.direction === 'flag-to-country') {
                 flagContainer.classList.remove('hidden');
                 questionContainer.classList.add('hidden');
@@ -823,7 +976,7 @@
             const flagContainer = document.getElementById('flag-container');
             const flagImage = document.getElementById('flag-image');
             const answerName = document.getElementById('answer-name');
-
+            
             if (state.direction === 'country-to-flag') {
                 flagContainer.classList.remove('hidden');
                 flagImage.src = `https://flagcdn.com/w320/${state.current.code}.png`;
@@ -832,9 +985,9 @@
             } else {
                 answerName.textContent = state.current.name;
             }
-
+            
             showCountryInfo();
-
+            
             document.getElementById('reveal-btn').classList.add('hidden');
             document.getElementById('answer-section').classList.remove('hidden');
         }
@@ -842,37 +995,37 @@
         function showCountryInfo() {
             const existingInfo = document.getElementById('country-info-display');
             if (existingInfo) existingInfo.remove();
-
+            
             const infoDiv = document.createElement('div');
             infoDiv.id = 'country-info-display';
             infoDiv.className = 'country-info';
-
-            const cfmStatus = state.current.cfm
+            
+            const cfmStatus = state.current.cfm 
                 ? '<span class="cfm-badge has-church">✓ CFM Church Present</span>'
                 : '<span class="cfm-badge no-church">✗ No CFM church yet. Who will go?</span>';
-
+            
             infoDiv.innerHTML = `
                 <div class="country-info-item">
                     ${cfmStatus}
                 </div>
                 <div class="country-info-item">
-                    <strong>🌍 Continent:</strong> ${state.current.continent}
-                    &nbsp; <strong>👥 Population:</strong> ${state.current.population}
+                    <strong>🌍 Continent:</strong> ${state.current.continent} &nbsp; <strong>👥 Population:</strong> ${state.current.population}
                 </div>
-                <div class="map-container">
-                    <div class="map-box">
-                        <h4>World</h4>
-                        <div class="globe-map">${getGlobeMap(state.current.code)}</div>
-                    </div>
-                    <div class="map-box">
-                        <h4>Region</h4>
-                        <div class="country-region-map">
-                            ${getWorldometerLocatorMap(state.current.code, state.current.name)}
-                        </div>
-                    </div>
-                </div>
-            `;
+               <div class="map-container">
+  <div class="map-box">
+    <h4>World</h4>
+    <div class="globe-map">${getGlobeMap(state.current.code)}</div>
+  </div>
+  <div class="map-box">
+    <h4>Region</h4>
+    <div class="country-region-map">
+      ${getWorldometerLocatorMap(state.current.code, state.current.name)}
+    </div>
+  </div>
+</div>
 
+            `;
+            
             const answerSection = document.getElementById('answer-section');
             const actionButtons = answerSection.querySelector('.action-buttons');
             actionButtons.parentNode.insertBefore(infoDiv, actionButtons.nextSibling);
@@ -886,13 +1039,13 @@
                 state.stats.incorrect++;
                 scheduleFailedFlag(state.current);
             }
-
+            
             if (!state.flagData[state.current.code]) {
                 state.flagData[state.current.code] = { seen: 0, correct: 0 };
             }
             state.flagData[state.current.code].seen++;
             if (correct) state.flagData[state.current.code].correct++;
-
+            
             saveData();
             updateStats();
             nextFlag();
@@ -904,17 +1057,17 @@
             const questionDiv = document.getElementById('quiz-question');
             const flagContainer = document.getElementById('flag-container');
             const flagImage = document.getElementById('flag-image');
-
+            
             container.innerHTML = '';
             questionDiv.innerHTML = '';
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('next-btn').classList.add('hidden');
-
+            
             if (state.direction === 'flag-to-country') {
                 flagContainer.classList.remove('hidden');
                 flagImage.src = `https://flagcdn.com/w320/${state.current.code}.png`;
                 flagImage.alt = 'Flag to identify';
-
+                
                 options.forEach(flag => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
@@ -929,17 +1082,17 @@
                 nameDiv.textContent = state.current.name;
                 nameDiv.style.marginBottom = '16px';
                 questionDiv.appendChild(nameDiv);
-
+                
                 options.forEach(flag => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.style.padding = '0';
                     btn.style.height = 'auto';
-
+                    
                     const img = document.createElement('img');
                     img.src = `https://flagcdn.com/w320/${flag.code}.png`;
                     img.alt = flag.name;
-
+                    
                     btn.appendChild(img);
                     btn.addEventListener('click', () => handleQuizAnswer(flag.name, btn));
                     container.appendChild(btn);
@@ -950,25 +1103,25 @@
         function getQuizOptions() {
             const options = [state.current];
             const others = state.filtered.filter(f => f.code !== state.current.code);
-
+            
             while (options.length < 4 && others.length > 0) {
                 const random = others[Math.floor(Math.random() * others.length)];
                 if (!options.find(o => o.code === random.code)) {
                     options.push(random);
                 }
             }
-
+            
             return options.sort(() => Math.random() - 0.5);
         }
 
         function handleQuizAnswer(selected, btn) {
             if (state.answered) return;
             state.answered = true;
-
+            
             const correct = selected === state.current.name;
             const allBtns = document.querySelectorAll('#options-container .option-btn');
             allBtns.forEach(b => b.disabled = true);
-
+            
             state.stats.total++;
             if (correct) {
                 state.stats.correct++;
@@ -978,7 +1131,7 @@
                 state.stats.incorrect++;
                 btn.classList.add('incorrect');
                 scheduleFailedFlag(state.current);
-
+                
                 allBtns.forEach(b => {
                     if (state.direction === 'flag-to-country') {
                         if (b.textContent === state.current.name) {
@@ -991,18 +1144,18 @@
                         }
                     }
                 });
-
+                
                 showFeedback(`❌ Wrong! The correct answer is ${state.current.name}`, 'incorrect');
             }
-
+            
             showCountryInfoQuiz();
-
+            
             if (!state.flagData[state.current.code]) {
                 state.flagData[state.current.code] = { seen: 0, correct: 0 };
             }
             state.flagData[state.current.code].seen++;
             if (correct) state.flagData[state.current.code].correct++;
-
+            
             saveData();
             updateStats();
             document.getElementById('next-btn').classList.remove('hidden');
@@ -1011,37 +1164,37 @@
         function showCountryInfoQuiz() {
             const existingInfo = document.getElementById('country-info-display-quiz');
             if (existingInfo) existingInfo.remove();
-
+            
             const infoDiv = document.createElement('div');
             infoDiv.id = 'country-info-display-quiz';
             infoDiv.className = 'country-info';
-
-            const cfmStatus = state.current.cfm
+            
+            const cfmStatus = state.current.cfm 
                 ? '<span class="cfm-badge has-church">✓ CFM Church Present</span>'
                 : '<span class="cfm-badge no-church">✗ No CFM church yet. Who will go?</span>';
-
+            
             infoDiv.innerHTML = `
                 <div class="country-info-item">
                     ${cfmStatus}
                 </div>
                 <div class="country-info-item">
-                    <strong>🌍 Continent:</strong> ${state.current.continent}
-                    &nbsp; <strong>👥 Population:</strong> ${state.current.population}
+                    <strong>🌍 Continent:</strong> ${state.current.continent} &nbsp; <strong>👥 Population:</strong> ${state.current.population}
                 </div>
-                <div class="map-container">
-                    <div class="map-box">
-                        <h4>World</h4>
-                        <div class="globe-map">${getGlobeMap(state.current.code)}</div>
-                    </div>
-                    <div class="map-box">
-                        <h4>Region</h4>
-                        <div class="country-region-map">
-                            ${getWorldometerLocatorMap(state.current.code, state.current.name)}
-                        </div>
-                    </div>
-                </div>
-            `;
+               <div class="map-container">
+  <div class="map-box">
+    <h4>World</h4>
+    <div class="globe-map">${getGlobeMap(state.current.code)}</div>
+  </div>
+  <div class="map-box">
+    <h4>Region</h4>
+    <div class="country-region-map">
+      ${getWorldometerLocatorMap(state.current.code, state.current.name)}
+    </div>
+  </div>
+</div>
 
+            `;
+            
             const nextBtn = document.getElementById('next-btn');
             nextBtn.parentNode.insertBefore(infoDiv, nextBtn);
         }
@@ -1051,6 +1204,14 @@
             feedback.textContent = text;
             feedback.className = `feedback ${type}`;
             feedback.classList.remove('hidden');
+        }
+
+        function getCountrySilhouette(countryCode) {
+            const svgUrl = `https://cdn.amcharts.com/lib/5/geodata/svg/${countryCode}Low.svg`;
+            
+            return `<img src="${svgUrl}" 
+                         alt="${state.current.name} shape"
+                         onerror="this.parentElement.innerHTML='<div style=\\'color: var(--color-text-secondary); font-size: 12px;\\'>Shape unavailable</div>'">`;
         }
 
         function getGlobeMap(countryCode) {
@@ -1105,11 +1266,11 @@
                 <svg viewBox="0 0 ${mapWidth} ${mapHeight}" preserveAspectRatio="xMidYMid meet"
                      style="width: 100%; height: 100%;">
                     <image href="https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg"
-                           x="0" y="0" width="${mapWidth}" height="${mapHeight}" opacity="0.7" />
-                    <circle cx="${x}" cy="${y}" r="12" fill="var(--color-error)" opacity="0.85" />
-                    <circle cx="${x}" cy="${y}" r="22"
-                            fill="none" stroke="var(--color-error)" stroke-width="4" opacity="0.8">
-                        <animate attributeName="r" from="14" to="36" dur="2s" repeatCount="indefinite"></animate>
+                           x="0" y="0" width="${mapWidth}" height="${mapHeight}" opacity="0.6" />
+                    <circle class="location-dot" cx="${x}" cy="${y}" r="16" opacity="0.4" style="filter: blur(3px);" />
+                    <circle class="location-dot" cx="${x}" cy="${y}" r="10" />
+                    <circle cx="${x}" cy="${y}" r="16" fill="none" stroke="var(--color-error)" stroke-width="4" opacity="0.8">
+                        <animate attributeName="r" from="10" to="30" dur="2s" repeatCount="indefinite"></animate>
                         <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"></animate>
                     </circle>
                 </svg>
