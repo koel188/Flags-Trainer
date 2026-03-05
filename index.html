@@ -206,502 +206,683 @@
 </div>
 
 <script>
-const FLAGS = [
-    {name:'Afghanistan',code:'af',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'40M'},
-    {name:'Albania',code:'al',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.8M'},
-    {name:'Algeria',code:'dz',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'45M'},
-    {name:'Andorra',code:'ad',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'80K'},
-    {name:'Angola',code:'ao',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'35M'},
-    {name:'Argentina',code:'ar',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'46M'},
-    {name:'Armenia',code:'am',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.8M'},
-    {name:'Australia',code:'au',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'26M'},
-    {name:'Austria',code:'at',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'9M'},
-    {name:'Azerbaijan',code:'az',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'10M'},
-    {name:'Bahamas',code:'bs',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'400K'},
-    {name:'Bahrain',code:'bh',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'1.5M'},
-    {name:'Bangladesh',code:'bd',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'170M'},
-    {name:'Barbados',code:'bb',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'280K'},
-    {name:'Belarus',code:'by',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'9.2M'},
-    {name:'Belgium',code:'be',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'11.6M'},
-    {name:'Belize',code:'bz',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'400K'},
-    {name:'Benin',code:'bj',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'13M'},
-    {name:'Bhutan',code:'bt',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'780K'},
-    {name:'Bolivia',code:'bo',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'12M'},
-    {name:'Bosnia and Herzegovina',code:'ba',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'3.2M'},
-    {name:'Botswana',code:'bw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M'},
-    {name:'Brazil',code:'br',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'215M'},
-    {name:'Brunei',code:'bn',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'450K'},
-    {name:'Bulgaria',code:'bg',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M'},
-    {name:'Burkina Faso',code:'bf',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M'},
-    {name:'Burundi',code:'bi',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'12.5M'},
-    {name:'Cambodia',code:'kh',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'17M'},
-    {name:'Cameroon',code:'cm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'28M'},
-    {name:'Canada',code:'ca',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'39M'},
-    {name:'Chad',code:'td',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'18M'},
-    {name:'Chile',code:'cl',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'19M'},
-    {name:'China',code:'cn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'1.4B'},
-    {name:'Colombia',code:'co',continent:'Americas',popularity:'popular',difficulty:'medium',cfm:true,population:'52M'},
-    {name:'Congo',code:'cg',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'6M'},
-    {name:'Costa Rica',code:'cr',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'5.2M'},
-    {name:'Croatia',code:'hr',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'3.9M'},
-    {name:'Cuba',code:'cu',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'11M'},
-    {name:'Cyprus',code:'cy',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'1.2M'},
-    {name:'Czech Republic',code:'cz',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M'},
-    {name:'Denmark',code:'dk',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.9M'},
-    {name:'Dominican Republic',code:'do',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'11M'},
-    {name:'Ecuador',code:'ec',continent:'Americas',popularity:'less',difficulty:'hard',cfm:true,population:'18M'},
-    {name:'Egypt',code:'eg',continent:'Africa',popularity:'popular',difficulty:'medium',cfm:false,population:'105M'},
-    {name:'El Salvador',code:'sv',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'6.3M'},
-    {name:'Estonia',code:'ee',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.3M'},
-    {name:'Ethiopia',code:'et',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'120M'},
-    {name:'Fiji',code:'fj',continent:'Oceania',popularity:'less',difficulty:'medium',cfm:false,population:'920K'},
-    {name:'Finland',code:'fi',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M'},
-    {name:'France',code:'fr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M'},
-    {name:'Gabon',code:'ga',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.3M'},
-    {name:'Gambia',code:'gm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M'},
-    {name:'Georgia',code:'ge',continent:'Asia',popularity:'less',difficulty:'medium',cfm:true,population:'3.7M'},
-    {name:'Germany',code:'de',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'84M'},
-    {name:'Ghana',code:'gh',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'33M'},
-    {name:'Greece',code:'gr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M'},
-    {name:'Guatemala',code:'gt',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'18M'},
-    {name:'Guinea',code:'gn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'14M'},
-    {name:'Haiti',code:'ht',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'11.5M'},
-    {name:'Honduras',code:'hn',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'10M'},
-    {name:'Hungary',code:'hu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'9.6M'},
-    {name:'Iceland',code:'is',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'370K'},
-    {name:'India',code:'in',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'1.4B'},
-    {name:'Indonesia',code:'id',continent:'Asia',popularity:'popular',difficulty:'hard',cfm:false,population:'275M'},
-    {name:'Iran',code:'ir',continent:'Asia',popularity:'popular',difficulty:'medium',cfm:false,population:'87M'},
-    {name:'Iraq',code:'iq',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'42M'},
-    {name:'Ireland',code:'ie',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'5.1M'},
-    {name:'Israel',code:'il',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'9.5M'},
-    {name:'Italy',code:'it',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'59M'},
-    {name:'Ivory Coast',code:'ci',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'28M'},
-    {name:'Jamaica',code:'jm',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M'},
-    {name:'Japan',code:'jp',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'125M'},
-    {name:'Jordan',code:'jo',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'11M'},
-    {name:'Kazakhstan',code:'kz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'19M'},
-    {name:'Kenya',code:'ke',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'55M'},
-    {name:'Kuwait',code:'kw',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'4.3M'},
-    {name:'Laos',code:'la',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'7.5M'},
-    {name:'Latvia',code:'lv',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.9M'},
-    {name:'Lebanon',code:'lb',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.5M'},
-    {name:'Libya',code:'ly',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'7M'},
-    {name:'Lithuania',code:'lt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M'},
-    {name:'Luxembourg',code:'lu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'650K'},
-    {name:'Madagascar',code:'mg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'29M'},
-    {name:'Malawi',code:'mw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M'},
-    {name:'Malaysia',code:'my',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M'},
-    {name:'Mali',code:'ml',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M'},
-    {name:'Malta',code:'mt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'520K'},
-    {name:'Mexico',code:'mx',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'130M'},
-    {name:'Moldova',code:'md',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'2.6M'},
-    {name:'Monaco',code:'mc',continent:'Europe',popularity:'less',difficulty:'hard',cfm:false,population:'40K'},
-    {name:'Mongolia',code:'mn',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'3.4M'},
-    {name:'Morocco',code:'ma',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'37M'},
-    {name:'Mozambique',code:'mz',continent:'Africa',popularity:'less',difficulty:'hard',cfm:true,population:'33M'},
-    {name:'Myanmar',code:'mm',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'55M'},
-    {name:'Namibia',code:'na',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'2.6M'},
-    {name:'Nepal',code:'np',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'30M'},
-    {name:'Netherlands',code:'nl',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'17.5M'},
-    {name:'New Zealand',code:'nz',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'5.1M'},
-    {name:'Nicaragua',code:'ni',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'7M'},
-    {name:'Niger',code:'ne',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'26M'},
-    {name:'Nigeria',code:'ng',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'220M'},
-    {name:'North Korea',code:'kp',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'26M'},
-    {name:'North Macedonia',code:'mk',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'2.1M'},
-    {name:'Norway',code:'no',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M'},
-    {name:'Oman',code:'om',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'4.6M'},
-    {name:'Pakistan',code:'pk',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'230M'},
-    {name:'Palestine',code:'ps',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'5.3M'},
-    {name:'Panama',code:'pa',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'4.4M'},
-    {name:'Paraguay',code:'py',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M'},
-    {name:'Peru',code:'pe',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'34M'},
-    {name:'Philippines',code:'ph',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'115M'},
-    {name:'Poland',code:'pl',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'38M'},
-    {name:'Portugal',code:'pt',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M'},
-    {name:'Qatar',code:'qa',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.9M'},
-    {name:'Romania',code:'ro',continent:'Europe',popularity:'less',difficulty:'hard',cfm:true,population:'19M'},
-    {name:'Russia',code:'ru',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'145M'},
-    {name:'Rwanda',code:'rw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'13.5M'},
-    {name:'Saudi Arabia',code:'sa',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'36M'},
-    {name:'Senegal',code:'sn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M'},
-    {name:'Serbia',code:'rs',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'6.7M'},
-    {name:'Singapore',code:'sg',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.9M'},
-    {name:'Slovakia',code:'sk',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'5.5M'},
-    {name:'Slovenia',code:'si',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.1M'},
-    {name:'Somalia',code:'so',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M'},
-    {name:'South Africa',code:'za',continent:'Africa',popularity:'popular',difficulty:'easy',cfm:true,population:'60M'},
-    {name:'South Korea',code:'kr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'52M'},
-    {name:'Spain',code:'es',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'48M'},
-    {name:'Sri Lanka',code:'lk',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M'},
-    {name:'Sudan',code:'sd',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'46M'},
-    {name:'Sweden',code:'se',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M'},
-    {name:'Switzerland',code:'ch',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'8.7M'},
-    {name:'Syria',code:'sy',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M'},
-    {name:'Taiwan',code:'tw',continent:'Asia',popularity:'less',difficulty:'easy',cfm:true,population:'23.5M'},
-    {name:'Tanzania',code:'tz',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'65M'},
-    {name:'Thailand',code:'th',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'70M'},
-    {name:'Togo',code:'tg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'8.6M'},
-    {name:'Trinidad and Tobago',code:'tt',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'1.5M'},
-    {name:'Tunisia',code:'tn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'12M'},
-    {name:'Turkey',code:'tr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'85M'},
-    {name:'Uganda',code:'ug',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'48M'},
-    {name:'Ukraine',code:'ua',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'38M'},
-    {name:'United Arab Emirates',code:'ae',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'10M'},
-    {name:'United Kingdom',code:'gb',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M'},
-    {name:'United States',code:'us',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'335M'},
-    {name:'Uruguay',code:'uy',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'3.4M'},
-    {name:'Uzbekistan',code:'uz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'35M'},
-    {name:'Venezuela',code:'ve',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'28M'},
-    {name:'Vietnam',code:'vn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'98M'},
-    {name:'Yemen',code:'ye',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M'},
-    {name:'Zambia',code:'zm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M'},
-    {name:'Zimbabwe',code:'zw',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'16M'}
-];
+    const FLAGS = [
+        {name:'Afghanistan',code:'af',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'40M'},
+        {name:'Albania',code:'al',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.8M'},
+        {name:'Algeria',code:'dz',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'45M'},
+        {name:'Andorra',code:'ad',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'80K'},
+        {name:'Angola',code:'ao',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'35M'},
+        {name:'Argentina',code:'ar',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'46M'},
+        {name:'Armenia',code:'am',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.8M'},
+        {name:'Australia',code:'au',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'26M'},
+        {name:'Austria',code:'at',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'9M'},
+        {name:'Azerbaijan',code:'az',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'10M'},
+        {name:'Bahamas',code:'bs',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'400K'},
+        {name:'Bahrain',code:'bh',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'1.5M'},
+        {name:'Bangladesh',code:'bd',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'170M'},
+        {name:'Barbados',code:'bb',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'280K'},
+        {name:'Belarus',code:'by',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'9.2M'},
+        {name:'Belgium',code:'be',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'11.6M'},
+        {name:'Belize',code:'bz',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'400K'},
+        {name:'Benin',code:'bj',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'13M'},
+        {name:'Bhutan',code:'bt',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'780K'},
+        {name:'Bolivia',code:'bo',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'12M'},
+        {name:'Bosnia and Herzegovina',code:'ba',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'3.2M'},
+        {name:'Botswana',code:'bw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M'},
+        {name:'Brazil',code:'br',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'215M'},
+        {name:'Brunei',code:'bn',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'450K'},
+        {name:'Bulgaria',code:'bg',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M'},
+        {name:'Burkina Faso',code:'bf',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M'},
+        {name:'Burundi',code:'bi',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'12.5M'},
+        {name:'Cambodia',code:'kh',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'17M'},
+        {name:'Cameroon',code:'cm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'28M'},
+        {name:'Canada',code:'ca',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'39M'},
+        {name:'Chad',code:'td',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'18M'},
+        {name:'Chile',code:'cl',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'19M'},
+        {name:'China',code:'cn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'1.4B'},
+        {name:'Colombia',code:'co',continent:'Americas',popularity:'popular',difficulty:'medium',cfm:true,population:'52M'},
+        {name:'Congo',code:'cg',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'6M'},
+        {name:'Costa Rica',code:'cr',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'5.2M'},
+        {name:'Croatia',code:'hr',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'3.9M'},
+        {name:'Cuba',code:'cu',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'11M'},
+        {name:'Cyprus',code:'cy',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'1.2M'},
+        {name:'Czech Republic',code:'cz',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M'},
+        {name:'Denmark',code:'dk',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.9M'},
+        {name:'Dominican Republic',code:'do',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'11M'},
+        {name:'Ecuador',code:'ec',continent:'Americas',popularity:'less',difficulty:'hard',cfm:true,population:'18M'},
+        {name:'Egypt',code:'eg',continent:'Africa',popularity:'popular',difficulty:'medium',cfm:false,population:'105M'},
+        {name:'El Salvador',code:'sv',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'6.3M'},
+        {name:'Estonia',code:'ee',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.3M'},
+        {name:'Ethiopia',code:'et',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'120M'},
+        {name:'Fiji',code:'fj',continent:'Oceania',popularity:'less',difficulty:'medium',cfm:false,population:'920K'},
+        {name:'Finland',code:'fi',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M'},
+        {name:'France',code:'fr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M'},
+        {name:'Gabon',code:'ga',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.3M'},
+        {name:'Gambia',code:'gm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M'},
+        {name:'Georgia',code:'ge',continent:'Asia',popularity:'less',difficulty:'medium',cfm:true,population:'3.7M'},
+        {name:'Germany',code:'de',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'84M'},
+        {name:'Ghana',code:'gh',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'33M'},
+        {name:'Greece',code:'gr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M'},
+        {name:'Guatemala',code:'gt',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'18M'},
+        {name:'Guinea',code:'gn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'14M'},
+        {name:'Haiti',code:'ht',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'11.5M'},
+        {name:'Honduras',code:'hn',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'10M'},
+        {name:'Hungary',code:'hu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'9.6M'},
+        {name:'Iceland',code:'is',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'370K'},
+        {name:'India',code:'in',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'1.4B'},
+        {name:'Indonesia',code:'id',continent:'Asia',popularity:'popular',difficulty:'hard',cfm:false,population:'275M'},
+        {name:'Iran',code:'ir',continent:'Asia',popularity:'popular',difficulty:'medium',cfm:false,population:'87M'},
+        {name:'Iraq',code:'iq',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'42M'},
+        {name:'Ireland',code:'ie',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'5.1M'},
+        {name:'Israel',code:'il',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'9.5M'},
+        {name:'Italy',code:'it',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'59M'},
+        {name:'Ivory Coast',code:'ci',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'28M'},
+        {name:'Jamaica',code:'jm',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M'},
+        {name:'Japan',code:'jp',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'125M'},
+        {name:'Jordan',code:'jo',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'11M'},
+        {name:'Kazakhstan',code:'kz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'19M'},
+        {name:'Kenya',code:'ke',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'55M'},
+        {name:'Kuwait',code:'kw',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'4.3M'},
+        {name:'Laos',code:'la',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'7.5M'},
+        {name:'Latvia',code:'lv',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.9M'},
+        {name:'Lebanon',code:'lb',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.5M'},
+        {name:'Libya',code:'ly',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'7M'},
+        {name:'Lithuania',code:'lt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M'},
+        {name:'Luxembourg',code:'lu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'650K'},
+        {name:'Madagascar',code:'mg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'29M'},
+        {name:'Malawi',code:'mw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M'},
+        {name:'Malaysia',code:'my',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M'},
+        {name:'Mali',code:'ml',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M'},
+        {name:'Malta',code:'mt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'520K'},
+        {name:'Mexico',code:'mx',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'130M'},
+        {name:'Moldova',code:'md',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'2.6M'},
+        {name:'Monaco',code:'mc',continent:'Europe',popularity:'less',difficulty:'hard',cfm:false,population:'40K'},
+        {name:'Mongolia',code:'mn',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'3.4M'},
+        {name:'Morocco',code:'ma',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'37M'},
+        {name:'Mozambique',code:'mz',continent:'Africa',popularity:'less',difficulty:'hard',cfm:true,population:'33M'},
+        {name:'Myanmar',code:'mm',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'55M'},
+        {name:'Namibia',code:'na',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'2.6M'},
+        {name:'Nepal',code:'np',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'30M'},
+        {name:'Netherlands',code:'nl',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'17.5M'},
+        {name:'New Zealand',code:'nz',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'5.1M'},
+        {name:'Nicaragua',code:'ni',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'7M'},
+        {name:'Niger',code:'ne',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'26M'},
+        {name:'Nigeria',code:'ng',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'220M'},
+        {name:'North Korea',code:'kp',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'26M'},
+        {name:'North Macedonia',code:'mk',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'2.1M'},
+        {name:'Norway',code:'no',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M'},
+        {name:'Oman',code:'om',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'4.6M'},
+        {name:'Pakistan',code:'pk',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'230M'},
+        {name:'Palestine',code:'ps',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'5.3M'},
+        {name:'Panama',code:'pa',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'4.4M'},
+        {name:'Paraguay',code:'py',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M'},
+        {name:'Peru',code:'pe',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'34M'},
+        {name:'Philippines',code:'ph',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'115M'},
+        {name:'Poland',code:'pl',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'38M'},
+        {name:'Portugal',code:'pt',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M'},
+        {name:'Qatar',code:'qa',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.9M'},
+        {name:'Romania',code:'ro',continent:'Europe',popularity:'less',difficulty:'hard',cfm:true,population:'19M'},
+        {name:'Russia',code:'ru',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'145M'},
+        {name:'Rwanda',code:'rw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'13.5M'},
+        {name:'Saudi Arabia',code:'sa',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'36M'},
+        {name:'Senegal',code:'sn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M'},
+        {name:'Serbia',code:'rs',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'6.7M'},
+        {name:'Singapore',code:'sg',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.9M'},
+        {name:'Slovakia',code:'sk',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'5.5M'},
+        {name:'Slovenia',code:'si',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.1M'},
+        {name:'Somalia',code:'so',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M'},
+        {name:'South Africa',code:'za',continent:'Africa',popularity:'popular',difficulty:'easy',cfm:true,population:'60M'},
+        {name:'South Korea',code:'kr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'52M'},
+        {name:'Spain',code:'es',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'48M'},
+        {name:'Sri Lanka',code:'lk',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M'},
+        {name:'Sudan',code:'sd',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'46M'},
+        {name:'Sweden',code:'se',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M'},
+        {name:'Switzerland',code:'ch',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'8.7M'},
+        {name:'Syria',code:'sy',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M'},
+        {name:'Taiwan',code:'tw',continent:'Asia',popularity:'less',difficulty:'easy',cfm:true,population:'23.5M'},
+        {name:'Tanzania',code:'tz',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'65M'},
+        {name:'Thailand',code:'th',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'70M'},
+        {name:'Togo',code:'tg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'8.6M'},
+        {name:'Trinidad and Tobago',code:'tt',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'1.5M'},
+        {name:'Tunisia',code:'tn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'12M'},
+        {name:'Turkey',code:'tr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'85M'},
+        {name:'Uganda',code:'ug',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'48M'},
+        {name:'Ukraine',code:'ua',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'38M'},
+        {name:'United Arab Emirates',code:'ae',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'10M'},
+        {name:'United Kingdom',code:'gb',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M'},
+        {name:'United States',code:'us',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'335M'},
+        {name:'Uruguay',code:'uy',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'3.4M'},
+        {name:'Uzbekistan',code:'uz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'35M'},
+        {name:'Venezuela',code:'ve',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'28M'},
+        {name:'Vietnam',code:'vn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'98M'},
+        {name:'Yemen',code:'ye',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M'},
+        {name:'Zambia',code:'zm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M'},
+        {name:'Zimbabwe',code:'zw',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'16M'}
+    ];
 
-let state = {
-    mode:'practice', direction:'flag-to-country', weakMode:false, filter:'all', regionalZoom:4,
-    filtered:[...FLAGS], current:null, previous:null, answered:false,
-    stats:{correct:0,incorrect:0,total:0}, flagData:{},
-    upcomingQueue:[], recentHistory:[], unseenFlags:[]
-};
+    const CAPITALS = {
+        af:'Kabul', al:'Tirana', dz:'Algiers', ad:'Andorra la Vella', ao:'Luanda',
+        ar:'Buenos Aires', am:'Yerevan', au:'Canberra', at:'Vienna', az:'Baku',
+        bs:'Nassau', bh:'Manama', bd:'Dhaka', bb:'Bridgetown', by:'Minsk',
+        be:'Brussels', bz:'Belmopan', bj:'Porto-Novo', bt:'Thimphu', bo:'Sucre',
+        ba:'Sarajevo', bw:'Gaborone', br:'Brasília', bn:'Bandar Seri Begawan',
+        bg:'Sofia', bf:'Ouagadougou', bi:'Gitega', kh:'Phnom Penh', cm:'Yaoundé',
+        ca:'Ottawa', td:'N\'Djamena', cl:'Santiago', cn:'Beijing', co:'Bogotá',
+        cg:'Brazzaville', cr:'San José', hr:'Zagreb', cu:'Havana', cy:'Nicosia',
+        cz:'Prague', dk:'Copenhagen', do:'Santo Domingo', ec:'Quito', eg:'Cairo',
+        sv:'San Salvador', ee:'Tallinn', et:'Addis Ababa', fj:'Suva', fi:'Helsinki',
+        fr:'Paris', ga:'Libreville', gm:'Banjul', ge:'Tbilisi', de:'Berlin',
+        gh:'Accra', gr:'Athens', gt:'Guatemala City', gn:'Conakry', ht:'Port-au-Prince',
+        hn:'Tegucigalpa', hu:'Budapest', is:'Reykjavik', in:'New Delhi', id:'Jakarta',
+        ir:'Tehran', iq:'Baghdad', ie:'Dublin', il:'Jerusalem', it:'Rome',
+        ci:'Yamoussoukro', jm:'Kingston', jp:'Tokyo', jo:'Amman', kz:'Astana',
+        ke:'Nairobi', kw:'Kuwait City', la:'Vientiane', lv:'Riga', lb:'Beirut',
+        ly:'Tripoli', lt:'Vilnius', lu:'Luxembourg City', mg:'Antananarivo',
+        mw:'Lilongwe', my:'Kuala Lumpur', ml:'Bamako', mt:'Valletta', mx:'Mexico City',
+        md:'Chișinău', mc:'Monaco', mn:'Ulaanbaatar', ma:'Rabat', mz:'Maputo',
+        mm:'Naypyidaw', na:'Windhoek', np:'Kathmandu', nl:'Amsterdam', nz:'Wellington',
+        ni:'Managua', ne:'Niamey', ng:'Abuja', kp:'Pyongyang', mk:'Skopje',
+        no:'Oslo', om:'Muscat', pk:'Islamabad', ps:'Ramallah', pa:'Panama City',
+        py:'Asunción', pe:'Lima', ph:'Manila', pl:'Warsaw', pt:'Lisbon',
+        qa:'Doha', ro:'Bucharest', ru:'Moscow', rw:'Kigali', sa:'Riyadh',
+        sn:'Dakar', rs:'Belgrade', sg:'Singapore', sk:'Bratislava', si:'Ljubljana',
+        so:'Mogadishu', za:'Pretoria', kr:'Seoul', es:'Madrid',
+        lk:'Sri Jayawardenepura Kotte', sd:'Khartoum', se:'Stockholm', ch:'Bern',
+        sy:'Damascus', tw:'Taipei', tz:'Dodoma', th:'Bangkok', tg:'Lomé',
+        tt:'Port of Spain', tn:'Tunis', tr:'Ankara', ug:'Kampala', ua:'Kyiv',
+        ae:'Abu Dhabi', gb:'London', us:'Washington D.C.', uy:'Montevideo',
+        uz:'Tashkent', ve:'Caracas', vn:'Hanoi', ye:'Sanaa', zm:'Lusaka', zw:'Harare'
+    };
 
-function initializeQueue(){state.unseenFlags=[...state.filtered];shuffleArray(state.unseenFlags);state.upcomingQueue=state.unseenFlags.splice(0,Math.min(10,state.unseenFlags.length));}
-function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
-function scheduleFailedFlag(flag){const pos=[Math.floor(Math.random()*5)+1,Math.floor(Math.random()*5)+6];pos.sort((a,b)=>a-b);pos.forEach(p=>{const i=Math.min(p,state.upcomingQueue.length);state.upcomingQueue.splice(i,0,flag);});}
-function init(){loadData();setupEventListeners();initializeQueue();nextFlag();}
-function loadData(){try{const s=localStorage.getItem('flagStats');if(s)state.flagData=JSON.parse(s);}catch(e){}}
-function saveData(){try{localStorage.setItem('flagStats',JSON.stringify(state.flagData));}catch(e){}}
+    let state = {
+        mode: 'practice',
+        direction: 'flag-to-country',
+        weakMode: false,
+        filter: 'all',
+        regionalZoom: 4,
+        filtered: [...FLAGS],
+        current: null,
+        previous: null,
+        answered: false,
+        stats: { correct: 0, incorrect: 0, total: 0 },
+        flagData: {},
+        upcomingQueue: [],
+        recentHistory: [],
+        unseenFlags: []
+    };
 
-function setupEventListeners(){
+    function initializeQueue() {
+        state.unseenFlags = [...state.filtered];
+        shuffleArray(state.unseenFlags);
+        state.upcomingQueue = state.unseenFlags.splice(0, Math.min(10, state.unseenFlags.length));
+    }
 
-    document.querySelectorAll('.mode-btn').forEach(btn=>btn.addEventListener('click',()=>{
-        document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');state.mode=btn.dataset.mode;switchMode();
-    }));
-    document.querySelectorAll('[data-direction]').forEach(btn=>btn.addEventListener('click',()=>{
-        document.querySelectorAll('[data-direction]').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');state.direction=btn.dataset.direction;nextFlag();
-    }));
-    document.getElementById('weak-toggle').addEventListener('click',e=>{
-        state.weakMode=!state.weakMode;e.target.textContent=state.weakMode?'On':'Off';e.target.classList.toggle('active');nextFlag();
-    });
-    document.getElementById('filter-select').addEventListener('change',e=>applyFilter(e.target.value));
-    document.getElementById('zoom-slider').addEventListener('input', e => {
-        state.regionalZoom = parseFloat(e.target.value);
-        document.getElementById('zoom-value').textContent = state.regionalZoom + '×';
-    });
-    document.getElementById('reveal-btn').addEventListener('click',revealAnswer);
-    document.getElementById('correct-btn').addEventListener('click',()=>markAnswer(true));
-    document.getElementById('missed-btn').addEventListener('click',()=>markAnswer(false));
-    document.getElementById('next-btn').addEventListener('click',nextFlag);
-}
+    function shuffleArray(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+    }
 
-function toggleSettings(){document.getElementById('settings-card').classList.toggle('collapsed');}
+    function scheduleFailedFlag(flag) {
+        const pos = [
+            Math.floor(Math.random() * 5) + 1,
+            Math.floor(Math.random() * 5) + 6
+        ];
+        pos.sort((a, b) => a - b);
+        pos.forEach(p => {
+            const i = Math.min(p, state.upcomingQueue.length);
+            state.upcomingQueue.splice(i, 0, flag);
+        });
+    }
 
-function applyFilter(v){
-    state.filter=v;
-    if(v==='all')state.filtered=[...FLAGS];
-    else if(['europe','asia','africa','americas','oceania'].includes(v))state.filtered=FLAGS.filter(f=>f.continent.toLowerCase()===v);
-    else if(v==='popular'||v==='less')state.filtered=FLAGS.filter(f=>f.popularity===v);
-    else if(['easy','medium','hard'].includes(v))state.filtered=FLAGS.filter(f=>f.difficulty===v);
-    document.getElementById('filter-info').textContent=`Showing ${state.filtered.length} flags`;
-    initializeQueue();nextFlag();
-}
+    function init() {
+        loadData();
+        setupEventListeners();
+        initializeQueue();
+        nextFlag();
+    }
 
-function switchMode(){
-    document.getElementById('practice-view').classList.toggle('hidden',state.mode!=='practice');
-    document.getElementById('quiz-view').classList.toggle('hidden',state.mode==='practice');
-    nextFlag();
-}
+    function loadData() {
+        try {
+            const s = localStorage.getItem('flagStats');
+            if (s) state.flagData = JSON.parse(s);
+        } catch (e) {}
+    }
 
-function getNextFlag(){
-    if(state.upcomingQueue.length>0){
-        const next=state.upcomingQueue.shift();
-        if(state.upcomingQueue.length<5){
-            if(state.unseenFlags.length===0){state.unseenFlags=[...state.filtered];shuffleArray(state.unseenFlags);}
-            state.upcomingQueue.push(...state.unseenFlags.splice(0,5));
+    function saveData() {
+        try {
+            localStorage.setItem('flagStats', JSON.stringify(state.flagData));
+        } catch (e) {}
+    }
+
+    function setupEventListeners() {
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.mode = btn.dataset.mode;
+            switchMode();
+        }));
+
+        document.querySelectorAll('[data-direction]').forEach(btn => btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-direction]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.direction = btn.dataset.direction;
+            nextFlag();
+        }));
+
+        document.getElementById('weak-toggle').addEventListener('click', e => {
+            state.weakMode = !state.weakMode;
+            e.target.textContent = state.weakMode ? 'On' : 'Off';
+            e.target.classList.toggle('active');
+            nextFlag();
+        });
+
+        document.getElementById('filter-select').addEventListener('change', e => applyFilter(e.target.value));
+
+        document.getElementById('zoom-slider').addEventListener('input', e => {
+            state.regionalZoom = parseFloat(e.target.value);
+            document.getElementById('zoom-value').textContent = state.regionalZoom + '×';
+        });
+
+        document.getElementById('reveal-btn').addEventListener('click', revealAnswer);
+        document.getElementById('correct-btn').addEventListener('click', () => markAnswer(true));
+        document.getElementById('missed-btn').addEventListener('click', () => markAnswer(false));
+        document.getElementById('next-btn').addEventListener('click', nextFlag);
+    }
+
+    function toggleSettings() {
+        document.getElementById('settings-card').classList.toggle('collapsed');
+    }
+
+    function applyFilter(v) {
+        state.filter = v;
+        if (v === 'all') state.filtered = [...FLAGS];
+        else if (['europe','asia','africa','americas','oceania'].includes(v))
+            state.filtered = FLAGS.filter(f => f.continent.toLowerCase() === v);
+        else if (v === 'popular' || v === 'less')
+            state.filtered = FLAGS.filter(f => f.popularity === v);
+        else if (['easy','medium','hard'].includes(v))
+            state.filtered = FLAGS.filter(f => f.difficulty === v);
+
+        document.getElementById('filter-info').textContent = `Showing ${state.filtered.length} flags`;
+        initializeQueue();
+        nextFlag();
+    }
+
+    function switchMode() {
+        document.getElementById('practice-view').classList.toggle('hidden', state.mode !== 'practice');
+        document.getElementById('quiz-view').classList.toggle('hidden', state.mode === 'practice');
+        nextFlag();
+    }
+
+    function getNextFlag() {
+        if (state.upcomingQueue.length === 0) {
+            const next = state.filtered[Math.floor(Math.random() * state.filtered.length)];
+            return next;
+        }
+        const next = state.upcomingQueue.shift();
+        if (state.upcomingQueue.length < 5) {
+            if (state.unseenFlags.length === 0) {
+                state.unseenFlags = [...state.filtered];
+                shuffleArray(state.unseenFlags);
+            }
+            state.upcomingQueue.push(...state.unseenFlags.splice(0, 5));
         }
         return next;
     }
-    return state.filtered[Math.floor(Math.random()*state.filtered.length)];
-}
 
-function nextFlag(){
-    const f=getNextFlag();
-    state.previous=state.current?state.current.code:null;
-    state.current=f;state.answered=false;
-    state.recentHistory.push(f.code);
-    if(state.recentHistory.length>10)state.recentHistory.shift();
-    if(state.mode==='practice')loadPracticeMode();else loadQuizMode();
-}
+    function nextFlag() {
+        const f = getNextFlag();
+        state.previous = state.current ? state.current.code : null;
+        state.current = f;
+        state.answered = false;
+        state.recentHistory.push(f.code);
+        if (state.recentHistory.length > 10) state.recentHistory.shift();
 
-function loadPracticeMode(){
-    document.getElementById('answer-section').classList.add('hidden');
-    document.getElementById('reveal-btn').classList.remove('hidden');
-    const fc=document.getElementById('flag-container');
-    const qc=document.getElementById('question-container');
-    const fi=document.getElementById('flag-image');
-    if(state.direction==='flag-to-country'){
-        fc.classList.remove('hidden');qc.classList.add('hidden');
-        fi.src=`https://flagcdn.com/w320/${state.current.code}.png`;fi.alt='Flag to identify';
-    }else{
-        fc.classList.add('hidden');qc.classList.remove('hidden');
-        document.getElementById('question-text').textContent=state.current.name;
+        if (state.mode === 'practice') loadPracticeMode();
+        else loadQuizMode();
     }
-}
 
-function revealAnswer(){
-    const fc=document.getElementById('flag-container');
-    const fi=document.getElementById('flag-image');
-    const an=document.getElementById('answer-name');
-    if(state.direction==='country-to-flag'){
-        fc.classList.remove('hidden');
-        fi.src=`https://flagcdn.com/w320/${state.current.code}.png`;
-        fi.alt=state.current.name;an.textContent='';
-    }else{an.textContent=state.current.name;}
-    showCountryInfo();
-    document.getElementById('reveal-btn').classList.add('hidden');
-    document.getElementById('answer-section').classList.remove('hidden');
-}
+    function loadPracticeMode() {
+        document.getElementById('answer-section').classList.add('hidden');
+        document.getElementById('reveal-btn').classList.remove('hidden');
 
-function buildInfoHTML(){
-    const cfmStatus=state.current.cfm
-        ?'<span class="cfm-badge has-church">✓ CFM Church Present</span>'
-        :'<span class="cfm-badge no-church">✗ No CFM church yet. Who will go?</span>';
-    return `
-        <div class="country-info-item">${cfmStatus}</div>
-        <div class="country-info-item">
-            <strong>🌍 Continent:</strong> ${state.current.continent}
-            &nbsp;<strong>👥 Population:</strong> ${state.current.population}
-        </div>
-        <div class="map-row-top">
-            <div class="map-box">
-                <div class="globe-map">${getGlobeMap(state.current.code)}</div>
+        const fc = document.getElementById('flag-container');
+        const qc = document.getElementById('question-container');
+        const fi = document.getElementById('flag-image');
+
+        if (state.direction === 'flag-to-country') {
+            fc.classList.remove('hidden');
+            qc.classList.add('hidden');
+            fi.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+            fi.alt = 'Flag to identify';
+        } else {
+            fc.classList.add('hidden');
+            qc.classList.remove('hidden');
+            document.getElementById('question-text').textContent = state.current.name;
+        }
+    }
+
+    function revealAnswer() {
+        const fc = document.getElementById('flag-container');
+        const fi = document.getElementById('flag-image');
+        const an = document.getElementById('answer-name');
+
+        if (state.direction === 'country-to-flag') {
+            fc.classList.remove('hidden');
+            fi.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+            fi.alt = state.current.name;
+            an.textContent = state.current.name;
+        } else {
+            an.textContent = state.current.name;
+        }
+
+        showCountryInfo();
+        document.getElementById('reveal-btn').classList.add('hidden');
+        document.getElementById('answer-section').classList.remove('hidden');
+    }
+
+    function buildInfoHTML() {
+        const cfmStatus = state.current.cfm
+            ? '<span class="cfm-badge has-church">CFM Church Present</span>'
+            : '<span class="cfm-badge no-church">No CFM church yet. Who will go?</span>';
+
+        const capital = CAPITALS[state.current.code] || '—';
+
+        return `
+            <div class="country-info-item">${cfmStatus}</div>
+            <div class="country-info-item">
+                <strong>Continent</strong> ${state.current.continent}
+                &nbsp;&nbsp;
+                <strong>Population</strong> ${state.current.population}
             </div>
-            <div class="map-box">
-                <div class="country-region-map">${getRegionalMap(state.current.code)}</div>
+            <div class="country-info-item">
+                <strong>Capital</strong> ${capital}
             </div>
-        </div>
-        <div class="map-row-bottom">
-            <div class="map-box locator-box">
-                <div class="locator-map">${getWorldometerLocatorHTML(state.current)}</div>
+            <div class="map-row-top">
+                <div class="map-box">
+                    <div class="globe-map">${getGlobeMap(state.current.code)}</div>
+                </div>
+                <div class="map-box">
+                    <div class="country-region-map">${getRegionalMap(state.current.code)}</div>
+                </div>
             </div>
-        </div>`;
-}
-
-function showCountryInfo(){
-    const existing=document.getElementById('country-info-display');
-    if(existing)existing.remove();
-    const div=document.createElement('div');
-    div.id='country-info-display';div.className='country-info';
-    div.innerHTML=buildInfoHTML();
-    const as=document.getElementById('answer-section');
-    const ab=as.querySelector('.action-buttons');
-    ab.parentNode.insertBefore(div,ab.nextSibling);
-}
-
-function showCountryInfoQuiz(){
-    const existing=document.getElementById('country-info-display-quiz');
-    if(existing)existing.remove();
-    const div=document.createElement('div');
-    div.id='country-info-display-quiz';div.className='country-info';
-    div.innerHTML=buildInfoHTML();
-    const nb=document.getElementById('next-btn');
-    nb.parentNode.insertBefore(div,nb);
-}
-
-function markAnswer(correct){
-    state.stats.total++;
-    if(correct)state.stats.correct++;
-    else{state.stats.incorrect++;scheduleFailedFlag(state.current);}
-    if(!state.flagData[state.current.code])state.flagData[state.current.code]={seen:0,correct:0};
-    state.flagData[state.current.code].seen++;
-    if(correct)state.flagData[state.current.code].correct++;
-    saveData();updateStats();nextFlag();
-}
-
-function loadQuizMode(){
-    const opts=getQuizOptions();
-    const container=document.getElementById('options-container');
-    const qDiv=document.getElementById('quiz-question');
-    container.innerHTML='';qDiv.innerHTML='';
-    document.getElementById('quiz-feedback').classList.add('hidden');
-    document.getElementById('next-btn').classList.add('hidden');
-    const fc=document.getElementById('flag-container');
-    const fi=document.getElementById('flag-image');
-    if(state.direction==='flag-to-country'){
-        fc.classList.remove('hidden');
-        fi.src=`https://flagcdn.com/w320/${state.current.code}.png`;fi.alt='Flag to identify';
-        opts.forEach(flag=>{
-            const btn=document.createElement('button');btn.className='option-btn';btn.textContent=flag.name;
-            btn.addEventListener('click',()=>handleQuizAnswer(flag.name,btn));container.appendChild(btn);
-        });
-    }else{
-        fc.classList.add('hidden');
-        const nd=document.createElement('div');nd.className='country-name';nd.textContent=state.current.name;nd.style.marginBottom='16px';qDiv.appendChild(nd);
-        opts.forEach(flag=>{
-            const btn=document.createElement('button');btn.className='option-btn';btn.style.padding='0';btn.style.height='auto';
-            const img=document.createElement('img');img.src=`https://flagcdn.com/w320/${flag.code}.png`;img.alt=flag.name;
-            btn.appendChild(img);btn.addEventListener('click',()=>handleQuizAnswer(flag.name,btn));container.appendChild(btn);
-        });
+            <div class="map-row-bottom">
+                <div class="map-box locator-box">
+                    <div class="locator-map">${getWorldometerLocatorHTML(state.current)}</div>
+                </div>
+            </div>
+        `;
     }
-}
 
-function getQuizOptions(){
-    const opts=[state.current];const others=state.filtered.filter(f=>f.code!==state.current.code);
-    while(opts.length<4&&others.length>0){
-        const r=others[Math.floor(Math.random()*others.length)];
-        if(!opts.find(o=>o.code===r.code))opts.push(r);
+    function showCountryInfo() {
+        const existing = document.getElementById('country-info-display');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.id = 'country-info-display';
+        div.className = 'country-info';
+        div.innerHTML = buildInfoHTML();
+
+        const as = document.getElementById('answer-section');
+        const ab = as.querySelector('.action-buttons');
+        ab.parentNode.insertBefore(div, ab.nextSibling);
     }
-    return opts.sort(()=>Math.random()-0.5);
-}
 
-function handleQuizAnswer(selected,btn){
-    if(state.answered)return;state.answered=true;
-    const correct=selected===state.current.name;
-    const allBtns=document.querySelectorAll('#options-container .option-btn');
-    allBtns.forEach(b=>b.disabled=true);
-    state.stats.total++;
-    if(correct){state.stats.correct++;btn.classList.add('correct');showFeedback('✅ Correct!','correct');}
-    else{
-        state.stats.incorrect++;btn.classList.add('incorrect');scheduleFailedFlag(state.current);
-        allBtns.forEach(b=>{
-            if(state.direction==='flag-to-country'){if(b.textContent===state.current.name)b.classList.add('correct');}
-            else{const img=b.querySelector('img');if(img&&img.src.includes(state.current.code))b.classList.add('correct');}
-        });
-        showFeedback(`❌ Wrong! The correct answer is ${state.current.name}`,'incorrect');
+    function showCountryInfoQuiz() {
+        const existing = document.getElementById('country-info-display-quiz');
+        if (existing) existing.remove();
+
+        const div = document.createElement('div');
+        div.id = 'country-info-display-quiz';
+        div.className = 'country-info';
+        div.innerHTML = buildInfoHTML();
+
+        const nb = document.getElementById('next-btn');
+        nb.parentNode.insertBefore(div, nb);
     }
-    if(!state.flagData[state.current.code])state.flagData[state.current.code]={seen:0,correct:0};
-    state.flagData[state.current.code].seen++;
-    if(correct)state.flagData[state.current.code].correct++;
-    saveData();updateStats();showCountryInfoQuiz();
-    document.getElementById('next-btn').classList.remove('hidden');
-}
 
-function showFeedback(text,type){
-    const fb=document.getElementById('quiz-feedback');fb.textContent=text;
-    fb.className=`feedback ${type}`;fb.classList.remove('hidden');
-}
+    function markAnswer(correct) {
+        state.stats.total++;
+        if (correct) state.stats.correct++;
+        else {
+            state.stats.incorrect++;
+            scheduleFailedFlag(state.current);
+        }
 
-const ISO_TO_FIPS = {
-    af:'AF',al:'AL',dz:'AG',ad:'AN',ao:'AO',ar:'AR',am:'AM',au:'AS',at:'AU',az:'AJ',
-    bs:'BF',bh:'BA',bd:'BG',bb:'BB',by:'BO',be:'BE',bz:'BH',bj:'BN',bt:'BT',bo:'BL',
-    ba:'BK',bw:'BC',br:'BR',bn:'BX',bg:'BU',bf:'UV',bi:'BY',kh:'CB',cm:'CM',ca:'CA',
-    td:'CD',cl:'CI',cn:'CH',co:'CO',cg:'CF',cr:'CS',hr:'HR',cu:'CU',cy:'CY',cz:'EZ',
-    dk:'DA',do:'DR',ec:'EC',eg:'EG',sv:'ES',ee:'EN',et:'ET',fj:'FJ',fi:'FI',fr:'FR',
-    ga:'GB',gm:'GA',ge:'GG',de:'GM',gh:'GH',gr:'GR',gt:'GT',gn:'GV',ht:'HA',hn:'HO',
-    hu:'HU',is:'IC',in:'IN',id:'ID',ir:'IR',iq:'IZ',ie:'EI',il:'IS',it:'IT',ci:'IV',
-    jm:'JM',jp:'JA',jo:'JO',kz:'KZ',ke:'KE',kw:'KU',la:'LA',lv:'LG',lb:'LE',ly:'LY',
-    lt:'LH',lu:'LU',mg:'MA',mw:'MI',my:'MY',ml:'ML',mt:'MT',mx:'MX',md:'MD',mc:'MN',
-    mn:'MG',ma:'MO',mz:'MZ',mm:'BM',na:'WA',np:'NP',nl:'NL',nz:'NZ',ni:'NU',ne:'NG',
-    ng:'NI',kp:'KN',mk:'MK',no:'NO',om:'MU',pk:'PK',ps:'WE',pa:'PM',py:'PA',pe:'PE',
-    ph:'RP',pl:'PL',pt:'PO',qa:'QA',ro:'RO',ru:'RS',rw:'RW',sa:'SA',sn:'SG',rs:'RB',
-    sg:'SN',sk:'LO',si:'SI',so:'SO',za:'SF',kr:'KS',es:'SP',lk:'CE',sd:'SU',se:'SW',
-    ch:'SZ',sy:'SY',tw:'TW',tz:'TZ',th:'TH',tg:'TO',tt:'TD',tn:'TS',tr:'TU',ug:'UG',
-    ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
-};
+        if (!state.flagData[state.current.code])
+            state.flagData[state.current.code] = { seen: 0, correct: 0 };
 
-function getWorldometerLocatorHTML(country){
-    const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
-    const url = `https://www.worldometers.info/img/maps_cl/${fips}-locator-map.gif`;
-    return `<img src="${url}" alt="${country.name} locator map"
-                 style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
-                 onerror="this.parentElement.innerHTML='<div style=\'color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;\'>Map unavailable</div>'">`;
-}
+        state.flagData[state.current.code].seen++;
+        if (correct) state.flagData[state.current.code].correct++;
 
-function getMapSVG(countryCode, zoomFactor){
-    const countryLatLon={
-        af:{lat:34,lon:66},al:{lat:41,lon:20},dz:{lat:28,lon:3},ad:{lat:42.5,lon:1.5},
-        ao:{lat:-12,lon:18},ar:{lat:-34,lon:-64},am:{lat:40,lon:45},au:{lat:-25,lon:135},
-        at:{lat:47.5,lon:14.5},az:{lat:40.5,lon:47.5},bs:{lat:25,lon:-77},bh:{lat:26,lon:50.5},
-        bd:{lat:24,lon:90},bb:{lat:13.2,lon:-59.5},by:{lat:53,lon:28},be:{lat:50.8,lon:4.5},
-        bz:{lat:17.2,lon:-88.7},bj:{lat:9.5,lon:2.3},bt:{lat:27.5,lon:90.5},bo:{lat:-16.7,lon:-64.7},
-        ba:{lat:44,lon:18},bw:{lat:-22,lon:24},br:{lat:-10,lon:-52},bn:{lat:4.5,lon:114.7},
-        bg:{lat:42.7,lon:25.5},bf:{lat:12.4,lon:-1.6},bi:{lat:-3.4,lon:29.9},kh:{lat:12.5,lon:105},
-        cm:{lat:5,lon:12},ca:{lat:57,lon:-106},td:{lat:15.5,lon:19},cl:{lat:-30,lon:-71},
-        cn:{lat:35,lon:103},co:{lat:4,lon:-72},cg:{lat:-1,lon:15},cr:{lat:10,lon:-84},
-        hr:{lat:45.1,lon:15.2},cu:{lat:21.5,lon:-79.5},cy:{lat:35,lon:33},cz:{lat:49.8,lon:15.5},
-        dk:{lat:56,lon:10},do:{lat:19,lon:-70.7},ec:{lat:-1.4,lon:-78.2},eg:{lat:27,lon:30},
-        sv:{lat:13.7,lon:-89.2},ee:{lat:58.7,lon:25},et:{lat:9,lon:40.5},fj:{lat:-17.8,lon:178},
-        fi:{lat:64,lon:26},fr:{lat:46.5,lon:2.8},ga:{lat:-0.8,lon:11.6},gm:{lat:13.4,lon:-16},
-        ge:{lat:42,lon:43.5},de:{lat:51,lon:9},gh:{lat:7.9,lon:-1.0},gr:{lat:39,lon:22},
-        gt:{lat:15.8,lon:-90.2},gn:{lat:10.5,lon:-10.5},ht:{lat:19,lon:-72.7},hn:{lat:14.8,lon:-86.2},
-        hu:{lat:47,lon:19.5},is:{lat:65,lon:-19},in:{lat:22,lon:79},id:{lat:-2,lon:118},
-        ir:{lat:32,lon:53},iq:{lat:33,lon:44},ie:{lat:53.4,lon:-8},il:{lat:31.5,lon:35},
-        it:{lat:42.8,lon:12.5},ci:{lat:7.5,lon:-5.5},jm:{lat:18.1,lon:-77.3},jp:{lat:36,lon:138},
-        jo:{lat:31,lon:36},kz:{lat:48,lon:68},ke:{lat:0,lon:38},kw:{lat:29.5,lon:47.8},
-        la:{lat:18,lon:105},lv:{lat:56.9,lon:24.6},lb:{lat:33.9,lon:35.9},ly:{lat:27,lon:18},
-        lt:{lat:55.3,lon:23.9},lu:{lat:49.8,lon:6.1},mg:{lat:-20,lon:47},mw:{lat:-13.5,lon:34},
-        my:{lat:4,lon:109.5},ml:{lat:17.5,lon:-4},mt:{lat:35.9,lon:14.4},mx:{lat:23,lon:-102},
-        md:{lat:47,lon:28.5},mc:{lat:43.7,lon:7.4},mn:{lat:46.8,lon:104},ma:{lat:31.8,lon:-7},
-        mz:{lat:-18.3,lon:35},mm:{lat:21,lon:96},na:{lat:-22,lon:17},np:{lat:28.4,lon:84},
-        nl:{lat:52.3,lon:5.5},nz:{lat:-41,lon:173},ni:{lat:12.8,lon:-85},ne:{lat:17.6,lon:8},
-        ng:{lat:9,lon:8},kp:{lat:40,lon:127},mk:{lat:41.6,lon:21.7},no:{lat:64.5,lon:11},
-        om:{lat:20.5,lon:57},pk:{lat:30,lon:70},ps:{lat:31.5,lon:35.3},pa:{lat:8.5,lon:-80},
-        py:{lat:-23,lon:-58},pe:{lat:-9.2,lon:-75},ph:{lat:13,lon:122},pl:{lat:52,lon:19},
-        pt:{lat:39.5,lon:-8},qa:{lat:25.3,lon:51.2},ro:{lat:45.9,lon:24.9},ru:{lat:60,lon:90},
-        rw:{lat:-1.9,lon:29.9},sa:{lat:24,lon:45},sn:{lat:14.4,lon:-14.5},rs:{lat:44,lon:21},
-        sg:{lat:1.3,lon:103.8},sk:{lat:48.7,lon:19.7},si:{lat:46.1,lon:14.8},so:{lat:6,lon:46},
-        za:{lat:-29,lon:24},kr:{lat:36.5,lon:127.8},es:{lat:40,lon:-4},lk:{lat:7.8,lon:80.7},
-        sd:{lat:15.6,lon:30.5},se:{lat:62,lon:15},ch:{lat:47,lon:8.2},sy:{lat:35,lon:38},
-        tw:{lat:23.6,lon:121},tz:{lat:-6,lon:35},th:{lat:15,lon:101},tg:{lat:8.5,lon:1.1},
-        tt:{lat:10.4,lon:-61.3},tn:{lat:34,lon:9},tr:{lat:39,lon:35},ug:{lat:1.5,lon:32},
-        ua:{lat:49,lon:32},ae:{lat:24,lon:54},gb:{lat:55,lon:-3},us:{lat:38,lon:-97},
-        uy:{lat:-33,lon:-56},uz:{lat:41.3,lon:64.6},ve:{lat:7,lon:-66},vn:{lat:16,lon:108},
-        ye:{lat:15.5,lon:47.5},zm:{lat:-13.1,lon:27.8},zw:{lat:-19,lon:29.2}
+        saveData();
+        updateStats();
+        nextFlag();
+    }
+
+    function loadQuizMode() {
+        const opts = getQuizOptions();
+        const container = document.getElementById('options-container');
+        const qDiv = document.getElementById('quiz-question');
+
+        container.innerHTML = '';
+        qDiv.innerHTML = '';
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+
+        const fc = document.getElementById('flag-container');
+        const fi = document.getElementById('flag-image');
+
+        if (state.direction === 'flag-to-country') {
+            fc.classList.remove('hidden');
+            fi.src = `https://flagcdn.com/w320/${state.current.code}.png`;
+            fi.alt = 'Flag to identify';
+
+            opts.forEach(flag => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = flag.name;
+                btn.addEventListener('click', () => handleQuizAnswer(flag.name, btn));
+                container.appendChild(btn);
+            });
+        } else {
+            fc.classList.add('hidden');
+            const nd = document.createElement('div');
+            nd.className = 'country-name';
+            nd.textContent = state.current.name;
+            nd.style.marginBottom = '16px';
+            qDiv.appendChild(nd);
+
+            opts.forEach(flag => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.style.padding = '0';
+                btn.style.height = 'auto';
+
+                const img = document.createElement('img');
+                img.src = `https://flagcdn.com/w320/${flag.code}.png`;
+                img.alt = flag.name;
+                btn.appendChild(img);
+
+                btn.addEventListener('click', () => handleQuizAnswer(flag.name, btn));
+                container.appendChild(btn);
+            });
+        }
+    }
+
+    function getQuizOptions() {
+        const opts = [state.current];
+        const others = state.filtered.filter(f => f.code !== state.current.code);
+
+        while (opts.length < 4 && others.length > 0) {
+            const r = others[Math.floor(Math.random() * others.length)];
+            if (!opts.find(o => o.code === r.code)) opts.push(r);
+        }
+        return opts.sort(() => Math.random() - 0.5);
+    }
+
+    function handleQuizAnswer(selected, btn) {
+        if (state.answered) return;
+        state.answered = true;
+
+        const correct = selected === state.current.name;
+        const allBtns = document.querySelectorAll('#options-container .option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        state.stats.total++;
+        if (correct) {
+            state.stats.correct++;
+            btn.classList.add('correct');
+            showFeedback('Correct!', 'correct');
+        } else {
+            state.stats.incorrect++;
+            btn.classList.add('incorrect');
+            scheduleFailedFlag(state.current);
+
+            allBtns.forEach(b => {
+                if (state.direction === 'flag-to-country') {
+                    if (b.textContent === state.current.name) b.classList.add('correct');
+                } else {
+                    const img = b.querySelector('img');
+                    if (img && img.src.includes(state.current.code)) b.classList.add('correct');
+                }
+            });
+
+            showFeedback(`Wrong! The correct answer is ${state.current.name}`, 'incorrect');
+        }
+
+        if (!state.flagData[state.current.code])
+            state.flagData[state.current.code] = { seen: 0, correct: 0 };
+
+        state.flagData[state.current.code].seen++;
+        if (correct) state.flagData[state.current.code].correct++;
+
+        saveData();
+        updateStats();
+        showCountryInfoQuiz();
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function showFeedback(text, type) {
+        const fb = document.getElementById('quiz-feedback');
+        fb.textContent = text;
+        fb.className = 'feedback ' + type;
+        fb.classList.remove('hidden');
+    }
+
+    const ISO_TO_FIPS = {
+        af:'AF',al:'AL',dz:'AG',ad:'AN',ao:'AO',ar:'AR',am:'AM',au:'AS',at:'AU',az:'AJ',
+        bs:'BF',bh:'BA',bd:'BG',bb:'BB',by:'BO',be:'BE',bz:'BH',bj:'BN',bt:'BT',bo:'BL',
+        ba:'BK',bw:'BC',br:'BR',bn:'BX',bg:'BU',bf:'UV',bi:'BY',kh:'CB',cm:'CM',ca:'CA',
+        td:'CD',cl:'CI',cn:'CH',co:'CO',cg:'CF',cr:'CS',hr:'HR',cu:'CU',cy:'CY',cz:'EZ',
+        dk:'DA',do:'DR',ec:'EC',eg:'EG',sv:'ES',ee:'EN',et:'ET',fj:'FJ',fi:'FI',fr:'FR',
+        ga:'GB',gm:'GA',ge:'GG',de:'GM',gh:'GH',gr:'GR',gt:'GT',gn:'GV',ht:'HA',hn:'HO',
+        hu:'HU',is:'IC',in:'IN',id:'ID',ir:'IR',iq:'IZ',ie:'EI',il:'IS',it:'IT',ci:'IV',
+        jm:'JM',jp:'JA',jo:'JO',kz:'KZ',ke:'KE',kw:'KU',la:'LA',lv:'LG',lb:'LE',ly:'LY',
+        lt:'LH',lu:'LU',mg:'MA',mw:'MI',my:'MY',ml:'ML',mt:'MT',mx:'MX',md:'MD',mc:'MN',
+        mn:'MG',ma:'MO',mz:'MZ',mm:'BM',na:'WA',np:'NP',nl:'NL',nz:'NZ',ni:'NU',ne:'NG',
+        ng:'NI',kp:'KN',mk:'MK',no:'NO',om:'MU',pk:'PK',ps:'WE',pa:'PM',py:'PA',pe:'PE',
+        ph:'RP',pl:'PL',pt:'PO',qa:'QA',ro:'RO',ru:'RS',rw:'RW',sa:'SA',sn:'SG',rs:'RB',
+        sg:'SN',sk:'LO',si:'SI',so:'SO',za:'SF',kr:'KS',es:'SP',lk:'CE',sd:'SU',se:'SW',
+        ch:'SZ',sy:'SY',tw:'TW',tz:'TZ',th:'TH',tg:'TO',tt:'TD',tn:'TS',tr:'TU',ug:'UG',
+        ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
     };
-    const mapW=1100, mapH=550;
-const mapImg = "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg";
 
+    function getWorldometerLocatorHTML(country) {
+        const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
+        const url = `https://www.worldometers.info/img/maps/${fips}-locator-map.gif`;
+        return `<img src="${url}" alt="${country.name} locator map"
+                style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
+                onerror="this.parentElement.innerHTML='<div style=&quot;color:var(--color-text-secondary);font-size:12px;text-align:center;padding:12px;&quot;>Map unavailable</div>'">`;
+    }
 
-    const pos = countryLatLon[countryCode] || {lat:0,lon:0};
-    const cx = (pos.lon + 180) * (mapW / 360);
-    const cy = (-pos.lat + 90) * (mapH / 180);
+    function getMapSVG(countryCode, zoomFactor) {
+        const countryLatLon = {
+            af:{lat:34,lon:66}, al:{lat:41,lon:20}, dz:{lat:28,lon:3}, ad:{lat:42.5,lon:1.5},
+            ao:{lat:-12,lon:18}, ar:{lat:-34,lon:-64}, am:{lat:40,lon:45}, au:{lat:-25,lon:135},
+            at:{lat:47.5,lon:14.5}, az:{lat:40.5,lon:47.5}, bs:{lat:25,lon:-77}, bh:{lat:26,lon:50.5},
+            bd:{lat:24,lon:90}, bb:{lat:13.2,lon:-59.5}, by:{lat:53,lon:28}, be:{lat:50.8,lon:4.5},
+            bz:{lat:17.2,lon:-88.7}, bj:{lat:9.5,lon:2.3}, bt:{lat:27.5,lon:90.5}, bo:{lat:-16.7,lon:-64.7},
+            ba:{lat:44,lon:18}, bw:{lat:-22,lon:24}, br:{lat:-10,lon:-52}, bn:{lat:4.5,lon:114.7},
+            bg:{lat:42.7,lon:25.5}, bf:{lat:12.4,lon:-1.6}, bi:{lat:-3.4,lon:29.9}, kh:{lat:12.5,lon:105},
+            cm:{lat:5,lon:12}, ca:{lat:57,lon:-106}, td:{lat:15.5,lon:19}, cl:{lat:-30,lon:-71},
+            cn:{lat:35,lon:103}, co:{lat:4,lon:-72}, cg:{lat:-1,lon:15}, cr:{lat:10,lon:-84},
+            hr:{lat:45.1,lon:15.2}, cu:{lat:21.5,lon:-79.5}, cy:{lat:35,lon:33}, cz:{lat:49.8,lon:15.5},
+            dk:{lat:56,lon:10}, do:{lat:19,lon:-70.7}, ec:{lat:-1.4,lon:-78.2}, eg:{lat:27,lon:30},
+            sv:{lat:13.7,lon:-89.2}, ee:{lat:58.7,lon:25}, et:{lat:9,lon:40.5}, fj:{lat:-17.8,lon:178},
+            fi:{lat:64,lon:26}, fr:{lat:46.5,lon:2.8}, ga:{lat:-0.8,lon:11.6}, gm:{lat:13.4,lon:-16},
+            ge:{lat:42,lon:43.5}, de:{lat:51,lon:9}, gh:{lat:7.9,lon:-1.0}, gr:{lat:39,lon:22},
+            gt:{lat:15.8,lon:-90.2}, gn:{lat:10.5,lon:-10.5}, ht:{lat:19,lon:-72.7}, hn:{lat:14.8,lon:-86.2},
+            hu:{lat:47,lon:19.5}, is:{lat:65,lon:-19}, in:{lat:22,lon:79}, id:{lat:-2,lon:118},
+            ir:{lat:32,lon:53}, iq:{lat:33,lon:44}, ie:{lat:53.4,lon:-8}, il:{lat:31.5,lon:35},
+            it:{lat:42.8,lon:12.5}, ci:{lat:7.5,lon:-5.5}, jm:{lat:18.1,lon:-77.3}, jp:{lat:36,lon:138},
+            jo:{lat:31,lon:36}, kz:{lat:48,lon:68}, ke:{lat:0,lon:38}, kw:{lat:29.5,lon:47.8},
+            la:{lat:18,lon:105}, lv:{lat:56.9,lon:24.6}, lb:{lat:33.9,lon:35.9}, ly:{lat:27,lon:18},
+            lt:{lat:55.3,lon:23.9}, lu:{lat:49.8,lon:6.1}, mg:{lat:-20,lon:47}, mw:{lat:-13.5,lon:34},
+            my:{lat:4,lon:109.5}, ml:{lat:17.5,lon:-4}, mt:{lat:35.9,lon:14.4}, mx:{lat:23,lon:-102},
+            md:{lat:47,lon:28.5}, mc:{lat:43.7,lon:7.4}, mn:{lat:46.8,lon:104}, ma:{lat:31.8,lon:-7},
+            mz:{lat:-18.3,lon:35}, mm:{lat:21,lon:96}, na:{lat:-22,lon:17}, np:{lat:28.4,lon:84},
+            nl:{lat:52.3,lon:5.5}, nz:{lat:-41,lon:173}, ni:{lat:12.8,lon:-85}, ne:{lat:17.6,lon:8},
+            ng:{lat:9,lon:8}, kp:{lat:40,lon:127}, mk:{lat:41.6,lon:21.7}, no:{lat:64.5,lon:11},
+            om:{lat:20.5,lon:57}, pk:{lat:30,lon:70}, ps:{lat:31.5,lon:35.3}, pa:{lat:8.5,lon:-80},
+            py:{lat:-23,lon:-58}, pe:{lat:-9.2,lon:-75}, ph:{lat:13,lon:122}, pl:{lat:52,lon:19},
+            pt:{lat:39.5,lon:-8}, qa:{lat:25.3,lon:51.2}, ro:{lat:45.9,lon:24.9}, ru:{lat:60,lon:90},
+            rw:{lat:-1.9,lon:29.9}, sa:{lat:24,lon:45}, sn:{lat:14.4,lon:-14.5}, rs:{lat:44,lon:21},
+            sg:{lat:1.3,lon:103.8}, sk:{lat:48.7,lon:19.7}, si:{lat:46.1,lon:14.8}, so:{lat:6,lon:46},
+            za:{lat:-29,lon:24}, kr:{lat:36.5,lon:127.8}, es:{lat:40,lon:-4}, lk:{lat:7.8,lon:80.7},
+            sd:{lat:15.6,lon:30.5}, se:{lat:62,lon:15}, ch:{lat:47,lon:8.2}, sy:{lat:35,lon:38},
+            tw:{lat:23.6,lon:121}, tz:{lat:-6,lon:35}, th:{lat:15,lon:101}, tg:{lat:8.5,lon:1.1},
+            tt:{lat:10.4,lon:-61.3}, tn:{lat:34,lon:9}, tr:{lat:39,lon:35}, ug:{lat:1.5,lon:32},
+            ua:{lat:49,lon:32}, ae:{lat:24,lon:54}, gb:{lat:55,lon:-3}, us:{lat:38,lon:-97},
+            uy:{lat:-33,lon:-56}, uz:{lat:41.3,lon:64.6}, ve:{lat:7,lon:-66}, vn:{lat:16,lon:108},
+            ye:{lat:15.5,lon:47.5}, zm:{lat:-13.1,lon:27.8}, zw:{lat:-19,lon:29.2}
+        };
 
-    // square viewport size = mapH / zoomFactor
-    const vSize = mapH / zoomFactor;
+        const mapW = 1100, mapH = 550;
+        const mapImg = "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg";
 
-    // center on country, clamped so we never show outside the map
-    let vx = cx - vSize/2;
-    let vy = cy - vSize/2;
-    vx = Math.max(0, Math.min(mapW - vSize, vx));
-    vy = Math.max(0, Math.min(mapH - vSize, vy));
+        const pos = countryLatLon[countryCode] || {lat:0, lon:0};
+        const cx = (pos.lon + 180) * (mapW / 360);
+        const cy = (-pos.lat + 90) * (mapH / 180);
 
-    // dot size scales with zoom
-    const dotR = Math.max(4, 14 / zoomFactor * 1);
-    const ringR1 = dotR * 1.6;
-    const ringR2 = dotR * 3;
+        const vSize = mapH / zoomFactor;
+        let vx = cx - vSize / 2;
+        let vy = cy - vSize / 2;
+        vx = Math.max(0, Math.min(mapW - vSize, vx));
+        vy = Math.max(0, Math.min(mapH - vSize, vy));
 
-    return `<svg viewBox="${vx} ${vy} ${vSize} ${vSize}"
-                 preserveAspectRatio="xMidYMid slice"
-                 style="width:100%;height:100%;display:block;">
-       <image href="${mapImg}"
-               x="0" y="0" width="${mapW}" height="${mapH}"/>
-        <circle cx="${cx}" cy="${cy}" r="${dotR}" fill="#ff5459" opacity="0.95"/>
-        <circle cx="${cx}" cy="${cy}" r="${ringR1}" fill="none" stroke="#ff5459" stroke-width="${dotR*0.4}" opacity="0.8">
-            <animate attributeName="r" from="${dotR*1.2}" to="${ringR2}" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
-        </circle>
-    </svg>`;
-}
+        const dotR = 6;
+        const ringR1 = dotR * 1.6;
+        const ringR2 = dotR * 3;
 
-function getRegionalMap(countryCode){
-    return getMapSVG(countryCode, state.regionalZoom);
-}
+        return `<svg viewBox="${vx} ${vy} ${vSize} ${vSize}" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+            <image href="${mapImg}" x="0" y="0" width="${mapW}" height="${mapH}"/>
+            <circle cx="${cx}" cy="${cy}" r="${dotR}" fill="#ff5459" opacity="0.95"/>
+            <circle cx="${cx}" cy="${cy}" r="${ringR1}" fill="none" stroke="#ff5459" stroke-width="${dotR*0.4}" opacity="0.8">
+                <animate attributeName="r" from="${dotR*1.2}" to="${ringR2}" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+        </svg>`;
+    }
 
-function getGlobeMap(countryCode){
-    return getMapSVG(countryCode, 1);
-}
+    function getRegionalMap(countryCode) {
+        return getMapSVG(countryCode, state.regionalZoom);
+    }
 
-function updateStats(){
-    document.getElementById('correct-count').textContent=state.stats.correct;
-    document.getElementById('incorrect-count').textContent=state.stats.incorrect;
-    document.getElementById('total-count').textContent=state.stats.total;
-}
+    function getGlobeMap(countryCode) {
+        return getMapSVG(countryCode, 1);
+    }
 
-init();
+    function updateStats() {
+        document.getElementById('correct-count').textContent = state.stats.correct;
+        document.getElementById('incorrect-count').textContent = state.stats.incorrect;
+        document.getElementById('total-count').textContent = state.stats.total;
+    }
+
+    init();
 </script>
+
 </body>
 </html>
