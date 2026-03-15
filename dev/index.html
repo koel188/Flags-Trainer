@@ -26,10 +26,615 @@ h1{font-size:26px;margin-bottom:var(--sm)}
 .settings-card.collapsed{padding:var(--md) var(--lg)}
 .settings-card.collapsed .settings-content{display:none}
 .settings-header{cursor:pointer;user-select:none}
+.toggle-icon{font-size:18px;transition:.3s}
+.settings-card.collapsed .toggle-icon{transform:rotate(180deg)}
+.flag-container{text-align:center;margin-bottom:var(--sm)}
+.flag{width:100%;max-width:320px;height:180px;object-fit:contain;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.45);background:#111}
+.country-name{font-size:22px;font-weight:600;color:var(--pri);margin-bottom:var(--sm)}
+.country-info{margin-top:var(--sm);padding:var(--md);background:#111;border-radius:12px;font-size:13px;line-height:1.6}
+.country-info-item{margin-bottom:var(--sm)}
+.country-info-item:last-child{margin-bottom:0}
+.map-row-top{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:var(--sm)} .map-row-bottom{margin-top:8px} .globe-map,.country-region-map{width:100%;aspect-ratio:1/1;overflow:hidden} .locator-box{border-radius:10px;overflow:hidden} .locator-map img{width:100%;height:auto;display:block;border-radius:10px} @media(max-width:500px){.map-row-top{grid-template-columns:1fr}}
+.map-box{border-radius:10px;overflow:hidden;background:#111}
+.options{display:flex;flex-direction:column;gap:var(--sm)}
+.option-btn{padding:var(--md);border:2px solid var(--border);background:#111;color:var(--txt);border-radius:12px;font-size:15px;cursor:pointer;transition:.2s;text-align:left;font-weight:500;min-height:44px;display:flex;align-items:center}
+.option-btn:hover:not(:disabled){background:var(--secH);border-color:var(--pri)}
+.option-btn.correct{background:var(--succ);border-color:var(--succ);color:#000}
+.option-btn.incorrect{background:var(--err);border-color:var(--err);color:#000}
+.option-btn:disabled{opacity:.7;cursor:not-allowed}
+.option-btn img{width:100%;height:90px;object-fit:contain;border-radius:8px}
+.action-btn{width:100%;padding:var(--md);border:none;background:var(--pri);color:#000;border-radius:12px;font-size:17px;font-weight:600;cursor:pointer;transition:.2s;margin-top:var(--md);min-height:52px}
+.action-btn:hover{background:var(--priH)}
+.action-buttons{display:flex;gap:var(--sm);margin-top:var(--md)}
+.action-btn-half{flex:1;padding:var(--lg);border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:.2s}
+.action-btn-half.correct{background:var(--succ);color:#000}
+.action-btn-half.missed{background:var(--err);color:#000}
+.feedback{text-align:center;padding:var(--sm);border-radius:8px;margin-top:var(--md);font-weight:500}
+.feedback.correct{background:rgba(50,184,198,.18);color:var(--succ)}
+.feedback.incorrect{background:rgba(255,84,89,.18);color:var(--err)}
+.hidden{display:none}
+select{width:100%;padding:var(--sm);border-radius:8px;border:2px solid var(--border);background:#111;color:var(--txt);font-size:15px}
+.filter-info{margin-top:var(--xs);font-size:13px;color:var(--txt2)}
+.settings-section-title{margin:var(--md) 0 var(--sm);font-size:15px}
+@media(max-width:500px){body{padding:var(--sm)}h1{font-size:22px}.card{padding:var(--md)}.flag{height:140px;max-width:260px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>World Flags Trainer</h1>
+    <div class="stats">
+      <div class="stat-item"><span>✓</span><span id="correct-count">0</span></div>
+      <div class="stat-item"><span>✗</span><span id="incorrect-count">0</span></div>
+      <div class="stat-item"><span>∑</span><span id="total-count">0</span></div>
+    </div>
+    <div class="settings-header" onclick="toggleSettings()">
+      <h3></h3><span class="toggle-icon">▼</span>
+    </div>
+  </header>
 
+  <div class="card settings-card" id="settings-card">
+    <div class="settings-content">
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="practice">Flashcard</button>
+        <button class="mode-btn" data-mode="quiz">Multiple Choice</button>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Direction</span>
+        <button class="toggle-btn active" data-direction="flag-to-country">Flag → Country</button>
+        <button class="toggle-btn" data-direction="country-to-flag">Country → Flag</button>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Focus on weak flags</span>
+        <button class="toggle-btn" id="weak-toggle">Off</button>
+      </div>
+      <h3 class="settings-section-title">Filter Flags</h3>
+      <select id="filter-select">
+        <option value="all">All Flags</option>
+        <optgroup label="Continent">
+          <option value="europe">Europe</option><option value="asia">Asia</option>
+          <option value="africa">Africa</option><option value="americas">Americas</option>
+          <option value="oceania">Oceania</option>
+        </optgroup>
+        <optgroup label="Popularity">
+          <option value="popular">Popular</option><option value="less">Less popular</option>
+        </optgroup>
+        <optgroup label="Difficulty">
+          <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
+        </optgroup>
+      </select>
+      <div class="filter-info" id="filter-info">Showing all flags</div>
+      <div class="toggle-row" style="margin-top:var(--md)">
+        <span class="toggle-label">Regional zoom</span>
+        <input type="range" id="zoom-slider" min="1" max="12" value="1" step="0.5"
+          style="flex:1;margin:0 10px;accent-color:var(--pri)">
+        <span id="zoom-value" style="font-size:13px;color:var(--txt2);min-width:24px">1</span>
+      </div>
+    </div>
+  </div>
 
-  // Merge missionary data into FLAGS array
-  MISSIONARY_DATA.forEach(md => {
-      const flag = FLAGS.find(f => f.code === md.code);
-      if (flag) { flag.fact = md.fact; flag.verseRef = md.verseRef; }
+  <div class="card">
+    <div id="flag-container" class="flag-container">
+      <img id="flag-image" class="flag" src="" alt="Flag">
+    </div>
+    <div id="practice-view">
+      <div id="question-container" class="hidden">
+        <div class="country-name" id="question-text"></div>
+      </div>
+      <button class="action-btn" id="reveal-btn">Show Answer</button>
+      <div id="answer-section" class="hidden">
+        <div style="text-align:center;"><div class="country-name" id="answer-name"></div></div>
+        <div class="action-buttons">
+          <button class="action-btn-half correct" id="correct-btn">✓ Correct</button>
+          <button class="action-btn-half missed" id="missed-btn">✗ Missed</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-view" class="hidden">
+      <div id="quiz-question"></div>
+      <div class="options" id="options-container"></div>
+      <div id="quiz-feedback" class="feedback hidden"></div>
+      <button class="action-btn hidden" id="next-btn">Next Question</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// minimal data to prove functionality; extend as you like
+const FLAGS=[
+  {name:'Afghanistan',code:'af',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'40M',capital:'Kabul',fact:'Afghanistan has almost no open church life; believers meet in secret because following Jesus can cost them their freedom or their life.',verseRef:'Acts 1:8',verse:'You will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth.'},
+  {name:'Albania',code:'al',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.8M',capital:'Tirana',fact:'Albania was the world\'s first officially atheist state under communism, but evangelical churches have grown since the 1990s.',verseRef:'Matthew 24:14',verse:'This gospel of the kingdom will be proclaimed throughout the whole world as a testimony to all nations.'},
+  {name:'Algeria',code:'dz',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'45M',capital:'Algiers',fact:'Algeria is almost entirely Muslim with laws restricting Christian evangelism, yet small house church networks continue to grow.',verseRef:'Romans 10:15',verse:'How beautiful are the feet of those who preach the good news!'},
+  {name:'Andorra',code:'ad',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'80K',capital:'Andorra la Vella',fact:'Tiny Andorra sits in the Pyrenees between France and Spain with a small evangelical presence among mostly nominal Catholics.',verseRef:'Psalm 96:3',verse:'Declare his glory among the nations, his marvelous works among all the peoples!'},
+  {name:'Angola',code:'ao',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'35M',capital:'Luanda',fact:'Angola has seen rapid church growth after decades of civil war, with evangelical and Pentecostal churches multiplying.',verseRef:'Isaiah 52:7',verse:'How beautiful upon the mountains are the feet of him who brings good news.'},
+  {name:'Argentina',code:'ar',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'46M',capital:'Buenos Aires',fact:'Argentina has a growing evangelical movement that challenges traditional Catholic dominance and sends missionaries to unreached regions.',verseRef:'Mark 16:15',verse:'Go into all the world and proclaim the gospel to the whole creation.'},
+  {name:'Armenia',code:'am',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.8M',capital:'Yerevan',fact:'Armenia was the first nation to adopt Christianity as its state religion in AD 301, but evangelical believers face opposition from the Orthodox church.',verseRef:'2 Corinthians 5:20',verse:'We are ambassadors for Christ, God making his appeal through us.'},
+  {name:'Australia',code:'au',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'26M',capital:'Canberra',fact:'Australia has a strong missionary-sending tradition but faces increasing secularism.',verseRef:'Acts 1:8',verse:'You will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth.'},
+  {name:'Austria',code:'at',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'9M',capital:'Vienna',fact:'Austria is historically Catholic but increasingly secular, with small but active evangelical congregations in cities.',verseRef:'John 3:16',verse:'For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.'},
+  {name:'Azerbaijan',code:'az',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'10M',capital:'Baku',fact:'Azerbaijan is a Shia Muslim majority country where evangelicals face restrictions and pressure.',verseRef:'Matthew 28:19',verse:'Go therefore and make disciples of all nations.'},
+  {name:'Bahamas',code:'bs',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'400K',capital:'Nassau',fact:'The Bahamas has many churches across its islands, though tourism and wealth can compete with spiritual priorities.',verseRef:'Revelation 7:9',verse:'A great multitude from every nation, from all tribes and peoples and languages.'},
+  {name:'Bahrain',code:'bh',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'1.5M',capital:'Manama',fact:'Bahrain is a Gulf state where expatriate Christians can worship but local Muslim-background believers face severe consequences.',verseRef:'Matthew 5:14',verse:'You are the light of the world. A city set on a hill cannot be hidden.'},
+  {name:'Bangladesh',code:'bd',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'170M',capital:'Dhaka',fact:'Bangladesh is a Muslim-majority nation where a tiny Christian minority faces pressure, violence, and legal obstacles to evangelism.',verseRef:'Luke 24:47',verse:'Repentance for the forgiveness of sins should be proclaimed in his name to all nations.'},
+  {name:'Barbados',code:'bb',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'280K',capital:'Bridgetown',fact:'Barbados has a high percentage of Christians but also struggles with materialism and declining church attendance.',verseRef:'1 Peter 3:15',verse:'Always be prepared to give an answer to everyone who asks you to give the reason for the hope that you have.'},
+  {name:'Belarus',code:'by',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'9.2M',capital:'Minsk',fact:'Belarus is under authoritarian rule where evangelical churches face restrictions, surveillance, and periodic crackdowns.',verseRef:'Philippians 1:27',verse:'Only let your manner of life be worthy of the gospel of Christ.'},
+  {name:'Belgium',code:'be',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'11.6M',capital:'Brussels',fact:'Belgium is highly secular despite its Catholic heritage, and evangelical churches are small but active in cities.',verseRef:'Romans 1:16',verse:'I am not ashamed of the gospel, for it is the power of God for salvation to everyone who believes.'},
+  {name:'Belize',code:'bz',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'400K',capital:'Belmopan',fact:'Belize has a diverse religious landscape with strong evangelical presence, especially among Pentecostal and Mennonite communities.',verseRef:'Psalm 67:2',verse:'That your way may be known on earth, your saving power among all nations.'},
+  {name:'Benin',code:'bj',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'13M',capital:'Porto-Novo',fact:'Benin is known as the birthplace of voodoo, but evangelical churches are growing despite strong traditional religion influence.',verseRef:'Colossians 1:6',verse:'The gospel is bearing fruit and growing throughout the whole world.'},
+  {name:'Bhutan',code:'bt',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'780K',capital:'Thimphu',fact:'Bhutan is a Buddhist kingdom where conversion to Christianity is illegal and believers must practice their faith in complete secrecy.',verseRef:'Matthew 10:28',verse:'Do not fear those who kill the body but cannot kill the soul.'},
+  {name:'Bolivia',code:'bo',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'12M',capital:'La Paz',fact:'Bolivia has a growing evangelical movement among indigenous populations, with churches addressing poverty and social needs.',verseRef:'Isaiah 49:6',verse:'I will make you as a light for the nations, that my salvation may reach to the end of the earth.'},
+  {name:'Bosnia and Herzegovina',code:'ba',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'3.2M',capital:'Sarajevo',fact:'Bosnia has a small evangelical community working for reconciliation in a country still healing from the 1990s ethnic conflicts.',verseRef:'2 Corinthians 5:18',verse:'God has reconciled us to himself through Christ and gave us the ministry of reconciliation.'},
+  {name:'Botswana',code:'bw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M',capital:'Gaborone',fact:'Botswana has many churches and religious freedom, though HIV/AIDS and poverty remain major challenges for ministry.',verseRef:'James 1:27',verse:'Religion that is pure and undefiled before God is this: to visit orphans and widows in their affliction.'},
+  {name:'Brazil',code:'br',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'215M',capital:'Brasília',fact:'Brazil has seen explosive evangelical growth in recent decades and now sends thousands of missionaries to other nations.',verseRef:'Mark 16:15',verse:'Go into all the world and proclaim the gospel to the whole creation.'},
+  {name:'Brunei',code:'bn',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'450K',capital:'Bandar Seri Begawan',fact:'Brunei enforces strict Islamic law making it illegal to evangelize Muslims; Christians must worship quietly with no outreach.',verseRef:'Acts 4:19',verse:'Whether it is right in the sight of God to listen to you rather than to God, you must judge.'},
+  {name:'Bulgaria',code:'bg',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M',capital:'Sofia',fact:'Bulgaria has a small evangelical minority in a largely Orthodox and increasingly secular society.',verseRef:'1 Thessalonians 1:8',verse:'The word of the Lord has sounded forth from you not only in Macedonia and Achaia, but in every place.'},
+  {name:'Burkina Faso',code:'bf',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M',capital:'Ouagadougou',fact:'Burkina Faso faces growing Islamist violence targeting Christians in the north, yet believers continue to share the gospel.',verseRef:'Matthew 10:22',verse:'The one who endures to the end will be saved.'},
+  {name:'Burundi',code:'bi',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'12.5M',capital:'Gitega',fact:'Burundi has a high percentage of Christians recovering from civil war, with churches playing key roles in reconciliation.',verseRef:'Ephesians 4:3',verse:'Eager to maintain the unity of the Spirit in the bond of peace.'},
+  {name:'Cambodia',code:'kh',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'17M',capital:'Phnom Penh',fact:'Cambodia is rebuilding after the Khmer Rouge killed millions; the church is small but growing among Buddhists.',verseRef:'Revelation 21:5',verse:'Behold, I am making all things new.'},
+  {name:'Cameroon',code:'cm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'28M',capital:'Yaoundé',fact:'Cameroon has strong churches in the south but faces Islamist violence in the north where Boko Haram attacks Christians.',verseRef:'Hebrews 10:24',verse:'Let us consider how to stir up one another to love and good works.'},
+  {name:'Canada',code:'ca',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'39M',capital:'Ottawa',fact:'Canada has a missionary-sending heritage but church attendance is declining as secularism and pluralism rise.',verseRef:'2 Timothy 4:2',verse:'Preach the word; be ready in season and out of season.'},
+  {name:'Chad',code:'td',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'18M',capital:"N'Djamena",fact:'Chad is divided between Muslim north and Christian/animist south, with violence and poverty affecting churches.',verseRef:'Psalm 46:1',verse:'God is our refuge and strength, a very present help in trouble.'},
+  {name:'Chile',code:'cl',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'19M',capital:'Santiago',fact:'Chile has growing evangelical churches that are increasingly influential in society and politics.',verseRef:'Matthew 5:16',verse:'Let your light shine before others, so that they may see your good works and give glory to your Father in heaven.'},
+  {name:'China',code:'cn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'1.4B',capital:'Beijing',fact:'China has tens of millions of believers in house churches and official churches despite government restrictions and surveillance.',verseRef:'Acts 5:29',verse:'We must obey God rather than men.'},
+  {name:'Colombia',code:'co',continent:'Americas',popularity:'popular',difficulty:'medium',cfm:true,population:'52M',capital:'Bogotá',fact:'Colombia has vibrant evangelical growth and is recovering from decades of violence with churches leading peacebuilding efforts.',verseRef:'Isaiah 61:1',verse:'The Lord has anointed me to bring good news to the poor.'},
+  {name:'Congo',code:'cg',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'6M',capital:'Brazzaville',fact:'Congo has many Christians but also faces poverty, corruption, and the need for deeper discipleship.',verseRef:'Micah 6:8',verse:'What does the Lord require of you but to do justice, and to love kindness, and to walk humbly with your God?'},
+  {name:'Costa Rica',code:'cr',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'5.2M',capital:'San José',fact:'Costa Rica is traditionally Catholic but evangelicals are growing and active in social ministry and church planting.',verseRef:'Galatians 6:9',verse:'Let us not grow weary of doing good, for in due season we will reap.'},
+  {name:'Croatia',code:'hr',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'3.9M',capital:'Zagreb',fact:'Croatia is strongly Catholic with a small evangelical minority facing social stigma.',verseRef:'1 Peter 4:16',verse:'If anyone suffers as a Christian, let him not be ashamed, but let him glorify God in that name.'},
+  {name:'Cuba',code:'cu',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'11M',capital:'Havana',fact:'Cuba has seen remarkable church growth under communist rule, with house churches multiplying despite restrictions.',verseRef:'Acts 12:24',verse:'The word of God increased and multiplied.'},
+  {name:'Cyprus',code:'cy',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'1.2M',capital:'Nicosia',fact:'Cyprus is divided between Greek Orthodox south and Turkish Muslim north, with small evangelical groups in both areas.',verseRef:'Ephesians 2:14',verse:'He himself is our peace, who has made us both one.'},
+  {name:'Czech Republic',code:'cz',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M',capital:'Prague',fact:'Czech Republic is one of the most atheistic nations in the world, presenting a huge challenge for gospel witness.',verseRef:'Romans 10:14',verse:'How are they to believe in him of whom they have never heard?'},
+  {name:'Denmark',code:'dk',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.9M',capital:'Copenhagen',fact:'Denmark is largely secular with state Lutheran church membership high but actual church attendance very low.',verseRef:'1 Corinthians 1:18',verse:'The word of the cross is folly to those who are perishing, but to us who are being saved it is the power of God.'},
+  {name:'Dominican Republic',code:'do',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'11M',capital:'Santo Domingo',fact:'The Dominican Republic has vibrant evangelical growth with churches addressing poverty and Haitian refugee needs.',verseRef:'Proverbs 31:8-9',verse:'Open your mouth for the mute, for the rights of all who are destitute.'},
+  {name:'Ecuador',code:'ec',continent:'Americas',popularity:'less',difficulty:'hard',cfm:true,population:'18M',capital:'Quito',fact:'Ecuador has strong indigenous churches and a history of martyrdom (Jim Elliot) that continues to inspire missions.',verseRef:'John 12:24',verse:'Unless a grain of wheat falls into the earth and dies, it remains alone; but if it dies, it bears much fruit.'},
+  {name:'Egypt',code:'eg',continent:'Africa',popularity:'popular',difficulty:'medium',cfm:false,population:'105M',capital:'Cairo',fact:'Egypt has a large Coptic Orthodox minority but evangelicals face persecution and restrictions on evangelism among Muslims.',verseRef:'Hebrews 11:26',verse:'He considered the reproach of Christ greater wealth than the treasures of Egypt.'},
+  {name:'El Salvador',code:'sv',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'6.3M',capital:'San Salvador',fact:'El Salvador has huge evangelical growth despite gang violence and poverty, with churches leading community transformation.',verseRef:'Jeremiah 29:7',verse:'Seek the welfare of the city where I have sent you into exile.'},
+  {name:'Estonia',code:'ee',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.3M',capital:'Tallinn',fact:'Estonia is one of the least religious countries in the world with very few active evangelical believers.',verseRef:'Luke 18:8',verse:'When the Son of Man comes, will he find faith on earth?'},
+  {name:'Ethiopia',code:'et',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'120M',capital:'Addis Ababa',fact:'Ethiopia has strong evangelical and Pentecostal churches alongside ancient Orthodox roots, but faces ethnic conflict and poverty.',verseRef:'Acts 8:27',verse:'An Ethiopian, a eunuch, a court official of Candace, queen of the Ethiopians.'},
+  {name:'Fiji',code:'fj',continent:'Oceania',popularity:'less',difficulty:'medium',cfm:false,population:'920K',capital:'Suva',fact:'Fiji has a strong Christian presence on its Pacific islands with active churches among both indigenous and Indian populations.',verseRef:'Psalm 72:10',verse:'May the kings of Tarshish and of the coastlands render him tribute.'},
+  {name:'Finland',code:'fi',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M',capital:'Helsinki',fact:'Finland has a state Lutheran church but growing secularism; evangelical groups are small but committed.',verseRef:'Psalm 119:105',verse:'Your word is a lamp to my feet and a light to my path.'},
+  {name:'France',code:'fr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M',capital:'Paris',fact:'France is strongly secular with low church attendance, but evangelical churches are growing in cities through church planting.',verseRef:'1 Corinthians 3:6',verse:'I planted, Apollos watered, but God gave the growth.'},
+  {name:'Gabon',code:'ga',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.3M',capital:'Libreville',fact:'Gabon has Christian majority and religious freedom, though syncretism with traditional religions remains common.',verseRef:'Joshua 24:15',verse:'Choose this day whom you will serve.'},
+  {name:'Gambia',code:'gm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'2.6M',capital:'Banjul',fact:'Gambia is a Muslim-majority nation where a small Christian minority lives peacefully but faces social pressure.',verseRef:'Colossians 4:5-6',verse:'Walk in wisdom toward outsiders, making the best use of the time.'},
+  {name:'Georgia',code:'ge',continent:'Asia',popularity:'less',difficulty:'medium',cfm:true,population:'3.7M',capital:'Tbilisi',fact:'Georgia has an ancient Orthodox church tradition but evangelicals face hostility and even violence from Orthodox extremists.',verseRef:'Matthew 10:16',verse:'I am sending you out as sheep in the midst of wolves, so be wise as serpents and innocent as doves.'},
+  {name:'Germany',code:'de',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'84M',capital:'Berlin',fact:'Germany has declining church attendance and many empty churches, but refugee ministry and church planting bring new life.',verseRef:'Ezekiel 37:4',verse:'O dry bones, hear the word of the Lord.'},
+  {name:'Ghana',code:'gh',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'33M',capital:'Accra',fact:'Ghana has vibrant evangelical churches and sends many missionaries, with a strong culture of prayer and fasting.',verseRef:'1 Chronicles 16:24',verse:'Declare his glory among the nations, his marvelous works among all the peoples!'},
+  {name:'Greece',code:'gr',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M',capital:'Athens',fact:'Greece is strongly Orthodox with very few evangelicals who often face opposition from the dominant church.',verseRef:'Acts 17:16',verse:'His spirit was provoked within him as he saw that the city was full of idols.'},
+  {name:'Guatemala',code:'gt',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'18M',capital:'Guatemala City',fact:'Guatemala has massive evangelical growth especially among Mayan indigenous peoples, with churches addressing deep poverty.',verseRef:'Luke 4:18',verse:'He has sent me to proclaim liberty to the captives.'},
+  {name:'Guinea',code:'gn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'14M',capital:'Conakry',fact:'Guinea is largely Muslim where Christians are a small minority facing increasing pressure and occasional violence.',verseRef:'2 Timothy 1:7',verse:'God gave us a spirit not of fear but of power and love and self-control.'},
+  {name:'Haiti',code:'ht',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'11.5M',capital:'Port-au-Prince',fact:'Haiti has many churches but also crushing poverty, political chaos, and voodoo influence that challenge believers.',verseRef:'Psalm 34:18',verse:'The Lord is near to the brokenhearted and saves the crushed in spirit.'},
+  {name:'Honduras',code:'hn',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'10M',capital:'Tegucigalpa',fact:'Honduras has strong evangelical presence working against gang violence, corruption, and poverty.',verseRef:'Amos 5:24',verse:'Let justice roll down like waters, and righteousness like an ever-flowing stream.'},
+  {name:'Hungary',code:'hu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'9.6M',capital:'Budapest',fact:'Hungary is traditionally Catholic and Reformed but increasingly secular, with small evangelical communities.',verseRef:'Jeremiah 33:3',verse:'Call to me and I will answer you, and will tell you great and hidden things that you have not known.'},
+  {name:'Iceland',code:'is',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'370K',capital:'Reykjavik',fact:'Iceland has a state Lutheran church but is highly secular with few active evangelical believers.',verseRef:'Matthew 9:37',verse:'The harvest is plentiful, but the laborers are few.'},
+  {name:'India',code:'in',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'1.4B',capital:'New Delhi',fact:'India has a small but growing Protestant minority facing new anti-conversion laws in many states and rising persecution.',verseRef:'Acts 14:22',verse:'Through many tribulations we must enter the kingdom of God.'},
+  {name:'Indonesia',code:'id',continent:'Asia',popularity:'popular',difficulty:'hard',cfm:false,population:'275M',capital:'Jakarta',fact:'Indonesia is the world\'s largest Muslim-majority nation, but around 10% are Christians and evangelical churches keep growing.',verseRef:'Matthew 28:19',verse:'Go therefore and make disciples of all nations.'},
+  {name:'Iran',code:'ir',continent:'Asia',popularity:'popular',difficulty:'medium',cfm:false,population:'87M',capital:'Tehran',fact:'Iran is a Shia Islamic republic where evangelical house churches are growing rapidly despite severe persecution.',verseRef:'2 Timothy 2:9',verse:'The word of God is not bound.'},
+  {name:'Iraq',code:'iq',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'42M',capital:'Baghdad',fact:'Iraq\'s ancient Christian community has been devastated by ISIS and war, but small remnant churches remain.',verseRef:'Isaiah 58:12',verse:'You shall be called the repairer of the breach.'},
+  {name:'Ireland',code:'ie',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'5.1M',capital:'Dublin',fact:'Ireland was strongly Catholic but has rapidly secularized; evangelical churches are small but growing through immigration.',verseRef:'Acts 16:9',verse:'Come over and help us.'},
+  {name:'Israel',code:'il',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'9.5M',capital:'Jerusalem',fact:'Israel is Jewish-majority where Messianic Jews face opposition from Orthodox Jews and society.',verseRef:'Romans 11:26',verse:'All Israel will be saved, as it is written.'},
+  {name:'Italy',code:'it',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'59M',capital:'Rome',fact:'Italy is traditionally Catholic but increasingly secular; evangelical churches are small but active especially among immigrants.',verseRef:'Romans 1:16',verse:'I am not ashamed of the gospel, for it is the power of God for salvation to everyone who believes.'},
+  {name:'Ivory Coast',code:'ci',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'28M',capital:'Yamoussoukro',fact:'Ivory Coast is religiously mixed with tensions between Muslim north and Christian south after civil war.',verseRef:'Ephesians 2:14',verse:'He himself is our peace, who has made us both one.'},
+  {name:'Jamaica',code:'jm',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M',capital:'Kingston',fact:'Jamaica has many churches across its island but also faces high crime rates and materialism that challenge believers.',verseRef:'1 John 2:15',verse:'Do not love the world or the things in the world.'},
+  {name:'Japan',code:'jp',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'125M',capital:'Tokyo',fact:'Japan has less than 1% evangelical Christians despite 150 years of missions, presenting one of the greatest remaining challenges.',verseRef:'1 Corinthians 3:7',verse:'Only God who gives the growth.'},
+  {name:'Jordan',code:'jo',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'11M',capital:'Amman',fact:'Jordan is Muslim-majority but tolerates Christian minority; evangelism among Muslims is illegal and dangerous.',verseRef:'Daniel 6:10',verse:'He got down on his knees three times a day and prayed and gave thanks before his God.'},
+  {name:'Kazakhstan',code:'kz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'19M',capital:'Astana',fact:'Kazakhstan has tightened religious restrictions in recent years, making it harder for evangelical churches to operate freely.',verseRef:'1 Peter 2:19',verse:'This is a gracious thing, when, mindful of God, one endures sorrows while suffering unjustly.'},
+  {name:'Kenya',code:'ke',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'55M',capital:'Nairobi',fact:'Kenya has strong evangelical churches and sends many missionaries, though corruption and tribal tensions remain challenges.',verseRef:'Nehemiah 4:14',verse:'Remember the Lord, who is great and awesome, and fight.'},
+  {name:'Kuwait',code:'kw',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'4.3M',capital:'Kuwait City',fact:'Kuwait allows expatriate Christian worship but conversion from Islam is illegal and local believers face severe consequences.',verseRef:'Acts 4:29',verse:'Grant to your servants to continue to speak your word with all boldness.'},
+  {name:'Laos',code:'la',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'7.5M',capital:'Vientiane',fact:'Laos is communist-ruled where the small church faces restrictions and persecution, especially in rural areas.',verseRef:'Revelation 2:10',verse:'Be faithful unto death, and I will give you the crown of life.'},
+  {name:'Latvia',code:'lv',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'1.9M',capital:'Riga',fact:'Latvia is largely secular after Soviet atheism, with small evangelical communities working to rebuild Christian witness.',verseRef:'Haggai 2:4',verse:'Be strong, all you people of the land. Work, for I am with you.'},
+  {name:'Lebanon',code:'lb',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.5M',capital:'Beirut',fact:'Lebanon has historic Christian communities and evangelical churches serving amid political crisis and economic collapse.',verseRef:'Psalm 121:1-2',verse:'My help comes from the Lord.'},
+  {name:'Libya',code:'ly',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'7M',capital:'Tripoli',fact:'Libya is chaotic after civil war and has almost no open Christian presence; believers must practice faith in complete secrecy.',verseRef:'Psalm 91:1',verse:'He who dwells in the shelter of the Most High will abide in the shadow of the Almighty.'},
+  {name:'Lithuania',code:'lt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:true,population:'2.8M',capital:'Vilnius',fact:'Lithuania is traditionally Catholic but increasingly secular, with small evangelical churches growing slowly.',verseRef:'1 Thessalonians 5:11',verse:'Therefore encourage one another and build one another up.'},
+  {name:'Luxembourg',code:'lu',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'650K',capital:'Luxembourg City',fact:'Tiny Luxembourg is wealthy and secular with a small evangelical presence among many nationalities.',verseRef:'Matthew 6:24',verse:'You cannot serve God and money.'},
+  {name:'Madagascar',code:'mg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'29M',capital:'Antananarivo',fact:'Madagascar has many churches but extreme poverty and syncretism with ancestor worship challenge discipleship.',verseRef:'Deuteronomy 6:6-7',verse:'You shall teach them diligently to your children.'},
+  {name:'Malawi',code:'mw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M',capital:'Lilongwe',fact:'Malawi has strong Christian presence and religious freedom, but deep poverty requires churches to serve practical needs.',verseRef:'Proverbs 19:17',verse:'Whoever is generous to the poor lends to the Lord.'},
+  {name:'Malaysia',code:'my',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M',capital:'Kuala Lumpur',fact:'Malaysia restricts evangelism among Muslim Malays, but churches thrive among Chinese and Indian minorities.',verseRef:'Acts 16:14',verse:'The Lord opened her heart to pay attention to what was said by Paul.'},
+  {name:'Mali',code:'ml',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'22M',capital:'Bamako',fact:'Mali is Muslim-majority with growing Islamist violence in the north targeting Christians and foreign workers.',verseRef:'2 Corinthians 4:8-9',verse:'We are afflicted in every way, but not crushed; perplexed, but not driven to despair.'},
+  {name:'Malta',code:'mt',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'520K',capital:'Valletta',fact:'Malta is traditionally Catholic on its Mediterranean islands with a small evangelical community.',verseRef:'Acts 28:1',verse:'We then learned that the island was called Malta.'},
+  {name:'Mexico',code:'mx',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'130M',capital:'Mexico City',fact:'Mexico has explosive evangelical growth challenging Catholic dominance, with churches addressing violence and poverty.',verseRef:'Matthew 11:28',verse:'Come to me, all who labor and are heavy laden, and I will give you rest.'},
+  {name:'Moldova',code:'md',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'2.6M',capital:'Chișinău',fact:'Moldova is Europe\'s poorest country where evangelical churches minister despite poverty and emigration.',verseRef:'2 Corinthians 8:9',verse:'Though he was rich, yet for your sake he became poor, so that you by his poverty might become rich.'},
+  {name:'Monaco',code:'mc',continent:'Europe',popularity:'less',difficulty:'hard',cfm:false,population:'40K',capital:'Monaco',fact:'Tiny Monaco is one of the world\'s wealthiest nations where material prosperity can overshadow spiritual needs.',verseRef:'Mark 10:25',verse:'It is easier for a camel to go through the eye of a needle than for a rich person to enter the kingdom of God.'},
+  {name:'Mongolia',code:'mn',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'3.4M',capital:'Ulaanbaatar',fact:'Mongolia had zero Christians under communism but now has a small, rapidly growing church among Buddhists.',verseRef:'Isaiah 35:1',verse:'The desert shall rejoice and blossom like the crocus.'},
+  {name:'Morocco',code:'ma',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'37M',capital:'Rabat',fact:'Morocco is a Muslim kingdom where conversion is illegal and believers face family pressure and possible imprisonment.',verseRef:'Matthew 10:32',verse:'Everyone who acknowledges me before men, I also will acknowledge before my Father who is in heaven.'},
+  {name:'Mozambique',code:'mz',continent:'Africa',popularity:'less',difficulty:'hard',cfm:true,population:'33M',capital:'Maputo',fact:'Mozambique is recovering from civil war with church growth, but now faces Islamist insurgency in the north.',verseRef:'Joel 2:25',verse:'I will restore to you the years that the swarming locust has eaten.'},
+  {name:'Myanmar',code:'mm',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'55M',capital:'Naypyidaw',fact:'Myanmar\'s military coup has brought chaos and persecution especially to Christian ethnic minorities in border regions.',verseRef:'Psalm 9:9',verse:'The Lord is a stronghold for the oppressed, a stronghold in times of trouble.'},
+  {name:'Namibia',code:'na',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'2.6M',capital:'Windhoek',fact:'Namibia has Christian majority and religious freedom, with churches addressing HIV/AIDS and inequality.',verseRef:'Galatians 6:2',verse:'Bear one another\'s burdens, and so fulfill the law of Christ.'},
+  {name:'Nepal',code:'np',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'30M',capital:'Kathmandu',fact:'Nepal is the birthplace of Buddha where anti-conversion laws make evangelism illegal, yet the church keeps growing.',verseRef:'Acts 4:20',verse:'We cannot but speak of what we have seen and heard.'},
+  {name:'Netherlands',code:'nl',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'17.5M',capital:'Amsterdam',fact:'The Netherlands is highly secular with church buildings closing, but immigrant churches bring new life to Dutch cities.',verseRef:'John 4:35',verse:'Lift up your eyes, and see that the fields are white for harvest.'},
+  {name:'New Zealand',code:'nz',continent:'Oceania',popularity:'popular',difficulty:'easy',cfm:true,population:'5.1M',capital:'Wellington',fact:'New Zealand has declining church attendance and rising secularism despite its missionary heritage.',verseRef:'2 Chronicles 7:14',verse:'If my people who are called by my name humble themselves, and pray and seek my face.'},
+  {name:'Nicaragua',code:'ni',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'7M',capital:'Managua',fact:'Nicaragua\'s authoritarian government has recently cracked down on churches, jailing pastors and closing ministries.',verseRef:'Hebrews 13:3',verse:'Remember those who are in prison, as though in prison with them.'},
+  {name:'Niger',code:'ne',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'26M',capital:'Niamey',fact:'Niger is one of the world\'s poorest and most Muslim nations where a tiny Christian minority faces restrictions.',verseRef:'Matthew 25:40',verse:'As you did it to one of the least of these my brothers, you did it to me.'},
+  {name:'Nigeria',code:'ng',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'220M',capital:'Abuja',fact:'Nigeria has millions of evangelical Christians and huge churches, but Islamist violence kills thousands of believers yearly.',verseRef:'Revelation 12:11',verse:'They loved not their lives even unto death.'},
+  {name:'North Korea',code:'kp',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'26M',capital:'Pyongyang',fact:'North Korea is the hardest place on earth to be a Christian, where believers risk death camps if discovered.',verseRef:'Matthew 10:28',verse:'Do not fear those who kill the body but cannot kill the soul.'},
+  {name:'North Macedonia',code:'mk',continent:'Europe',popularity:'less',difficulty:'easy',cfm:false,population:'2.1M',capital:'Skopje',fact:'North Macedonia is religiously mixed with a small evangelical presence working for ethnic reconciliation.',verseRef:'Colossians 3:11',verse:'Christ is all, and in all.'},
+  {name:'Norway',code:'no',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'5.5M',capital:'Oslo',fact:'Norway has declining church attendance despite state Lutheran church membership, and rising secularism.',verseRef:'Ecclesiastes 12:1',verse:'Remember also your Creator in the days of your youth.'},
+  {name:'Oman',code:'om',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'4.6M',capital:'Muscat',fact:'Oman allows expatriate Christian worship but prohibits evangelism and conversion from Islam is illegal.',verseRef:'1 Peter 3:15',verse:'Always be prepared to give an answer to everyone who asks you to give the reason for the hope that you have.'},
+  {name:'Pakistan',code:'pk',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'230M',capital:'Islamabad',fact:'Pakistan\'s Christians are a tiny, poor minority living under harsh blasphemy laws where false accusations can mean death.',verseRef:'Psalm 140:1',verse:'Deliver me, O Lord, from evil men; preserve me from violent men.'},
+  {name:'Palestine',code:'ps',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'5.3M',capital:'Ramallah',fact:'Palestinian Christians are declining in number under Israeli occupation and Islamic pressure in the West Bank and Gaza.',verseRef:'Psalm 122:6',verse:'Pray for the peace of Jerusalem!'},
+  {name:'Panama',code:'pa',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'4.4M',capital:'Panama City',fact:'Panama has growing evangelical presence with churches serving diverse populations in this strategic crossroads nation.',verseRef:'Isaiah 49:1',verse:'Listen to me, O coastlands, and give attention, you peoples from afar.'},
+  {name:'Paraguay',code:'py',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'6.8M',capital:'Asunción',fact:'Paraguay has strong evangelical growth with churches addressing corruption and poverty.',verseRef:'Zechariah 4:6',verse:'Not by might, nor by power, but by my Spirit, says the Lord of hosts.'},
+  {name:'Peru',code:'pe',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'34M',capital:'Lima',fact:'Peru has growing evangelical churches especially among indigenous Quechua and Aymara peoples in the Andes.',verseRef:'Acts 17:26',verse:'He made from one man every nation of mankind to live on all the face of the earth.'},
+  {name:'Philippines',code:'ph',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'115M',capital:'Manila',fact:'The Philippines is Asia\'s largest Christian nation and sends thousands of missionaries and workers worldwide.',verseRef:'Acts 13:47',verse:'I have made you a light for the Gentiles, that you may bring salvation to the ends of the earth.'},
+  {name:'Poland',code:'pl',continent:'Europe',popularity:'popular',difficulty:'hard',cfm:true,population:'38M',capital:'Warsaw',fact:'Poland is strongly Catholic but evangelical churches are small and growing, especially among youth.',verseRef:'Ephesians 5:14',verse:'Awake, O sleeper, and arise from the dead, and Christ will shine on you.'},
+  {name:'Portugal',code:'pt',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.3M',capital:'Lisbon',fact:'Portugal is traditionally Catholic but increasingly secular with small but active evangelical churches.',verseRef:'Acts 2:39',verse:'The promise is for you and for your children and for all who are far off.'},
+  {name:'Qatar',code:'qa',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'2.9M',capital:'Doha',fact:'Qatar allows expatriate Christian worship in designated areas but evangelism is illegal and conversion from Islam forbidden.',verseRef:'Daniel 3:17-18',verse:'Our God whom we serve is able to deliver us, but if not, we will not serve your gods.'},
+  {name:'Romania',code:'ro',continent:'Europe',popularity:'less',difficulty:'hard',cfm:true,population:'19M',capital:'Bucharest',fact:'Romania has vibrant evangelical minority and sends missionaries despite economic struggles after communism.',verseRef:'Romans 15:20',verse:'I make it my ambition to preach the gospel, not where Christ has already been named.'},
+  {name:'Russia',code:'ru',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'145M',capital:'Moscow',fact:'Russia has tightened religious laws restricting evangelical ministry and banned some missionary activities.',verseRef:'Acts 5:29',verse:'We must obey God rather than men.'},
+  {name:'Rwanda',code:'rw',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'13.5M',capital:'Kigali',fact:'Rwanda is rebuilding after 1994 genocide with churches leading reconciliation and healing between Hutu and Tutsi.',verseRef:'2 Corinthians 5:18',verse:'God has reconciled us to himself through Christ and gave us the ministry of reconciliation.'},
+  {name:'Saudi Arabia',code:'sa',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'36M',capital:'Riyadh',fact:'Saudi Arabia forbids all Christian worship and evangelism; believers meet in complete secrecy at risk of death.',verseRef:'Acts 4:29',verse:'Grant to your servants to continue to speak your word with all boldness.'},
+  {name:'Senegal',code:'sn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M',capital:'Dakar',fact:'Senegal is Muslim-majority but tolerant, allowing small Christian minority to worship though evangelism faces social barriers.',verseRef:'Matthew 5:16',verse:'Let your light shine before others.'},
+  {name:'Serbia',code:'rs',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'6.7M',capital:'Belgrade',fact:'Serbia is strongly Orthodox where evangelicals face opposition and difficulty registering churches.',verseRef:'1 Peter 4:12',verse:'Do not be surprised at the fiery trial when it comes upon you to test you.'},
+  {name:'Singapore',code:'sg',continent:'Asia',popularity:'less',difficulty:'easy',cfm:false,population:'5.9M',capital:'Singapore',fact:'Singapore has religious freedom and vibrant churches but also strong materialism and prosperity focus.',verseRef:'1 Timothy 6:10',verse:'The love of money is a root of all kinds of evils.'},
+  {name:'Slovakia',code:'sk',continent:'Europe',popularity:'less',difficulty:'medium',cfm:true,population:'5.5M',capital:'Bratislava',fact:'Slovakia is strongly Catholic with small evangelical minority growing slowly.',verseRef:'Luke 19:10',verse:'The Son of Man came to seek and to save the lost.'},
+  {name:'Slovenia',code:'si',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'2.1M',capital:'Ljubljana',fact:'Slovenia is largely secular after Catholic heritage, with very small evangelical presence.',verseRef:'Isaiah 6:8',verse:'Whom shall I send, and who will go for us?'},
+  {name:'Somalia',code:'so',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'17M',capital:'Mogadishu',fact:'Somalia is one of the most dangerous places for Christians, where believers face almost certain death if discovered.',verseRef:'Hebrews 11:35',verse:'Some were tortured, refusing to accept release, so that they might rise again to a better life.'},
+  {name:'South Africa',code:'za',continent:'Africa',popularity:'popular',difficulty:'easy',cfm:true,population:'60M',capital:'Pretoria',fact:'South Africa has strong churches that fought apartheid but now faces crime, poverty, and corruption challenges.',verseRef:'Micah 6:8',verse:'What does the Lord require of you but to do justice, and to love kindness, and to walk humbly with your God?'},
+  {name:'South Korea',code:'kr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:true,population:'52M',capital:'Seoul',fact:'South Korea has huge churches and sends many missionaries, though prosperity gospel and materialism are concerns.',verseRef:'Matthew 6:33',verse:'Seek first the kingdom of God and his righteousness.'},
+  {name:'Spain',code:'es',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'48M',capital:'Madrid',fact:'Spain is traditionally Catholic but increasingly secular; evangelical churches are small but growing through immigration.',verseRef:'Romans 10:15',verse:'How beautiful are the feet of those who preach the good news!'},
+  {name:'Sri Lanka',code:'lk',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M',capital:'Colombo',fact:'Sri Lanka\'s small Christian minority has faced violence and pressure from Buddhist nationalists.',verseRef:'James 1:2-3',verse:'The testing of your faith produces steadfastness.'},
+  {name:'Sudan',code:'sd',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'46M',capital:'Khartoum',fact:'Sudan has Islamic law and severe restrictions on Christianity, though the church persists underground.',verseRef:'2 Timothy 2:3',verse:'Share in suffering as a good soldier of Christ Jesus.'},
+  {name:'Sweden',code:'se',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'10.5M',capital:'Stockholm',fact:'Sweden is one of the world\'s most secular nations where evangelical churches struggle against declining interest.',verseRef:'Revelation 3:2',verse:'Wake up, and strengthen what remains and is about to die.'},
+  {name:'Switzerland',code:'ch',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'8.7M',capital:'Bern',fact:'Switzerland has declining church attendance despite Protestant heritage, with immigrant churches bringing renewal.',verseRef:'Philippians 2:15',verse:'Among whom you shine as lights in the world.'},
+  {name:'Syria',code:'sy',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'22M',capital:'Damascus',fact:'Syria\'s ancient Christian community has been devastated by civil war, ISIS, and emigration.',verseRef:'Lamentations 5:21',verse:'Restore us to yourself, O Lord, that we may be restored!'},
+  {name:'Taiwan',code:'tw',continent:'Asia',popularity:'less',difficulty:'easy',cfm:true,population:'23.5M',capital:'Taipei',fact:'Taiwan has religious freedom and growing evangelical churches among Buddhist/Taoist majority.',verseRef:'Joshua 1:9',verse:'Be strong and courageous. The Lord your God is with you wherever you go.'},
+  {name:'Tanzania',code:'tz',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'65M',capital:'Dodoma',fact:'Tanzania has strong churches but also rising Islamic extremism on the coast and Zanzibar islands.',verseRef:'1 Peter 5:8',verse:'Your adversary the devil prowls around like a roaring lion, seeking someone to devour.'},
+  {name:'Thailand',code:'th',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'70M',capital:'Bangkok',fact:'Thailand is strongly Buddhist where Christians are less than 1% and face social pressure against conversion.',verseRef:'Colossians 4:3',verse:'Pray for us, that God may open to us a door for the word.'},
+  {name:'Togo',code:'tg',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'8.6M',capital:'Lomé',fact:'Togo has Christian minority alongside voodoo and Islam, with churches growing despite syncretism challenges.',verseRef:'1 Kings 18:21',verse:'How long will you go limping between two different opinions?'},
+  {name:'Trinidad and Tobago',code:'tt',continent:'Americas',popularity:'less',difficulty:'easy',cfm:false,population:'1.5M',capital:'Port of Spain',fact:'Trinidad has diverse religions on its Caribbean islands with strong churches among different ethnic groups.',verseRef:'Galatians 3:28',verse:'You are all one in Christ Jesus.'},
+  {name:'Tunisia',code:'tn',continent:'Africa',popularity:'less',difficulty:'easy',cfm:false,population:'12M',capital:'Tunis',fact:'Tunisia is Muslim with very few believers who face pressure and legal restrictions on evangelism.',verseRef:'2 Corinthians 4:16',verse:'We do not lose heart. Though our outer self is wasting away, our inner self is being renewed day by day.'},
+  {name:'Turkey',code:'tr',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'85M',capital:'Ankara',fact:'Turkey is officially secular but strongly Muslim; tiny Christian minority faces hostility and even violence.',verseRef:'Revelation 2:13',verse:'Yet you hold fast my name.'},
+  {name:'Uganda',code:'ug',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'48M',capital:'Kampala',fact:'Uganda has vibrant evangelical churches and sends missionaries, though corruption and poverty remain challenges.',verseRef:'Psalm 126:6',verse:'He who goes out weeping, bearing the seed for sowing, shall come home with shouts of joy.'},
+  {name:'Ukraine',code:'ua',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'38M',capital:'Kyiv',fact:'Ukraine\'s churches are ministering amid war with Russia, providing aid and spiritual support to suffering people.',verseRef:'Psalm 46:1',verse:'God is our refuge and strength, a very present help in trouble.'},
+  {name:'United Arab Emirates',code:'ae',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'10M',capital:'Abu Dhabi',fact:'UAE allows expatriate Christian worship in designated areas but evangelism is illegal and conversion forbidden.',verseRef:'1 Peter 2:12',verse:'Keep your conduct among the Gentiles honorable.'},
+  {name:'United Kingdom',code:'gb',continent:'Europe',popularity:'popular',difficulty:'easy',cfm:true,population:'68M',capital:'London',fact:'UK has rich missionary history but church attendance has collapsed; immigrant churches bring new vitality.',verseRef:'Isaiah 6:8',verse:'Whom shall I send, and who will go for us?'},
+  {name:'United States',code:'us',continent:'Americas',popularity:'popular',difficulty:'easy',cfm:true,population:'335M',capital:'Washington, D.C.',fact:'The United States has the world\'s largest evangelical population and sends the most missionaries globally.',verseRef:'Matthew 28:19-20',verse:'Go therefore and make disciples of all nations.'},
+  {name:'Uruguay',code:'uy',continent:'Americas',popularity:'less',difficulty:'easy',cfm:true,population:'3.4M',capital:'Montevideo',fact:'Uruguay is one of Latin America\'s most secular nations where evangelical churches are small but growing.',verseRef:'Romans 1:16',verse:'I am not ashamed of the gospel, for it is the power of God for salvation.'},
+  {name:'Uzbekistan',code:'uz',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'35M',capital:'Tashkent',fact:'Uzbekistan tightly controls religion with severe restrictions on evangelical churches and harsh penalties for evangelism.',verseRef:'2 Timothy 1:8',verse:'Do not be ashamed of the testimony about our Lord.'},
+  {name:'Venezuela',code:'ve',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'28M',capital:'Caracas',fact:'Venezuela\'s economic collapse has caused mass emigration but churches remain active providing aid amid the crisis.',verseRef:'Philippians 4:19',verse:'My God will supply every need of yours according to his riches in glory in Christ Jesus.'},
+  {name:'Vietnam',code:'vn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'98M',capital:'Hanoi',fact:'Vietnam\'s communist government restricts churches but evangelical house churches keep growing, especially among ethnic minorities.',verseRef:'Acts 12:24',verse:'The word of God increased and multiplied.'},
+  {name:'Yemen',code:'ye',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M',capital:"Sana'a",fact:'Yemen is one of the most closed nations where civil war rages and almost no Christian presence exists.',verseRef:'Isaiah 43:19',verse:'Behold, I am doing a new thing; now it springs forth, do you not perceive it?'},
+  {name:'Zambia',code:'zm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M',capital:'Lusaka',fact:'Zambia has strong Christian presence and religious freedom but extreme poverty challenges churches.',verseRef:'Proverbs 31:9',verse:'Open your mouth, judge righteously, defend the rights of the poor and needy.'},
+  {name:'Zimbabwe',code:'zw',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'16M',capital:'Harare',fact:'Zimbabwe has vibrant churches ministering amid economic collapse, hyperinflation, and political oppression.',verseRef:'Habakkuk 3:17-18',verse:'Yet I will rejoice in the Lord; I will take joy in the God of my salvation.'}
+];
+
+let state = {
+  mode:'practice',
+  direction:'flag-to-country',
+  weakMode:false,
+  filter:'all',
+  regionalZoom:1,
+  filtered:[...FLAGS],
+  current:null,
+  stats:{correct:0,incorrect:0,total:0},
+  upcomingQueue:[],
+  unseenFlags:[]
+};
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+function initializeQueue(){
+  state.unseenFlags=[...state.filtered];shuffle(state.unseenFlags);
+  state.upcomingQueue=state.unseenFlags.splice(0,Math.min(8,state.unseenFlags.length));
+}
+function getNextFlag(){
+  if(state.upcomingQueue.length<3){
+    if(state.unseenFlags.length===0){state.unseenFlags=[...state.filtered];shuffle(state.unseenFlags);}
+    state.upcomingQueue.push(...state.unseenFlags.splice(0,Math.min(5,state.unseenFlags.length)));
+  }
+  if(state.upcomingQueue.length>0)return state.upcomingQueue.shift();
+  return state.filtered[Math.floor(Math.random()*state.filtered.length)];
+}
+
+function applyFilter(v){
+  state.filter=v;
+  if(v==='all') state.filtered=[...FLAGS];
+  else if(['europe','asia','africa','americas','oceania'].includes(v))
+    state.filtered=FLAGS.filter(f=>f.continent.toLowerCase()===v);
+  else if(v==='popular'||v==='less') state.filtered=FLAGS.filter(f=>f.popularity===v);
+  else state.filtered=FLAGS.filter(f=>f.difficulty===v);
+  document.getElementById('filter-info').textContent=`Showing ${state.filtered.length} flags`;
+  initializeQueue();nextFlag();
+}
+
+function switchMode(){
+  document.getElementById('practice-view').classList.toggle('hidden',state.mode!=='practice');
+  document.getElementById('quiz-view').classList.toggle('hidden',state.mode==='practice');
+  nextFlag();
+}
+
+function nextFlag(){
+  const f=getNextFlag(); if(!f) return;
+  state.current=f; state.answered=false;
+  if(state.mode==='practice') loadPracticeMode(); else loadQuizMode();
+}
+
+function loadPracticeMode(){
+  document.getElementById('answer-section').classList.add('hidden');
+  document.getElementById('reveal-btn').classList.remove('hidden');
+  const fc=document.getElementById('flag-container');
+  const qc=document.getElementById('question-container');
+  const fi=document.getElementById('flag-image');
+  if(state.direction==='flag-to-country'){
+    fc.classList.remove('hidden'); qc.classList.add('hidden');
+    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt='Flag';
+  }else{
+    fc.classList.add('hidden'); qc.classList.remove('hidden');
+    document.getElementById('question-text').textContent=state.current.name;
+  }
+}
+
+function revealAnswer(){
+  const fc=document.getElementById('flag-container');
+  const fi=document.getElementById('flag-image');
+  const an=document.getElementById('answer-name');
+  if(state.direction==='country-to-flag'){
+    fc.classList.remove('hidden');
+    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt=state.current.name;
+    an.textContent='';
+  }else an.textContent=state.current.name;
+  showCountryInfo();
+  document.getElementById('reveal-btn').classList.add('hidden');
+  document.getElementById('answer-section').classList.remove('hidden');
+}
+
+function buildInfoHTML(){
+  
+    const c = state.current;
+
+  return `
+    <div class="country-info-item">
+      <strong>${c.cfm ? 'CFM church present.' : 'No CFM church yet. Who will go?'}</strong>
+    </div>
+    <div class="country-info-item">
+      <strong>Capital:</strong> ${c.capital}
+      &nbsp;&nbsp;
+      <strong>Population:</strong> ${c.population}
+    </div>
+    <div class="country-info-item">
+      ${c.fact}
+    </div>
+    <div class="country-info-item">
+      <strong>${c.verseRef}:</strong> ${c.verse}
+    </div>
+    <div class="map-row-top">
+      <div class="map-box">
+        <div class="globe-map">
+          ${getGlobeMap(c.code)}
+        </div>
+      </div>
+      <div class="map-box">
+        <div class="country-region-map">
+          ${getRegionalMap(c.code)}
+        </div>
+      </div>
+    </div>
+    <div class="map-row-bottom">
+      <div class="map-box locator-box">
+        <div class="locator-map">
+          ${getWorldometerLocatorHTML(c)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function showCountryInfo(){
+  const old=document.getElementById('country-info-display');
+  if(old) old.remove();
+  const div=document.createElement('div');
+  div.id='country-info-display';div.className='country-info';
+  div.innerHTML=buildInfoHTML();
+  const as=document.getElementById('answer-section');
+  const ab=as.querySelector('.action-buttons');
+  ab.parentNode.insertBefore(div,ab.nextSibling);
+}
+
+function markAnswer(correct){
+  state.stats.total++; if(correct) state.stats.correct++; else state.stats.incorrect++;
+  updateStats(); nextFlag();
+}
+
+function loadQuizMode(){
+  const opts=getQuizOptions();
+  const cont=document.getElementById('options-container');
+  const q=document.getElementById('quiz-question');
+  cont.innerHTML=''; q.innerHTML=''; document.getElementById('quiz-feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  const fc=document.getElementById('flag-container');
+  const fi=document.getElementById('flag-image');
+
+  if(state.direction==='flag-to-country'){
+    fc.classList.remove('hidden');
+    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt='Flag';
+    opts.forEach(flag=>{
+      const b=document.createElement('button');
+      b.className='option-btn'; b.textContent=flag.name;
+      b.onclick=()=>handleQuizAnswer(flag.name,b);
+      cont.appendChild(b);
     });
+  }else{
+    fc.classList.add('hidden');
+    const title=document.createElement('div');
+    title.className='country-name'; title.textContent=state.current.name; title.style.marginBottom='16px';
+    q.appendChild(title);
+    opts.forEach(flag=>{
+      const b=document.createElement('button'); b.className='option-btn'; b.style.padding='0';
+      const img=document.createElement('img');
+      img.src=`https://flagcdn.com/w320/${flag.code}.png`; img.alt=flag.name;
+      b.appendChild(img); b.onclick=()=>handleQuizAnswer(flag.name,b);
+      cont.appendChild(b);
+    });
+  }
+}
+
+function getQuizOptions(){
+  const opts=[state.current];
+  const others=state.filtered.filter(f=>f.code!==state.current.code);
+  while(opts.length<4 && others.length){
+    const r=others[Math.floor(Math.random()*others.length)];
+    if(!opts.find(o=>o.code===r.code)) opts.push(r);
+  }
+  return opts.sort(()=>Math.random()-0.5);
+}
+
+function handleQuizAnswer(selected,btn){
+  if(state.answered) return; state.answered=true;
+  const ok=selected===state.current.name;
+  document.querySelectorAll('#options-container .option-btn').forEach(b=>b.disabled=true);
+  state.stats.total++; if(ok) state.stats.correct++; else state.stats.incorrect++;
+  const fb=document.getElementById('quiz-feedback');
+  if(ok){ btn.classList.add('correct'); fb.textContent='Correct!'; fb.className='feedback correct'; }
+  else{
+    btn.classList.add('incorrect');
+    document.querySelectorAll('#options-container .option-btn').forEach(b=>{
+      if(b.textContent===state.current.name) b.classList.add('correct');
+    });
+    fb.textContent=`Wrong! It was ${state.current.name}`; fb.className='feedback incorrect';
+  }
+  fb.classList.remove('hidden');
+  updateStats(); showCountryInfo(); document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function updateStats(){
+  document.getElementById('correct-count').textContent=state.stats.correct;
+  document.getElementById('incorrect-count').textContent=state.stats.incorrect;
+  document.getElementById('total-count').textContent=state.stats.total;
+}
+
+function toggleSettings(){document.getElementById('settings-card').classList.toggle('collapsed');}
+
+function setupUI(){
+  document.querySelectorAll('.mode-btn').forEach(b=>{
+    b.onclick=()=>{document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); state.mode=b.dataset.mode; switchMode();};
+  });
+  document.querySelectorAll('[data-direction]').forEach(b=>{
+    b.onclick=()=>{document.querySelectorAll('[data-direction]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); state.direction=b.dataset.direction; nextFlag();};
+  });
+  document.getElementById('weak-toggle').onclick=e=>{
+    state.weakMode=!state.weakMode;
+    e.target.textContent=state.weakMode?'On':'Off';
+    e.target.classList.toggle('active');
+  };
+  document.getElementById('filter-select').onchange=e=>applyFilter(e.target.value);
+  document.getElementById('zoom-slider').oninput=e=>{
+    state.regionalZoom=parseFloat(e.target.value);
+    document.getElementById('zoom-value').textContent=state.regionalZoom;
+  };
+  document.getElementById('reveal-btn').onclick=revealAnswer;
+  document.getElementById('correct-btn').onclick=()=>markAnswer(true);
+  document.getElementById('missed-btn').onclick=()=>markAnswer(false);
+  document.getElementById('next-btn').onclick=nextFlag;
+}
+
+  const ISO_TO_FIPS = {
+  af:'AF',al:'AL',dz:'AG',ad:'AN',ao:'AO',ar:'AR',am:'AM',au:'AS',at:'AU',az:'AJ',
+  bs:'BF',bh:'BA',bd:'BG',bb:'BB',by:'BO',be:'BE',bz:'BH',bj:'BN',bt:'BT',bo:'BL',
+  ba:'BK',bw:'BC',br:'BR',bn:'BX',bg:'BU',bf:'UV',bi:'BY',kh:'CB',cm:'CM',ca:'CA',
+  td:'CD',cl:'CI',cn:'CH',co:'CO',cg:'CF',cr:'CS',hr:'HR',cu:'CU',cy:'CY',cz:'EZ',
+  dk:'DA',do:'DR',ec:'EC',eg:'EG',sv:'ES',ee:'EN',et:'ET',fj:'FJ',fi:'FI',fr:'FR',
+  ga:'GB',gm:'GA',ge:'GG',de:'GM',gh:'GH',gr:'GR',gt:'GT',gn:'GV',ht:'HA',hn:'HO',
+  hu:'HU',is:'IC',in:'IN',id:'ID',ir:'IR',iq:'IZ',ie:'EI',il:'IS',it:'IT',ci:'IV',
+  jm:'JM',jp:'JA',jo:'JO',kz:'KZ',ke:'KE',kw:'KU',la:'LA',lv:'LG',lb:'LE',ly:'LY',
+  lt:'LH',lu:'LU',mg:'MA',mw:'MI',my:'MY',ml:'ML',mt:'MT',mx:'MX',md:'MD',mc:'MN',
+  mn:'MG',ma:'MO',mz:'MZ',mm:'BM',na:'WA',np:'NP',nl:'NL',nz:'NZ',ni:'NU',ne:'NG',
+  ng:'NI',kp:'KN',mk:'MK',no:'NO',om:'MU',pk:'PK',ps:'WE',pa:'PM',py:'PA',pe:'PE',
+  ph:'RP',pl:'PL',pt:'PO',qa:'QA',ro:'RO',ru:'RS',rw:'RW',sa:'SA',sn:'SG',rs:'RB',
+  sg:'SN',sk:'LO',si:'SI',so:'SO',za:'SF',kr:'KS',es:'SP',lk:'CE',sd:'SU',se:'SW',
+  ch:'SZ',sy:'SY',tw:'TW',tz:'TZ',th:'TH',tg:'TO',tt:'TD',tn:'TS',tr:'TU',ug:'UG',
+  ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
+};
+
+function getWorldometerLocatorHTML(country) {
+  const fips = ISO_TO_FIPS[country.code] || country.code.toUpperCase();
+  const url = `https://www.worldometers.info/img/maps_cl/${fips}-locator-map.gif`;
+  return `<img src="${url}" alt="${country.name} locator map"
+      style="width:100%;height:auto;object-fit:contain;display:block;border-radius:8px;"
+      onerror="this.parentElement.innerHTML='<div style=&quot;color:var(--txt2);font-size:12px;text-align:center;padding:12px;&quot;>Map unavailable</div>'">`;
+}
+
+  function getMapSVG(countryCode, zoomFactor) {
+  const countryLatLon = {
+    af:{lat:34,lon:66}, al:{lat:41,lon:20}, dz:{lat:28,lon:3}, ad:{lat:42.5,lon:1.5},
+    ao:{lat:-12,lon:18}, ar:{lat:-34,lon:-64}, am:{lat:40,lon:45}, au:{lat:-25,lon:135},
+    at:{lat:47.5,lon:14.5}, az:{lat:40.5,lon:47.5}, bs:{lat:25,lon:-77}, bh:{lat:26,lon:50.5},
+    bd:{lat:24,lon:90}, bb:{lat:13.2,lon:-59.5}, by:{lat:53,lon:28}, be:{lat:50.8,lon:4.5},
+    bz:{lat:17.2,lon:-88.7}, bj:{lat:9.5,lon:2.3}, bt:{lat:27.5,lon:90.5}, bo:{lat:-16.7,lon:-64.7},
+    ba:{lat:44,lon:18}, bw:{lat:-22,lon:24}, br:{lat:-10,lon:-52}, bn:{lat:4.5,lon:114.7},
+    bg:{lat:42.7,lon:25.5}, bf:{lat:12.4,lon:-1.6}, bi:{lat:-3.4,lon:29.9}, kh:{lat:12.5,lon:105},
+    cm:{lat:5,lon:12}, ca:{lat:57,lon:-106}, td:{lat:15.5,lon:19}, cl:{lat:-30,lon:-71},
+    cn:{lat:35,lon:103}, co:{lat:4,lon:-72}, cg:{lat:-1,lon:15}, cr:{lat:10,lon:-84},
+    hr:{lat:45.1,lon:15.2}, cu:{lat:21.5,lon:-79.5}, cy:{lat:35,lon:33}, cz:{lat:49.8,lon:15.5},
+    dk:{lat:56,lon:10}, do:{lat:19,lon:-70.7}, ec:{lat:-1.4,lon:-78.2}, eg:{lat:27,lon:30},
+    sv:{lat:13.7,lon:-89.2}, ee:{lat:58.7,lon:25}, et:{lat:9,lon:40.5}, fj:{lat:-17.8,lon:178},
+    fi:{lat:64,lon:26}, fr:{lat:46.5,lon:2.8}, ga:{lat:-0.8,lon:11.6}, gm:{lat:13.4,lon:-16},
+    ge:{lat:42,lon:43.5}, de:{lat:51,lon:9}, gh:{lat:7.9,lon:-1.0}, gr:{lat:39,lon:22},
+    gt:{lat:15.8,lon:-90.2}, gn:{lat:10.5,lon:-10.5}, ht:{lat:19,lon:-72.7}, hn:{lat:14.8,lon:-86.2},
+    hu:{lat:47,lon:19.5}, is:{lat:65,lon:-19}, in:{lat:22,lon:79}, id:{lat:-2,lon:118},
+    ir:{lat:32,lon:53}, iq:{lat:33,lon:44}, ie:{lat:53.4,lon:-8}, il:{lat:31.5,lon:35},
+    it:{lat:42.8,lon:12.5}, ci:{lat:7.5,lon:-5.5}, jm:{lat:18.1,lon:-77.3}, jp:{lat:36,lon:138},
+    jo:{lat:31,lon:36}, kz:{lat:48,lon:68}, ke:{lat:0,lon:38}, kw:{lat:29.5,lon:47.8},
+    la:{lat:18,lon:105}, lv:{lat:56.9,lon:24.6}, lb:{lat:33.9,lon:35.9}, ly:{lat:27,lon:18},
+    lt:{lat:55.3,lon:23.9}, lu:{lat:49.8,lon:6.1}, mg:{lat:-20,lon:47}, mw:{lat:-13.5,lon:34},
+    my:{lat:4,lon:109.5}, ml:{lat:17.5,lon:-4}, mt:{lat:35.9,lon:14.4}, mx:{lat:23,lon:-102},
+    md:{lat:47,lon:28.5}, mc:{lat:43.7,lon:7.4}, mn:{lat:46.8,lon:104}, ma:{lat:31.8,lon:-7},
+    mz:{lat:-18.3,lon:35}, mm:{lat:21,lon:96}, na:{lat:-22,lon:17}, np:{lat:28.4,lon:84},
+    nl:{lat:52.3,lon:5.5}, nz:{lat:-41,lon:173}, ni:{lat:12.8,lon:-85}, ne:{lat:17.6,lon:8},
+    ng:{lat:9,lon:8}, kp:{lat:40,lon:127}, mk:{lat:41.6,lon:21.7}, no:{lat:64.5,lon:11},
+    om:{lat:20.5,lon:57}, pk:{lat:30,lon:70}, ps:{lat:31.5,lon:35.3}, pa:{lat:8.5,lon:-80},
+    py:{lat:-23,lon:-58}, pe:{lat:-9.2,lon:-75}, ph:{lat:13,lon:122}, pl:{lat:52,lon:19},
+    pt:{lat:39.5,lon:-8}, qa:{lat:25.3,lon:51.2}, ro:{lat:45.9,lon:24.9}, ru:{lat:60,lon:90},
+    rw:{lat:-1.9,lon:29.9}, sa:{lat:24,lon:45}, sn:{lat:14.4,lon:-14.5}, rs:{lat:44,lon:21},
+    sg:{lat:1.3,lon:103.8}, sk:{lat:48.7,lon:19.7}, si:{lat:46.1,lon:14.8}, so:{lat:6,lon:46},
+    za:{lat:-29,lon:24}, kr:{lat:36.5,lon:127.8}, es:{lat:40,lon:-4}, lk:{lat:7.8,lon:80.7},
+    sd:{lat:15.6,lon:30.5}, se:{lat:62,lon:15}, ch:{lat:47,lon:8.2}, sy:{lat:35,lon:38},
+    tw:{lat:23.6,lon:121}, tz:{lat:-6,lon:35}, th:{lat:15,lon:101}, tg:{lat:8.5,lon:1.1},
+    tt:{lat:10.4,lon:-61.3}, tn:{lat:34,lon:9}, tr:{lat:39,lon:35}, ug:{lat:1.5,lon:32},
+    ua:{lat:49,lon:32}, ae:{lat:24,lon:54}, gb:{lat:55,lon:-3}, us:{lat:38,lon:-97},
+    uy:{lat:-33,lon:-56}, uz:{lat:41.3,lon:64.6}, ve:{lat:7,lon:-66}, vn:{lat:16,lon:108},
+    ye:{lat:15.5,lon:47.5}, zm:{lat:-13.1,lon:27.8}, zw:{lat:-19,lon:29.2}
+  };
+
+  const mapW = 1100, mapH = 550;
+  const mapImg = "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg";
+
+  const pos = countryLatLon[countryCode] || {lat:0, lon:0};
+  const cx = (pos.lon + 180) * (mapW / 360);
+  const cy = (-pos.lat + 90) * (mapH / 180);
+
+  const vSize = mapH / zoomFactor;
+  let vx = cx - vSize / 2;
+  let vy = cy - vSize / 2;
+  vx = Math.max(0, Math.min(mapW - vSize, vx));
+  vy = Math.max(0, Math.min(mapH - vSize, vy));
+
+  const dotR = 4;
+  const ringR1 = dotR * 1.6;
+  const ringR2 = dotR * 3;
+
+  return `<svg viewBox="${vx} ${vy} ${vSize} ${vSize}" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block;">
+    <image href="${mapImg}" x="0" y="0" width="${mapW}" height="${mapH}"/>
+    <circle cx="${cx}" cy="${cy}" r="${dotR}" fill="#ff5459" opacity="0.95"/>
+    <circle cx="${cx}" cy="${cy}" r="${ringR1}" fill="none" stroke="#ff5459" stroke-width="${dotR*0.4}" opacity="0.8">
+      <animate attributeName="r" from="${dotR*1.2}" to="${ringR2}" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>`;
+}
+
+function getGlobeMap(code){
+  return getMapSVG(code, 1);
+}
+function getRegionalMap(code){
+  const z = state.regionalZoom || 4;
+  return getMapSVG(code, z);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setupUI();
+  initializeQueue();
+  nextFlag();
+});
+</script>
+</body>
+</html>
+</html>
