@@ -405,7 +405,7 @@ function loadPracticeMode(){
   const fi=document.getElementById('flag-image');
   if(state.direction==='flag-to-country'){
     fc.classList.remove('hidden'); qc.classList.add('hidden');
-    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt='Flag';
+    fi.src=`https://flagcdn.com/w320/${state.current.code.toLowerCase()}.png`; fi.alt='Flag';
   }else{
     fc.classList.add('hidden'); qc.classList.remove('hidden');
     document.getElementById('question-text').textContent=state.current.name;
@@ -418,7 +418,7 @@ function revealAnswer(){
   const an=document.getElementById('answer-name');
   if(state.direction==='country-to-flag'){
     fc.classList.remove('hidden');
-    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt=state.current.name;
+    fi.src=`https://flagcdn.com/w320/${state.current.code.toLowerCase()}.png`; fi.alt=state.current.name;
     an.textContent='';
   }else an.textContent=state.current.name;
   showCountryInfo();
@@ -494,7 +494,7 @@ function loadQuizMode(){
 
   if(state.direction==='flag-to-country'){
     fc.classList.remove('hidden');
-    fi.src=`https://flagcdn.com/w320/${state.current.code}.png`; fi.alt='Flag';
+    fi.src=`https://flagcdn.com/w320/${state.current.code.toLowerCase()}.png`; fi.alt='Flag';
     opts.forEach(flag=>{
       const b=document.createElement('button');
       b.className='option-btn'; b.textContent=flag.name;
@@ -509,7 +509,7 @@ function loadQuizMode(){
     opts.forEach(flag=>{
       const b=document.createElement('button'); b.className='option-btn'; b.style.padding='0';
       const img=document.createElement('img');
-      img.src=`https://flagcdn.com/w320/${flag.code}.png`; img.alt=flag.name;
+      img.src=`https://flagcdn.com/w320/${flag.code.toLowerCase()}.png`; img.alt=flag.name;
       b.appendChild(img); b.onclick=()=>handleQuizAnswer(flag.name,b);
       cont.appendChild(b);
     });
