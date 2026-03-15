@@ -84,10 +84,7 @@ select{width:100%;padding:var(--sm);border-radius:8px;border:2px solid var(--bor
         <button class="toggle-btn active" data-direction="flag-to-country">Flag → Country</button>
         <button class="toggle-btn" data-direction="country-to-flag">Country → Flag</button>
       </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Focus on weak flags</span>
-        <button class="toggle-btn" id="weak-toggle">Off</button>
-      </div>
+
       <h3 class="settings-section-title">Filter Flags</h3>
       <select id="filter-select">
         <option value="all">All Flags</option>
@@ -345,14 +342,15 @@ const FLAGS=[
 let state = {
   mode:'practice',
   direction:'flag-to-country',
-  weakMode:false,
   filter:'all',
   regionalZoom:1,
   filtered:[...FLAGS],
   current:null,
   stats:{correct:0,incorrect:0,total:0},
   upcomingQueue:[],
-  unseenFlags:[]
+  unseenFlags:[],
+  missedFlags:[],
+  cardsSinceMiss:0
 };
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
@@ -361,10 +359,27 @@ function initializeQueue(){
   state.upcomingQueue=state.unseenFlags.splice(0,Math.min(8,state.unseenFlags.length));
 }
 function getNextFlag(){
+  // Repeat missed flags: first repeat after 3 new cards, second repeat after 7 new cards
+  if(state.missedFlags.length>0){
+    const next=state.missedFlags[0];
+    if(next._repeatAt===undefined) next._repeatAt=state.cardsSinceMiss+3;
+    if(state.cardsSinceMiss>=next._repeatAt){
+      state.missedFlags.shift();
+      // schedule a second repeat 7 cards later if not already repeated
+      if(!next._repeated){
+        next._repeated=true;
+        next._repeatAt=state.cardsSinceMiss+7;
+        state.missedFlags.push(next);
+      }
+      state.cardsSinceMiss=0;
+      return next;
+    }
+  }
   if(state.upcomingQueue.length<3){
     if(state.unseenFlags.length===0){state.unseenFlags=[...state.filtered];shuffle(state.unseenFlags);}
     state.upcomingQueue.push(...state.unseenFlags.splice(0,Math.min(5,state.unseenFlags.length)));
   }
+  state.cardsSinceMiss++;
   if(state.upcomingQueue.length>0)return state.upcomingQueue.shift();
   return state.filtered[Math.floor(Math.random()*state.filtered.length)];
 }
@@ -475,6 +490,7 @@ function showCountryInfo(){
 
 function markAnswer(correct){
   state.stats.total++; if(correct) state.stats.correct++; else state.stats.incorrect++;
+  if(!correct) state.missedFlags.push(state.current);
   updateStats(); nextFlag();
 }
 
@@ -534,6 +550,7 @@ function handleQuizAnswer(selected,btn){
       if(b.textContent===state.current.name) b.classList.add('correct');
     });
     fb.textContent=`Wrong! It was ${state.current.name}`; fb.className='feedback incorrect';
+    state.missedFlags.push(state.current);
   }
   fb.classList.remove('hidden');
   updateStats(); showCountryInfo(); document.getElementById('next-btn').classList.remove('hidden');
@@ -556,11 +573,7 @@ function setupUI(){
     b.onclick=()=>{document.querySelectorAll('[data-direction]').forEach(x=>x.classList.remove('active'));
       b.classList.add('active'); state.direction=b.dataset.direction; nextFlag();};
   });
-  document.getElementById('weak-toggle').onclick=e=>{
-    state.weakMode=!state.weakMode;
-    e.target.textContent=state.weakMode?'On':'Off';
-    e.target.classList.toggle('active');
-  };
+
   document.getElementById('filter-select').onchange=e=>applyFilter(e.target.value);
   document.getElementById('zoom-slider').oninput=e=>{
     state.regionalZoom=parseFloat(e.target.value);
