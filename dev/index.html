@@ -26,6 +26,12 @@ h1{font-size:26px;margin-bottom:var(--sm)}
 .settings-card.collapsed{padding:var(--md) var(--lg)}
 .settings-card.collapsed .settings-content{display:none}
 .settings-header{cursor:pointer;user-select:none}
+
+  // TEST: Add missionary data merge
+MISSIONARY_DATA.forEach(md => {
+  const flag = FLAGS.find(f => f.code === md.code);
+  if (flag) { flag.fact = md.fact; flag.verseRef = md.verseRef; }
+});
 .toggle-icon{font-size:18px;transition:.3s}
 .settings-card.collapsed .toggle-icon{transform:rotate(180deg)}
 .flag-container{text-align:center;margin-bottom:var(--sm)}
@@ -896,3 +902,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 </html>
 </html>
+400
