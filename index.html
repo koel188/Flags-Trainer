@@ -103,9 +103,9 @@ select{width:100%;padding:var(--sm);border-radius:8px;border:2px solid var(--bor
       <div class="filter-info" id="filter-info">Showing all flags</div>
       <div class="toggle-row" style="margin-top:var(--md)">
         <span class="toggle-label">Regional zoom</span>
-        <input type="range" id="zoom-slider" min="1" max="12" value="1" step="0.5"
+        <input type="range" id="zoom-slider" min="1" max="12" value="2" step="0.5"
           style="flex:1;margin:0 10px;accent-color:var(--pri)">
-        <span id="zoom-value" style="font-size:13px;color:var(--txt2);min-width:24px">1</span>
+        <span id="zoom-value" style="font-size:13px;color:var(--txt2);min-width:24px">2</span>
       </div>
     </div>
   </div>
@@ -343,7 +343,7 @@ let state = {
   mode:'practice',
   direction:'flag-to-country',
   filter:'all',
-  regionalZoom:1,
+  regionalZoom:2,
   filtered:[...FLAGS],
   current:null,
   stats:{correct:0,incorrect:0,total:0},
@@ -455,22 +455,17 @@ function buildInfoHTML(){
     <div class="country-info-item">
       <strong>${c.verseRef}:</strong> ${c.verse}
     </div>
-    <div class="map-row-top">
-      <div class="map-box">
-        <div class="globe-map">
-          ${getGlobeMap(c.code)}
-        </div>
-      </div>
-      <div class="map-box">
-        <div class="country-region-map">
-          ${getRegionalMap(c.code)}
-        </div>
-      </div>
-    </div>
     <div class="map-row-bottom">
       <div class="map-box locator-box">
         <div class="locator-map">
           ${getWorldometerLocatorHTML(c)}
+        </div>
+      </div>
+    </div>
+    <div class="map-row-bottom" style="margin-top:8px">
+      <div class="map-box">
+        <div class="country-region-map">
+          ${getRegionalMap(c.code)}
         </div>
       </div>
     </div>
