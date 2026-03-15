@@ -84,10 +84,7 @@ select{width:100%;padding:var(--sm);border-radius:8px;border:2px solid var(--bor
         <button class="toggle-btn active" data-direction="flag-to-country">Flag → Country</button>
         <button class="toggle-btn" data-direction="country-to-flag">Country → Flag</button>
       </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Focus on weak flags</span>
-        <button class="toggle-btn" id="weak-toggle">Off</button>
-      </div>
+
       <h3 class="settings-section-title">Filter Flags</h3>
       <select id="filter-select">
         <option value="all">All Flags</option>
@@ -293,20 +290,67 @@ const FLAGS=[
   {name:'Vietnam',code:'vn',continent:'Asia',popularity:'popular',difficulty:'easy',cfm:false,population:'98M',capital:'Hanoi',fact:'Vietnam\'s communist government restricts churches but evangelical house churches keep growing, especially among ethnic minorities.',verseRef:'Acts 12:24',verse:'The word of God increased and multiplied.'},
   {name:'Yemen',code:'ye',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'33M',capital:"Sana'a",fact:'Yemen is one of the most closed nations where civil war rages and almost no Christian presence exists.',verseRef:'Isaiah 43:19',verse:'Behold, I am doing a new thing; now it springs forth, do you not perceive it?'},
   {name:'Zambia',code:'zm',continent:'Africa',popularity:'less',difficulty:'easy',cfm:true,population:'20M',capital:'Lusaka',fact:'Zambia has strong Christian presence and religious freedom but extreme poverty challenges churches.',verseRef:'Proverbs 31:9',verse:'Open your mouth, judge righteously, defend the rights of the poor and needy.'},
-  {name:'Zimbabwe',code:'zw',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'16M',capital:'Harare',fact:'Zimbabwe has vibrant churches ministering amid economic collapse, hyperinflation, and political oppression.',verseRef:'Habakkuk 3:17-18',verse:'Yet I will rejoice in the Lord; I will take joy in the God of my salvation.'}
+  {name:'Zimbabwe',code:'zw',continent:'Africa',popularity:'less',difficulty:'medium',cfm:true,population:'16M',capital:'Harare',fact:'Zimbabwe has vibrant churches ministering amid economic collapse, hyperinflation, and political oppression.',verseRef:'Habakkuk 3:17-18',verse:'Yet I will rejoice in the Lord; I will take joy in the God of my salvation.'},
+  {name:'Antigua and Barbuda',code:'ag',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'100K',capital:'Saint John\'s',fact:'Antigua and Barbuda is a predominantly Christian Caribbean nation where churches are central to community life.',verseRef:'Psalm 96:3',verse:'Declare his glory among the nations, his marvelous works among all the peoples!'},
+  {name:'Cape Verde',code:'cv',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'560K',capital:'Praia',fact:'Cape Verde is an island nation with a strong Catholic heritage and a growing evangelical presence.',verseRef:'Mark 16:15',verse:'Go into all the world and proclaim the gospel to the whole creation.'},
+  {name:'Central African Republic',code:'cf',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'5.3M',capital:'Bangui',fact:'The Central African Republic faces ongoing conflict but churches provide refuge and the gospel is spreading amid great suffering.',verseRef:'Romans 8:18',verse:'The sufferings of this present time are not worth comparing with the glory that is to be revealed to us.'},
+  {name:'Comoros',code:'km',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'870K',capital:'Moroni',fact:'Comoros is a Muslim island nation in the Indian Ocean where converting from Islam is illegal and believers face severe persecution.',verseRef:'Revelation 2:10',verse:'Be faithful unto death, and I will give you the crown of life.'},
+  {name:'DR Congo',code:'cd',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'100M',capital:'Kinshasa',fact:'DR Congo has one of the fastest growing Christian populations in Africa despite devastating conflict in its eastern regions.',verseRef:'Colossians 1:6',verse:'The gospel is bearing fruit and growing throughout the whole world.'},
+  {name:'Djibouti',code:'dj',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'1M',capital:'Djibouti City',fact:'Djibouti is an almost entirely Muslim country where a tiny Christian minority exists mostly among expatriates.',verseRef:'Matthew 9:37',verse:'The harvest is plentiful, but the laborers are few.'},
+  {name:'Dominica',code:'dm',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'70K',capital:'Roseau',fact:'Dominica is a small Caribbean island with a Catholic majority and growing evangelical congregations.',verseRef:'Acts 1:8',verse:'You will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth.'},
+  {name:'Equatorial Guinea',code:'gq',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'1.5M',capital:'Malabo',fact:'Equatorial Guinea has great oil wealth but extreme poverty; evangelical churches are growing despite government control.',verseRef:'Amos 5:24',verse:'Let justice roll down like waters, and righteousness like an ever-flowing stream.'},
+  {name:'Eritrea',code:'er',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'3.5M',capital:'Asmara',fact:'Eritrea is one of the worst persecutors of Christians in the world; believers are imprisoned in metal shipping containers for their faith.',verseRef:'Matthew 5:10',verse:'Blessed are those who are persecuted for righteousness, for theirs is the kingdom of heaven.'},
+  {name:'Eswatini',code:'sz',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'1.2M',capital:'Mbabane',fact:'Eswatini has a high church attendance rate but also one of the world\'s highest HIV/AIDS rates, challenging the church to holistic ministry.',verseRef:'James 1:27',verse:'Religion that is pure and undefiled before God is this: to visit orphans and widows in their affliction.'},
+  {name:'Grenada',code:'gd',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'110K',capital:'Saint George\'s',fact:'Grenada is a Caribbean island with a strong Christian heritage and growing Pentecostal churches.',verseRef:'1 Corinthians 1:18',verse:'The word of the cross is folly to those who are perishing, but to us who are being saved it is the power of God.'},
+  {name:'Guinea-Bissau',code:'gw',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'2.1M',capital:'Bissau',fact:'Guinea-Bissau is among the world\'s poorest nations with a growing church facing animism and Islam.',verseRef:'Isaiah 52:7',verse:'How beautiful upon the mountains are the feet of him who brings good news.'},
+  {name:'Guyana',code:'gy',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'790K',capital:'Georgetown',fact:'Guyana has a diverse population with Hindu, Muslim, and Christian communities; evangelical churches are growing.',verseRef:'Romans 10:12',verse:'There is no distinction between Jew and Greek; for the same Lord is Lord of all, bestowing his riches on all who call on him.'},
+  {name:'Kiribati',code:'ki',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'120K',capital:'South Tarawa',fact:'Kiribati is a Pacific island nation facing rising sea levels; its predominantly Christian people trust God amid an existential environmental threat.',verseRef:'Psalm 46:2',verse:'We will not fear though the earth gives way, though the mountains be moved into the heart of the sea.'},
+  {name:'Kyrgyzstan',code:'kg',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'6.8M',capital:'Bishkek',fact:'Kyrgyzstan is a Muslim majority country where evangelical churches have grown rapidly since independence, despite opposition.',verseRef:'Acts 14:22',verse:'Through many tribulations we must enter the kingdom of God.'},
+  {name:'Lesotho',code:'ls',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'2.2M',capital:'Maseru',fact:'Lesotho has a high Christian population but also a devastating HIV/AIDS crisis that challenges the church to minister compassionately.',verseRef:'Proverbs 19:17',verse:'Whoever is generous to the poor lends to the Lord, and he will repay him for his deed.'},
+  {name:'Liberia',code:'lr',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'5.4M',capital:'Monrovia',fact:'Liberia was founded by freed American slaves and has a strong Christian identity, though healing from civil war continues.',verseRef:'Isaiah 61:1',verse:'He has sent me to bind up the brokenhearted, to proclaim liberty to the captives.'},
+  {name:'Liechtenstein',code:'li',continent:'Europe',popularity:'less',difficulty:'hard',cfm:false,population:'38K',capital:'Vaduz',fact:'Liechtenstein is a tiny Alpine principality with a Catholic majority and a small but faithful evangelical witness.',verseRef:'Matthew 5:14',verse:'You are the light of the world. A city set on a hill cannot be hidden.'},
+  {name:'Maldives',code:'mv',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'520K',capital:'Malé',fact:'Maldives is a 100% Muslim island nation where it is illegal to be any other religion; a tiny secret church exists.',verseRef:'John 3:8',verse:'The wind blows where it wishes, and you hear its sound, but you do not know where it comes from or where it goes.'},
+  {name:'Marshall Islands',code:'mh',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'42K',capital:'Majuro',fact:'Marshall Islands has strong church attendance influenced by early missionary work, but faces threat of climate-related displacement.',verseRef:'Psalm 23:4',verse:'Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me.'},
+  {name:'Mauritania',code:'mr',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'4.7M',capital:'Nouakchott',fact:'Mauritania is a Muslim theocracy where apostasy from Islam is punishable by death; a tiny underground church persists.',verseRef:'Matthew 10:28',verse:'Do not fear those who kill the body but cannot kill the soul.'},
+  {name:'Mauritius',code:'mu',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'1.3M',capital:'Port Louis',fact:'Mauritius has religious freedom and a diverse population with Hindu, Muslim, and growing evangelical Christian communities.',verseRef:'Acts 17:26',verse:'He made from one man every nation of mankind to live on all the face of the earth.'},
+  {name:'Micronesia',code:'fm',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'115K',capital:'Palikir',fact:'Micronesia has strong Christian foundations from early missionary work with many churches across its island communities.',verseRef:'Matthew 28:20',verse:'I am with you always, to the end of the age.'},
+  {name:'Montenegro',code:'me',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'620K',capital:'Podgorica',fact:'Montenegro is a small Balkan nation with an Orthodox majority and a very small evangelical community seeking to share the gospel.',verseRef:'Romans 15:20',verse:'I make it my ambition to preach the gospel, not where Christ has already been named.'},
+  {name:'Nauru',code:'nr',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'10K',capital:'Yaren',fact:'Nauru is the world\'s smallest republic with a predominantly Protestant Christian population.',verseRef:'Psalm 67:2',verse:'That your way may be known on earth, your saving power among all nations.'},
+  {name:'Palau',code:'pw',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'18K',capital:'Ngerulmud',fact:'Palau has a strong Christian majority with Catholic and evangelical churches playing central roles in community life.',verseRef:'1 Peter 2:9',verse:'You are a chosen race, a royal priesthood, a holy nation, a people for his own possession.'},
+  {name:'Papua New Guinea',code:'pg',continent:'Oceania',popularity:'less',difficulty:'medium',cfm:false,population:'10M',capital:'Port Moresby',fact:'Papua New Guinea has hundreds of unreached tribal groups; missionaries and local believers are working to translate the Bible into every language.',verseRef:'Revelation 7:9',verse:'A great multitude from every nation, from all tribes and peoples and languages.'},
+  {name:'Saint Kitts and Nevis',code:'kn',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'53K',capital:'Basseterre',fact:'Saint Kitts and Nevis is a small Caribbean nation with a Christian majority and active evangelical churches.',verseRef:'Titus 2:11',verse:'The grace of God has appeared, bringing salvation for all people.'},
+  {name:'Saint Lucia',code:'lc',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'180K',capital:'Castries',fact:'Saint Lucia has a Catholic majority but evangelical and Pentecostal churches are growing with vibrant island communities.',verseRef:'Romans 1:16',verse:'I am not ashamed of the gospel, for it is the power of God for salvation to everyone who believes.'},
+  {name:'Saint Vincent and the Grenadines',code:'vc',continent:'Americas',popularity:'less',difficulty:'hard',cfm:false,population:'110K',capital:'Kingstown',fact:'Saint Vincent and the Grenadines has a strong Protestant tradition with growing evangelical churches across its islands.',verseRef:'Acts 1:8',verse:'You will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth.'},
+  {name:'Samoa',code:'ws',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'220K',capital:'Apia',fact:'Samoa is a deeply Christian nation that enshrined God in its constitution; churches are central to every village.',verseRef:'Joshua 24:15',verse:'As for me and my house, we will serve the Lord.'},
+  {name:'San Marino',code:'sm',continent:'Europe',popularity:'less',difficulty:'hard',cfm:false,population:'34K',capital:'San Marino',fact:'San Marino is the world\'s oldest republic and smallest nation by GDP, with a Catholic majority and small evangelical community.',verseRef:'Psalm 100:1',verse:'Make a joyful noise to the Lord, all the earth!'},
+  {name:'Sao Tome and Principe',code:'st',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'230K',capital:'São Tomé',fact:'Sao Tome and Principe is a small African island nation with a Catholic majority and growing evangelical churches.',verseRef:'Mark 16:15',verse:'Go into all the world and proclaim the gospel to the whole creation.'},
+  {name:'Seychelles',code:'sc',continent:'Africa',popularity:'less',difficulty:'hard',cfm:false,population:'100K',capital:'Victoria',fact:'Seychelles is a Catholic majority island nation in the Indian Ocean with growing evangelical and charismatic churches.',verseRef:'Psalm 96:1',verse:'Oh sing to the Lord a new song; sing to the Lord, all the earth!'},
+  {name:'Sierra Leone',code:'sl',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'8.4M',capital:'Freetown',fact:'Sierra Leone has a roughly equal Muslim-Christian split with many evangelical churches active in post-war reconciliation and development.',verseRef:'2 Corinthians 5:18',verse:'God has reconciled us to himself through Christ and gave us the ministry of reconciliation.'},
+  {name:'Solomon Islands',code:'sb',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'720K',capital:'Honiara',fact:'Solomon Islands has a strong Anglican and evangelical presence with churches at the heart of most communities.',verseRef:'1 Corinthians 3:9',verse:'We are God\'s fellow workers. You are God\'s field, God\'s building.'},
+  {name:'South Sudan',code:'ss',continent:'Africa',popularity:'less',difficulty:'medium',cfm:false,population:'11M',capital:'Juba',fact:'South Sudan is the world\'s newest nation and majority Christian; churches provide hope amid devastating civil conflict and famine.',verseRef:'Isaiah 40:31',verse:'They who wait for the Lord shall renew their strength; they shall mount up with wings like eagles.'},
+  {name:'Suriname',code:'sr',continent:'Americas',popularity:'less',difficulty:'medium',cfm:false,population:'620K',capital:'Paramaribo',fact:'Suriname is one of the most diverse nations on earth; evangelical churches are growing among its many ethnic communities.',verseRef:'Revelation 7:9',verse:'A great multitude from every nation, from all tribes and peoples and languages.'},
+  {name:'Tajikistan',code:'tj',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'10M',capital:'Dushanbe',fact:'Tajikistan strictly controls religion; evangelical churches face constant harassment, raids, and the threat of closure.',verseRef:'2 Timothy 2:3',verse:'Share in suffering as a good soldier of Christ Jesus.'},
+  {name:'Timor-Leste',code:'tl',continent:'Asia',popularity:'less',difficulty:'hard',cfm:false,population:'1.3M',capital:'Dili',fact:'Timor-Leste is Asia\'s most Christian nation; faith sustained the people through brutal Indonesian occupation and now shapes its young democracy.',verseRef:'Psalm 9:9',verse:'The Lord is a stronghold for the oppressed, a stronghold in times of trouble.'},
+  {name:'Tonga',code:'to',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'100K',capital:'Nuku\'alofa',fact:'Tonga is a deeply Christian Pacific kingdom where Sunday is strictly observed and churches play a vital role in national life.',verseRef:'Joshua 24:15',verse:'As for me and my house, we will serve the Lord.'},
+  {name:'Turkmenistan',code:'tm',continent:'Asia',popularity:'less',difficulty:'medium',cfm:false,population:'6.1M',capital:'Ashgabat',fact:'Turkmenistan is one of the world\'s most closed dictatorships where evangelical churches are banned and believers meet in secret.',verseRef:'Acts 4:29',verse:'Grant to your servants to continue to speak your word with all boldness.'},
+  {name:'Tuvalu',code:'tv',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'11K',capital:'Funafuti',fact:'Tuvalu is the world\'s second smallest nation by population with a predominantly Protestant Christian community facing the threat of rising seas.',verseRef:'Nahum 1:7',verse:'The Lord is good, a stronghold in the day of trouble.'},
+  {name:'Vanuatu',code:'vu',continent:'Oceania',popularity:'less',difficulty:'hard',cfm:false,population:'340K',capital:'Port Vila',fact:'Vanuatu has one of the highest proportions of Christians in the Pacific with strong church networks across its 80+ islands.',verseRef:'1 Corinthians 9:22',verse:'I have become all things to all people, that by all means I might save some.'},
+  {name:'Vatican City',code:'va',continent:'Europe',popularity:'less',difficulty:'medium',cfm:false,population:'800',capital:'Vatican City',fact:'Vatican City is the headquarters of the Roman Catholic Church; while not evangelical, it influences over a billion nominal Christians worldwide.',verseRef:'John 17:21',verse:'That they may all be one, just as you, Father, are in me, and I in you.'}
+
 ];
 
 let state = {
   mode:'practice',
   direction:'flag-to-country',
-  weakMode:false,
   filter:'all',
   regionalZoom:1,
   filtered:[...FLAGS],
   current:null,
   stats:{correct:0,incorrect:0,total:0},
   upcomingQueue:[],
-  unseenFlags:[]
+  unseenFlags:[],
+  missedFlags:[],
+  cardsSinceMiss:0
 };
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
@@ -315,10 +359,27 @@ function initializeQueue(){
   state.upcomingQueue=state.unseenFlags.splice(0,Math.min(8,state.unseenFlags.length));
 }
 function getNextFlag(){
+  // Repeat missed flags: first repeat after 3 new cards, second repeat after 7 new cards
+  if(state.missedFlags.length>0){
+    const next=state.missedFlags[0];
+    if(next._repeatAt===undefined) next._repeatAt=state.cardsSinceMiss+3;
+    if(state.cardsSinceMiss>=next._repeatAt){
+      state.missedFlags.shift();
+      // schedule a second repeat 7 cards later if not already repeated
+      if(!next._repeated){
+        next._repeated=true;
+        next._repeatAt=state.cardsSinceMiss+7;
+        state.missedFlags.push(next);
+      }
+      state.cardsSinceMiss=0;
+      return next;
+    }
+  }
   if(state.upcomingQueue.length<3){
     if(state.unseenFlags.length===0){state.unseenFlags=[...state.filtered];shuffle(state.unseenFlags);}
     state.upcomingQueue.push(...state.unseenFlags.splice(0,Math.min(5,state.unseenFlags.length)));
   }
+  state.cardsSinceMiss++;
   if(state.upcomingQueue.length>0)return state.upcomingQueue.shift();
   return state.filtered[Math.floor(Math.random()*state.filtered.length)];
 }
@@ -429,6 +490,7 @@ function showCountryInfo(){
 
 function markAnswer(correct){
   state.stats.total++; if(correct) state.stats.correct++; else state.stats.incorrect++;
+  if(!correct) state.missedFlags.push(state.current);
   updateStats(); nextFlag();
 }
 
@@ -488,6 +550,7 @@ function handleQuizAnswer(selected,btn){
       if(b.textContent===state.current.name) b.classList.add('correct');
     });
     fb.textContent=`Wrong! It was ${state.current.name}`; fb.className='feedback incorrect';
+    state.missedFlags.push(state.current);
   }
   fb.classList.remove('hidden');
   updateStats(); showCountryInfo(); document.getElementById('next-btn').classList.remove('hidden');
@@ -510,11 +573,7 @@ function setupUI(){
     b.onclick=()=>{document.querySelectorAll('[data-direction]').forEach(x=>x.classList.remove('active'));
       b.classList.add('active'); state.direction=b.dataset.direction; nextFlag();};
   });
-  document.getElementById('weak-toggle').onclick=e=>{
-    state.weakMode=!state.weakMode;
-    e.target.textContent=state.weakMode?'On':'Off';
-    e.target.classList.toggle('active');
-  };
+
   document.getElementById('filter-select').onchange=e=>applyFilter(e.target.value);
   document.getElementById('zoom-slider').oninput=e=>{
     state.regionalZoom=parseFloat(e.target.value);
@@ -541,7 +600,14 @@ function setupUI(){
   ph:'RP',pl:'PL',pt:'PO',qa:'QA',ro:'RO',ru:'RS',rw:'RW',sa:'SA',sn:'SG',rs:'RB',
   sg:'SN',sk:'LO',si:'SI',so:'SO',za:'SF',kr:'KS',es:'SP',lk:'CE',sd:'SU',se:'SW',
   ch:'SZ',sy:'SY',tw:'TW',tz:'TZ',th:'TH',tg:'TO',tt:'TD',tn:'TS',tr:'TU',ug:'UG',
-  ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI'
+  ua:'UP',ae:'AE',gb:'UK',us:'US',uy:'UY',uz:'UZ',ve:'VE',vn:'VM',ye:'YM',zm:'ZA',zw:'ZI',
+  ag:'AC',cd:'CG',cf:'CT',cv:'CV',dj:'DJ',dm:'DO',er:'ER',
+  fm:'FM',gd:'GJ',gq:'EK',gw:'PU',gy:'GY',kg:'KG',ki:'KR',
+  km:'CN',kn:'SC',lc:'ST',li:'LS',lr:'LI',ls:'LT',me:'MJ',
+  mh:'RM',mr:'MR',mu:'MP',mv:'MV',nr:'NR',pg:'PP',pw:'PS',
+  sb:'BP',sc:'SE',sl:'SL',sm:'SM',sr:'NS',ss:'OD',st:'TP',
+  sz:'WZ',tj:'TI',tl:'TT',tm:'TX',to:'TN',tv:'TV',va:'VT',
+  vc:'VC',vu:'NH',ws:'WS'
 };
 
 function getWorldometerLocatorHTML(country) {
@@ -591,7 +657,22 @@ function getWorldometerLocatorHTML(country) {
     tt:{lat:10.4,lon:-61.3}, tn:{lat:34,lon:9}, tr:{lat:39,lon:35}, ug:{lat:1.5,lon:32},
     ua:{lat:49,lon:32}, ae:{lat:24,lon:54}, gb:{lat:55,lon:-3}, us:{lat:38,lon:-97},
     uy:{lat:-33,lon:-56}, uz:{lat:41.3,lon:64.6}, ve:{lat:7,lon:-66}, vn:{lat:16,lon:108},
-    ye:{lat:15.5,lon:47.5}, zm:{lat:-13.1,lon:27.8}, zw:{lat:-19,lon:29.2}
+    ye:{lat:15.5,lon:47.5}, zm:{lat:-13.1,lon:27.8}, zw:{lat:-19,lon:29.2},
+    ag:{lat:17.1,lon:-61.8}, cd:{lat:-4,lon:22}, cf:{lat:6.6,lon:20.5},
+    cv:{lat:16,lon:-24}, dj:{lat:11.8,lon:42.6}, dm:{lat:15.4,lon:-61.4},
+    er:{lat:15,lon:39}, fm:{lat:6.9,lon:158}, gd:{lat:12.1,lon:-61.7},
+    gq:{lat:2,lon:10}, gw:{lat:12,lon:-15}, gy:{lat:5,lon:-59},
+    kg:{lat:41.2,lon:74.7}, ki:{lat:1.3,lon:173}, km:{lat:-11.7,lon:43.3},
+    kn:{lat:17.3,lon:-62.7}, lc:{lat:13.9,lon:-60.9}, li:{lat:47.1,lon:9.5},
+    lr:{lat:6.5,lon:-9.4}, ls:{lat:-29.6,lon:28.2}, me:{lat:42.8,lon:19.4},
+    mh:{lat:7.1,lon:171}, mr:{lat:20,lon:-12}, mu:{lat:-20.3,lon:57.6},
+    mv:{lat:4,lon:73.5}, nr:{lat:-0.5,lon:166.9}, pg:{lat:-6,lon:147},
+    pw:{lat:7.5,lon:134.6}, sb:{lat:-8,lon:159}, sc:{lat:-4.6,lon:55.5},
+    sl:{lat:8.5,lon:-11.8}, sm:{lat:43.9,lon:12.5}, sr:{lat:4,lon:-56},
+    ss:{lat:7,lon:30}, st:{lat:1,lon:7}, sz:{lat:-26.5,lon:31.5},
+    tj:{lat:38.8,lon:71}, tl:{lat:-8.8,lon:125.8}, tm:{lat:40,lon:60},
+    to:{lat:-20.2,lon:-175.2}, tv:{lat:-8,lon:179}, va:{lat:41.9,lon:12.45},
+    vc:{lat:13.2,lon:-61.2}, vu:{lat:-16,lon:167}, ws:{lat:-13.8,lon:-172}
   };
 
   const mapW = 1100, mapH = 550;
